@@ -21,19 +21,18 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             if (!settings.ShowTraveller)
             {
                 return RedirectToAction("Index", "ShowBoards");
             }
 
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             // If ResultData doesn't exist, either from ShowBoards/View or browser 'Back' button, retrieve result
-            if (tableStatus.ResultData.BoardNumber == 0)
+            if (deviceStatus.ResultData.BoardNumber == 0)
             {
-                tableStatus.ResultData = database.GetResult(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, boardNumber);
+                deviceStatus.ResultData = database.GetResult(deviceStatus.SectionId, deviceStatus.TableNumber, deviceStatus.RoundNumber, boardNumber);
             }
            
             ShowTravellerModel showTravellerModel = utilities.CreateShowTravellerModel(deviceStatus);

@@ -243,4 +243,7 @@
   <data name="SplashScreenCheckbox.Text" xml:space="preserve">
     <value>Opstartscherm weergeven bij opstarten</value>
   </data>
+  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
+    <value>Gebruik Tafel 1 als master om de rondetimer te starten</value>
+  </data>
 </root>

@@ -243,4 +243,7 @@
   <data name="SplashScreenCheckbox.Text" xml:space="preserve">
     <value>Mostrar pantalla de presentación al inicio</value>
   </data>
+  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
+    <value>Utilice la Mesa 1 como maestra para iniciar el cronómetro de ronda</value>
+  </data>
 </root>

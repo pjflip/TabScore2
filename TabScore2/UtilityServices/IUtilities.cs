@@ -26,7 +26,7 @@ namespace TabScore2.UtilityServices
 
         string Header(HeaderType headerType, DeviceStatus deviceStatus);
         string Title(string titleString, DeviceStatus deviceStatus);
-        bool ValidateLead(TableStatus tableStatus, string card);
+        bool ValidateLead(Result result, string card);
         public void CalculateScore(Result result);
     }
 }

@@ -24,8 +24,8 @@ namespace TabScore2.Controllers
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            Result result = tableStatus.ResultData;
-            if (tableStatus.ResultData.BoardNumber != boardNumber)
+            Result result = deviceStatus.ResultData;
+            if (result.BoardNumber != boardNumber)
             {
                 // No result set for this board yet, so get result (if any) from database and set pair/player numbers
                 result = database.GetResult(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, boardNumber);
@@ -33,7 +33,7 @@ namespace TabScore2.Controllers
                 result.NumberEast = tableStatus.RoundData.NumberEast;
                 result.NumberSouth = tableStatus.RoundData.NumberSouth;
                 result.NumberWest = tableStatus.RoundData.NumberWest;
-                tableStatus.ResultData = result;
+                deviceStatus.ResultData = result;
             }
 
             EnterContractModel enterContractModel = utilities.CreateEnterContractModel(result);
@@ -49,10 +49,8 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
             contractX ??= string.Empty;
-            Result result = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData;
+            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = contractLevel;
             result.ContractSuit = contractSuit;
             result.ContractX = contractX;
@@ -65,9 +63,7 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
-            Result result = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData;
+            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = 0;
             result.ContractSuit = string.Empty;
             result.ContractX = string.Empty;
@@ -82,9 +78,7 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
-            Result result = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData;
+            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = -1;
             result.ContractSuit = string.Empty;
             result.ContractX = string.Empty;

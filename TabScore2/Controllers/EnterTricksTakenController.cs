@@ -21,15 +21,14 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (tableStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
+            if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
                 return RedirectToAction("Index", "ShowBoards");
             }
 
-            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(tableStatus.ResultData);
+            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(deviceStatus.ResultData);
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = utilities.Title("EnterTricksTaken", deviceStatus);
@@ -49,9 +48,8 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            Result result = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData;
+            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.TricksTaken = tricksTaken;
             if (tricksTaken == -1)
             {
@@ -77,7 +75,6 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             if (settings.EnterLeadCard)
             {
@@ -85,9 +82,7 @@ namespace TabScore2.Controllers
             }
             else
             {
-                TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-                Result result = tableStatus.ResultData!;
-                return RedirectToAction("Index", "EnterContract", new { boardNumber = result.BoardNumber });
+                return RedirectToAction("Index", "EnterContract", new { boardNumber = appData.GetDeviceStatus(deviceNumber).ResultData.BoardNumber });
             }
         }
     }

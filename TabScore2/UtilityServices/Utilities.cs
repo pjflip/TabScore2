@@ -207,7 +207,7 @@ namespace TabScore2.UtilityServices
         public ShowTravellerModel CreateShowTravellerModel(DeviceStatus deviceStatus)
         {
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            int currentBoardNumber = tableStatus.ResultData!.BoardNumber; 
+            int currentBoardNumber = deviceStatus.ResultData.BoardNumber;
             ShowTravellerModel showTravellerModel = new(currentBoardNumber);
             List<Result> resultsList = database.GetResultsList(tableStatus.SectionId, currentBoardNumber);
             foreach (Result result in resultsList)
@@ -695,14 +695,14 @@ namespace TabScore2.UtilityServices
                     tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                     if (settings.IsIndividual)
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", tableStatus.ResultData.BoardNumber, 
-                            $"{tableStatus.RoundData.NumberNorth}+{tableStatus.RoundData.NumberSouth}")} v {ColourPairByVulnerability("EW", tableStatus.ResultData.BoardNumber,
+                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", deviceStatus.ResultData.BoardNumber, 
+                            $"{tableStatus.RoundData.NumberNorth}+{tableStatus.RoundData.NumberSouth}")} v {ColourPairByVulnerability("EW", deviceStatus.ResultData.BoardNumber,
                             $"{tableStatus.RoundData.NumberEast}+{tableStatus.RoundData.NumberWest}")}";
                     }
                     else
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", tableStatus.ResultData.BoardNumber, 
-                            $"{localizer["N"]}{localizer["S"]} {tableStatus.RoundData.NumberNorth}")} v {ColourPairByVulnerability("EW", tableStatus.ResultData.BoardNumber, 
+                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", deviceStatus.ResultData.BoardNumber, 
+                            $"{localizer["N"]}{localizer["S"]} {tableStatus.RoundData.NumberNorth}")} v {ColourPairByVulnerability("EW", deviceStatus.ResultData.BoardNumber, 
                             $"{localizer["E"]}{localizer["W"]} {tableStatus.RoundData.NumberEast}")}";
                     }
                 default:
@@ -715,23 +715,22 @@ namespace TabScore2.UtilityServices
             return $"{deviceStatus.Location}: {localizer["Rd"]} {deviceStatus.RoundNumber}: {localizer[titleString]}";
         }
 
-        public bool ValidateLead(TableStatus tableStatus, string card)
+        public bool ValidateLead(Result result, string card)
         {
             if (database.GetHandsCount() == 0) return true;    // No hand records to validate against
-            if (tableStatus.ResultData == null) return true;  // No result (shouldn't be possible at this stage)
             if (card == "SKIP") return true;    // Lead card entry has been skipped, so no validation
 
-            Hand hand = database.GetHand(tableStatus.SectionId, tableStatus.ResultData.BoardNumber);
+            Hand hand = database.GetHand(result.SectionId, result.BoardNumber);
             if (hand.NorthSpades == "###")     // Can't find matching hand record, so try default SectionId = 1
             {
-                hand = database.GetHand(1, tableStatus.ResultData.BoardNumber);
+                hand = database.GetHand(1, result.BoardNumber);
                 if (hand.NorthSpades == "###") return true;    // Still no match, so no validation possible
             }
 
             string cardSuit = card[..1];
             string cardValue = card.Substring(1,1);
 
-            switch (tableStatus.ResultData.DeclarerNSEW)
+            switch (result.DeclarerNSEW)
             {
                 case "N":
                     switch (cardSuit)

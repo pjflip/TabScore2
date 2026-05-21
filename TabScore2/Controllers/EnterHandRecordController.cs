@@ -49,7 +49,7 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            int boardNumber = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData.BoardNumber;
+            int boardNumber = deviceStatus.ResultData.BoardNumber;
             Hand hand = new()
             {
                 SectionId = deviceStatus.SectionId,

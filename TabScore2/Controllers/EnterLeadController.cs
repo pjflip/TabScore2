@@ -20,20 +20,19 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
             if (!settings.EnterLeadCard)
             {
                 return RedirectToAction("Index", "EnterTricksTaken");
             }
 
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (tableStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
+            if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
                 return RedirectToAction("Index", "ShowBoards");
             }
 
-            if (tableStatus.ResultData.LeadCard == string.Empty)  // Lead not set, so use leadValidation value as passed to controller
+            if (deviceStatus.ResultData.LeadCard == string.Empty)  // Lead not set, so use leadValidation value as passed to controller
             {
                 tableStatus.LeadValidation = leadValidation;
             }
@@ -41,7 +40,7 @@ namespace TabScore2.Controllers
             {
                 tableStatus.LeadValidation = LeadValidationOptions.NoWarning;
             }
-            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(tableStatus.ResultData, false, tableStatus.LeadValidation);
+            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(deviceStatus.ResultData, false, tableStatus.LeadValidation);
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = utilities.Title("EnterLead", deviceStatus);
@@ -54,12 +53,12 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (tableStatus.LeadValidation != LeadValidationOptions.Validate || !settings.ValidateLeadCard || utilities.ValidateLead(tableStatus, card))
+            if (tableStatus.LeadValidation != LeadValidationOptions.Validate || !settings.ValidateLeadCard || utilities.ValidateLead(deviceStatus.ResultData, card))
             {
-                tableStatus.ResultData.LeadCard = card;
+                deviceStatus.ResultData.LeadCard = card;
                 return RedirectToAction("Index", "EnterTricksTaken");
             }
             else

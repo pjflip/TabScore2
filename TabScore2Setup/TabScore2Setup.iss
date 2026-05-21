@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TabScore2"
-#define MyAppVersion "1.0.2.4"
+#define MyAppVersion "1.0.2.5"
 #define MyAppPublisher "TabScore2"
 #define MyAppURL "https://tabscore.infinityfreeapp.com/index.html"
 #define MyAppExeName "TabScore2.exe"

@@ -22,7 +22,7 @@ namespace TabScore2.Controllers
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             
             // Clear result data as we'll be selecting a new board
-            appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber).ResultData = new();
+            deviceStatus.ResultData = new();
 
             ShowBoardsModel showBoardsModel = utilities.CreateShowBoardsModel(deviceStatus);
             

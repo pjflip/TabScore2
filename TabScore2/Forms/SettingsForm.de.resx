@@ -243,4 +243,7 @@
   <data name="SplashScreenGroupBox.Text" xml:space="preserve">
     <value>Begrüßungsbildschirm</value>
   </data>
+  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
+    <value>Verwenden Sie Tisch 1 als Master, um den Rundentimer zu starten</value>
+  </data>
 </root>
