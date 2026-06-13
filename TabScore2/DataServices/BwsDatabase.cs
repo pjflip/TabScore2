@@ -40,7 +40,7 @@ namespace TabScore2.DataServices
         public void WebappInitialize()  // Called from webapp StartScreen and run just once.  After this point, changing the TabletsMove setting will have no effect
         {
             GetDatabaseSettings();    // Refresh setting as these can be changed by the scoring program
-            client.WebappInitialize(new WebappInitializeMessage() { TabletsMove = settings.DevicesMove });
+            client.WebappInitialize();
         }
 
         public bool IsDatabaseConnectionOK()

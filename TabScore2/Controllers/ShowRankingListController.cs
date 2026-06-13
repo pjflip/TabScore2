@@ -3,19 +3,19 @@
 
 using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using TabScore2.UtilityServices;
 
 namespace TabScore2.Controllers
 {
-    public class ShowRankingListController(IDatabase iDatabase, IAppData iAppData, IUtilities iUtilities, ISettings iSettings) : Controller
+    public class ShowRankingListController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index()
@@ -33,7 +33,7 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
             }
 
-            ShowRankingListModel showRankingListModel = utilities.CreateRankingListModel(deviceStatus);
+            ShowRankingListModel showRankingListModel = busLogic.CreateRankingListModel(deviceStatus);
             // Only show the ranking list if it contains something meaningful
             if (showRankingListModel.Count <= 1 || showRankingListModel[0].ScoreDecimal == 0.0)
             {
@@ -41,8 +41,8 @@ namespace TabScore2.Controllers
             }
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("ShowRankingList", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.Round, deviceStatus);
+            ViewData["Title"] = busLogic.Title("ShowRankingList", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
             if (deviceStatus.AtSitoutTable)
             {
                 // Can't go back to ShowBoards if it's a sitout and there are no boards to play, so no 'Back' button
@@ -73,7 +73,7 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            ShowRankingListModel showRankingListModel = utilities.CreateRankingListModel(appData.GetDeviceStatus(deviceNumber));
+            ShowRankingListModel showRankingListModel = busLogic.CreateRankingListModel(appData.GetDeviceStatus(deviceNumber));
             if (showRankingListModel.Count <= 1 && showRankingListModel[0].ScoreDecimal == 0.0)
             {
                 return RedirectToAction("Index", "EndScreen", new { deviceNumber });
@@ -81,8 +81,8 @@ namespace TabScore2.Controllers
             }
 
             showRankingListModel.FinalRankingList = true;
-            ViewData["Title"] = utilities.Title("ShowFinalRankingList", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.Round, deviceStatus);
+            ViewData["Title"] = busLogic.Title("ShowFinalRankingList", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             if (settings.IsIndividual)
             {
@@ -103,7 +103,7 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? 0;
 
             int sectionId = appData.GetDeviceStatus(deviceNumber).SectionId;
-            List<Ranking> rankingList = utilities.GetRankings(sectionId);
+            List<Ranking> rankingList = busLogic.GetRankings(sectionId);
             return Json(rankingList);
         }
     }

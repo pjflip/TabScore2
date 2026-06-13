@@ -1,7 +1,45 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model TabScore2.Models.SelectTableNumberModel
+@model SelectTableNumberModel
+
+@if (Model.Confirm)
+{
+    <div id="tableRegisteredModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <p>@localizer["ErrorTableRegistered1"] @Model.TableNumber @localizer["ErrorTableRegistered3"]</p>
+                </div>
+                <div class="modal-footer" style="justify-content:space-between">
+                    <button class="btn btn-lg btn-danger" onclick="modalLogOn()">
+                        <span class="icon-check-circle"></span> @localizer["Register"]
+                    </button>
+                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
+                        @localizer["Cancel"] <span class="icon-times-circle"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var tableRegisteredModal = new bootstrap.Modal(document.getElementById("tableRegisteredModal"), { backdrop: 'static' });
+        tableRegisteredModal.show();
+
+        function modalLogOn() {
+            if (!isSubmitted) {
+                isSubmitted = true;
+                location.href = '@Url.Action("OKButtonClick", "SelectTableNumber")?sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&confirm=true';
+            }
+        }
+    </script>
+}
 
 <div class="row mt-4">
     <div class="col-12 text-center">
@@ -89,44 +127,6 @@
             }
         </div>
     </div>
-}
-
-@if (Model.Confirm)
-{
-    <div id="tableRegisteredModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header text-danger">
-                    <p class="modal-title text-center">
-                        <h3>@localizer["Warning"]</h3>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p>@localizer["ErrorTableRegistered1"] @Model.TableNumber @localizer["ErrorTableRegistered3"]</p>
-                </div>
-                <div class="modal-footer" style="justify-content:space-between">
-                    <button class="btn btn-lg btn-danger" onclick="modalLogOn()">
-                        <span class="icon-check-circle"></span> @localizer["Register"]
-                    </button>
-                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
-                        @localizer["Cancel"] <span class="icon-times-circle"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var tableRegisteredModal = new bootstrap.Modal(document.getElementById("tableRegisteredModal"), { backdrop: 'static' });
-        tableRegisteredModal.show();
-
-        function modalLogOn() {
-            if (!isSubmitted) {
-                isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "SelectTableNumber")?sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&confirm=true';
-            }
-        }
-    </script>
 }
 
 <script>

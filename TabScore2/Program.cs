@@ -6,9 +6,9 @@ using GrpcSharedContracts.SharedClasses;
 using ProtoBuf.Grpc.ClientFactory;
 using System.Diagnostics;
 using System.Net;
+using TabScore2.BusinessLogic;
 using TabScore2.DataServices;
 using TabScore2.Forms;
-using TabScore2.UtilityServices;
 
 namespace TabScore2
 {
@@ -86,7 +86,7 @@ namespace TabScore2
             webAppBuilder.Services.AddCodeFirstGrpcClient<IBwsDatabaseService>(option => { option.Address = grpcAddress; });
             webAppBuilder.Services.AddCodeFirstGrpcClient<IExternalNamesDatabaseService>(option => { option.Address = grpcAddress; });
             webAppBuilder.Services.AddWebOptimizer(option => { option.EnableDiskCache = false; });
-            webAppBuilder.Services.AddSingleton<IUtilities, Utilities>();
+            webAppBuilder.Services.AddSingleton<IBusLogic, BusLogic>();
             webAppBuilder.Services.AddSingleton<IDatabase, BwsDatabase>();
             webAppBuilder.Services.AddSingleton<IExternalNamesDatabase, ExternalNamesDatabase>();
             webAppBuilder.Services.AddSingleton<ISettings, Settings>();

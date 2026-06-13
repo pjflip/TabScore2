@@ -29,12 +29,6 @@ namespace GrpcSharedContracts
     }
 
     [DataContract]
-    public class WebappInitializeMessage
-    {
-        [DataMember(Order = 1)] public bool TabletsMove { get; set; }
-    }
-
-    [DataContract]
     public class IsIndividualMessage
     {
         [DataMember(Order = 1)] public bool IsIndividual { get; set; }

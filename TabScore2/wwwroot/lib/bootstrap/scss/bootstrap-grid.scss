@@ -11,18 +11,18 @@ $include-column-box-sizing: true !default;
 @import "mixins/breakpoints";
 @import "mixins/container";
 @import "mixins/grid";
-@import "mixins/utilities";
+@import "mixins/busLogic";
 
 @import "vendor/rfs";
 
 @import "containers";
 @import "grid";
 
-@import "utilities";
-// Only use the utilities we need
+@import "busLogic";
+// Only use the busLogic we need
 // stylelint-disable-next-line scss/dollar-variable-default
-$utilities: map-get-multiple(
-  $utilities,
+$busLogic: map-get-multiple(
+  $busLogic,
   (
     "display",
     "order",
@@ -59,4 +59,4 @@ $utilities: map-get-multiple(
   )
 );
 
-@import "utilities/api";
+@import "busLogic/api";

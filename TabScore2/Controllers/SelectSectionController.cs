@@ -3,35 +3,39 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using TabScore2.DataServices;
+using TabScore2.BusinessLogic;
 using TabScore2.Globals;
 using TabScore2.Models;
 using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class SelectSectionController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase) : Controller
+    public class SelectSectionController(IStringLocalizer<Strings> iLocalizer, IBusLogic iBusLogic) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
-        private readonly IDatabase database = iDatabase;
+        private readonly IBusLogic busLogic = iBusLogic;
 
         public ActionResult Index()
         {
-            SelectSectionModel selectSectionModel = [];
-            selectSectionModel.AddRange(database.GetSectionsList());
-            // Check if only one section - if so use it
-            if (selectSectionModel.Count == 1)
+            SelectSectionModel model = busLogic.CreateSelectSectionModel();
+            if (model.Count == 1)  // Check if only one section - if so use it
             {
-                return RedirectToAction("Index", "SelectTableNumber", new { sectionId = selectSectionModel[0].SectionId });
+                HttpContext.Session.SetInt32("SectionId", model[0].SectionId);
+                return RedirectToAction("Index", "SelectTableNumber");
             }
-            else
-            // Get section
+            else  // Get section
             {
                 ViewData["Title"] = localizer["SelectSection"];
                 ViewData["Header"] = string.Empty;
                 ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
-                return View(selectSectionModel);
+                return View(model);
             }
+        }
+
+        public ActionResult OKButtonClick(int sectionId)
+        {
+            HttpContext.Session.SetInt32("SectionId", sectionId);
+            return RedirectToAction("Index", "SelectTableNumber");
         }
     }
 }

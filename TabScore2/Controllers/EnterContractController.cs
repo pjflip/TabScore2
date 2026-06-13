@@ -3,19 +3,19 @@
 
 using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using TabScore2.UtilityServices;
 
 namespace TabScore2.Controllers
 {
-    public class EnterContractController(IDatabase iDatabase, IAppData iAppData, IUtilities iUtilities) : Controller
+    public class EnterContractController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
 
         public ActionResult Index(int boardNumber)
         {
@@ -36,11 +36,11 @@ namespace TabScore2.Controllers
                 deviceStatus.ResultData = result;
             }
 
-            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(result);
+            EnterContractModel enterContractModel = busLogic.CreateEnterContractModel(result);
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("EnterContract", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["Title"] = busLogic.Title("EnterContract", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             return View(enterContractModel);
         }
@@ -56,7 +56,7 @@ namespace TabScore2.Controllers
             result.ContractX = contractX;
             result.DeclarerNSEW = declarerNSEW;
             result.Remarks = string.Empty;
-            return RedirectToAction("Index", "EnterLead", new { leadValidation = LeadValidationOptions.Validate });
+            return RedirectToAction("Index", "EnterLead");
         }
 
         public ActionResult OKButtonPass()

@@ -1,0 +1,57 @@
+﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
+     Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
+
+@model IEnumerable<TableStatusDisplay>
+
+<div class="row mt-2">
+    <div class="col-12 p-0">
+        <table class="table table-sm table-bordered text-center" style="margin:auto; width:80%">
+            <thead class="thead-dark">
+                <tr>
+                    <th>@localizer["Section"]</th>
+                    <th>@localizer["Table"]</th>
+                    <th>@localizer["Round"]</th>
+                    <th>@localizer["Devices"]</th>
+                    <th>@localizer["Ready"]</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                @foreach (var status in Model)
+                {
+                    <tr>
+                        <td>@status.SectionLetter</td>
+                        <td>@status.TableNumber</td>
+                        <td>@status.RoundNumber</td>
+                        @if (status.Devices)
+                        {
+                            <td class="table-success">@localizer["Yes"]</td>
+                        }
+                        else
+                        {
+                            <td class="table-danger">@localizer["No"]</td>
+                        }
+                        @if (status.ReadyForNextRound)
+                        {
+                            <td class="table-success">@localizer["Yes"]</td>
+                        }
+                        else
+                        {
+                            <td class="table-danger">@localizer["No"]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var isSubmitted = false;
+
+    function OKButtonClick() {
+        if (!isSubmitted) {
+            isSubmitted = true;
+            location.href = '@Url.Action("Index", "SelectSection")';
+        }
+    }
+</script>

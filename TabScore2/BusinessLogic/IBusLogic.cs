@@ -6,20 +6,24 @@ using TabScore2.Classes;
 using TabScore2.Globals;
 using TabScore2.Models;
 
-namespace TabScore2.UtilityServices
+namespace TabScore2.BusinessLogic
 {
-    public interface IUtilities
+    public interface IBusLogic
     {
-        ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus, bool showWarning);
+        SelectSectionModel CreateSelectSectionModel();
+        SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int tableNumber, bool confirm);
+        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction direction, bool confirm);
+        ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus);
         EnterPlayerIdModel CreateEnterPlayerIdModel(Direction direction);
         ShowRoundInfoModel CreateShowRoundInfoModel(DeviceStatus deviceStatus);
         ShowBoardsModel CreateShowBoardsModel(DeviceStatus deviceStatus);
         ShowMoveModel CreateShowMoveModel(DeviceStatus deviceStatus, int newRoundNumber, int tableNotReadyNumber);
-        EnterContractModel CreateEnterContractModel(Result result, bool showTricks = false, LeadValidationOptions leadValidation = LeadValidationOptions.NoWarning);
+        EnterContractModel CreateEnterContractModel(Result result, bool showTricks = false);
         ShowTravellerModel CreateShowTravellerModel(DeviceStatus deviceStatus);
         ShowHandRecordModel? CreateShowHandRecordModel(DeviceStatus deviceStatus, int boardNumber);
         ShowRankingListModel CreateRankingListModel(DeviceStatus deviceStatus);
-        
+
+        void UpdateNamesForRound(TableStatus tableStatus);
         Move GetMove(List<Round> roundsList, int tableNumber, int pairNumber, Direction direction);
         int GetBoardsFromTableNumber(TableStatus tableStatus);
         List<Ranking> GetRankings(int sectionId);

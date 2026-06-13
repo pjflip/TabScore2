@@ -12,16 +12,17 @@ namespace TabScore2.DataServices
     {
         void ClearAppData();
 
-        bool TableStatusExists(int sectionId, int tableNumber);
         TableStatus GetTableStatus(int sectionId, int tableNumber);
+        bool IsTableReadyForNextRound(int sectionId, int tableNumber, int roundNumber);
+        IEnumerable<TableStatusDisplay> GetAllTableStatuses();
         void UpdateTableStatus(int sectionId, int tableNumber, int roundNumber);
 
-        bool DeviceStatusExists(int sectionId, int tableNumber, Direction direction = Direction.North);
+        int GetDeviceNumber(int sectionId, int tableNumber, Direction direction = Direction.North);
         DeviceStatus GetDeviceStatus(int deviceNumber);
-        DeviceStatus GetDeviceStatus(int sectionId, int tableNumber, Direction direction = Direction.North);
-        void AddDeviceStatus(int sectionId, int tableNumber, int pairNumber, int roundNumber, Direction direction = Direction.North);
-        void UpdateDeviceStatus(int deviceNumber, int tableNumber, int roundNumber, Direction direction);
-        int GetDeviceNumber(DeviceStatus deviceStatus);
+        int AddDeviceStatus(int sectionId, int tableNumber, int pairNumber, int roundNumber, Direction direction = Direction.North, int devicesPerTable = 1);
+        void UpdateDeviceStatus(DeviceStatus deviceStatus, int tableNumber, int roundNumber, Direction direction);
+        bool SetDeviceAsScorer(int deviceNumber);
+        bool SetDeviceAsViewer(int deviceNumber);
 
         int GetTimerSeconds(DeviceStatus deviceStatus);
 

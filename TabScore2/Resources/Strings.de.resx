@@ -153,9 +153,6 @@
   <data name="ErrorNoTabScoreDBtxt" xml:space="preserve">
     <value>Die Datei TabScoreDB.txt existiert nicht. Bitte starten Sie TabScoreStarter.exe neu</value>
   </data>
-  <data name="ErrorNotAllIDs" xml:space="preserve">
-    <value>Bitte wählen Sie für alle Spieler eine ID oder „Unbekannt“</value>
-  </data>
   <data name="ErrorPermanentDB" xml:space="preserve">
     <value>Permanenter Datenbankverbindungsfehler. Bitte überprüfen Sie das Format und die Zugriffsberechtigungen für die Scoring-Datenbank-Datei und starten Sie TabScoreStarter.exe neu</value>
   </data>
@@ -315,9 +312,6 @@
   <data name="North" xml:space="preserve">
     <value>Nord</value>
   </data>
-  <data name="NeedAllIDs" xml:space="preserve">
-    <value>Bitte geben Sie alle Spieler-IDs ein, bevor Sie auf OK drücken</value>
-  </data>
   <data name="N" xml:space="preserve">
     <value>N</value>
   </data>
@@ -342,7 +336,7 @@
   <data name="IfFinished" xml:space="preserve">
     <value>Wenn der Wettbewerb beendet ist, können Sie das Tablet-Gerät ausschalten</value>
   </data>
-  <data name="ErrorWaitResults" xml:space="preserve">
+  <data name="ErrorWaitAllResults" xml:space="preserve">
     <value>Bitte warten Sie, bis für jedes Board Ergebnisse eingegeben sind</value>
   </data>
   <data name="Enter" xml:space="preserve">
@@ -380,9 +374,6 @@
   </data>
   <data name="ErrorWaitResult" xml:space="preserve">
     <value>Bitte warten Sie, bis für dieses Board ein Ergebnis eingegeben ist</value>
-  </data>
-  <data name="ErrorWaitAllIDs" xml:space="preserve">
-    <value>Bitte warten Sie, bis alle Spieler-IDs für diesen Tisch eingegeben wurden</value>
   </data>
   <data name="ErrorTableRegistered1" xml:space="preserve">
     <value>Tisch</value>
@@ -527,5 +518,44 @@
   </data>
   <data name="BoardsStay" xml:space="preserve">
     <value>An diesem Tisch liegen lassen</value>
+  </data>
+  <data name="WarningTableSelect1" xml:space="preserve">
+    <value>Sie versuchen, dieses Gerät bei Table zu registrieren</value>
+  </data>
+  <data name="WarningTableSelect2" xml:space="preserve">
+    <value>. Bitte bestätigen Sie, dass dies korrekt ist</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Wählen Sie die Paar-/Spieler-/Teamnummer für Norden</value>
+  </data>
+  <data name="ShowTableStatus" xml:space="preserve">
+    <value>Status der Tabellen</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="ScoreThisRound" xml:space="preserve">
+    <value>Punkten Sie in dieser Runde</value>
+  </data>
+  <data name="ViewOnly" xml:space="preserve">
+    <value>Sehen Sie sich nur die Ergebnisse an</value>
+  </data>
+  <data name="ErrorScorerAlreadyExists" xml:space="preserve">
+    <value>Für diese Runde wurde bereits ein Torschütze ausgewählt</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>Sie können nicht auswählen, nur die Ergebnisse anzuzeigen, bis ein Torschütze ausgewählt wurde</value>
+  </data>
+  <data name="ErrorNotAllNames" xml:space="preserve">
+    <value>Bitte stellen Sie sicher, dass für alle Spieler am Tisch eine ID oder „Unbekannt“ eingegeben wurde, bevor Sie auf „OK“ klicken</value>
   </data>
 </root>

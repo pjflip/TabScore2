@@ -11,7 +11,7 @@ namespace GrpcSharedContracts
     {
         // GENERAL
         [OperationContract] InitializeReturnMessage Initialize(InitializeMessage message);
-        [OperationContract] void WebappInitialize(WebappInitializeMessage message);
+        [OperationContract] void WebappInitialize();
         [OperationContract] IsDatabaseConnectionOKMessage IsDatabaseConnectionOK();
 
         // SECTION

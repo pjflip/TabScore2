@@ -6,15 +6,15 @@ using TabScore2.Models;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
-using TabScore2.UtilityServices;
 using GrpcSharedContracts.SharedClasses;
+using TabScore2.BusinessLogic;
 
 namespace TabScore2.Controllers
 {
-    public class EnterTricksTakenController(IAppData iAppData, IUtilities iUtilities, ISettings iSettings) : Controller
+    public class EnterTricksTakenController(IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index()
@@ -28,11 +28,11 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowBoards");
             }
 
-            EnterContractModel enterContractModel = utilities.CreateEnterContractModel(deviceStatus.ResultData);
+            EnterContractModel enterContractModel = busLogic.CreateEnterContractModel(deviceStatus.ResultData);
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("EnterTricksTaken", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["Title"] = busLogic.Title("EnterTricksTaken", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             if (settings.EnterResultsMethod == 1)
             {
@@ -67,7 +67,7 @@ namespace TabScore2.Controllers
                     result.TricksTakenSymbol = tricksTakenLevel.ToString("+#;-#;0");
                 }
             }
-            utilities.CalculateScore(result);
+            busLogic.CalculateScore(result);
             return RedirectToAction("Index", "ConfirmResult");
         }
 
@@ -78,7 +78,7 @@ namespace TabScore2.Controllers
 
             if (settings.EnterLeadCard)
             {
-                return RedirectToAction("Index", "EnterLead", new { deviceNumber, leadValidation = LeadValidationOptions.NoWarning });
+                return RedirectToAction("Index", "EnterLead", new { leadValidated = true }); // Going back, so the lead has already been validated (if it needed to be)
             }
             else
             {

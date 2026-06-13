@@ -11,7 +11,7 @@ setTimeout(function () {
 }, 10000);
 
 function pollRankingListener() {
-     rankingList = JSON.parse(this.responseText);
+    rankingList = JSON.parse(this.responseText);
     var new_tbody = document.createElement("tbody");
     for (var i = 0; i < rankingList.length; i++) {
         var row = new_tbody.insertRow(i);

@@ -2,20 +2,20 @@
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
 using Microsoft.AspNetCore.Mvc;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using TabScore2.UtilityServices;
 
 namespace TabScore2.Controllers
 {
-    public class EnterPlayerIdController(IDatabase iDatabase, IExternalNamesDatabase iExternalNamesDatabase, IAppData iAppData, IUtilities iUtilities, ISettings iSettings) : Controller
+    public class EnterPlayerIdController(IDatabase iDatabase, IExternalNamesDatabase iExternalNamesDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IExternalNamesDatabase externalNamesDatabase = iExternalNamesDatabase;
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index(Direction direction)
@@ -24,10 +24,10 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            ViewData["Title"] = utilities.Title("EnterPlayerIds", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.Location, deviceStatus);
+            ViewData["Title"] = busLogic.Title("EnterPlayerIds", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
-            EnterPlayerIdModel enterPlayerIdModel = utilities.CreateEnterPlayerIdModel(direction);
+            EnterPlayerIdModel enterPlayerIdModel = busLogic.CreateEnterPlayerIdModel(direction);
             return View(enterPlayerIdModel);
         }
 

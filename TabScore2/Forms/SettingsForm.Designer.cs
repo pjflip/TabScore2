@@ -52,9 +52,11 @@ namespace TabScore2.Forms
             EnterResultsMethodGroup = new GroupBox();
             EnterResultsMethodCombobox = new ComboBox();
             TabletMovesGroupBox = new GroupBox();
-            TabletModePersonalRadioButton = new RadioButton();
-            TabletModeTraditionalRadioButton = new RadioButton();
+            ModeScorerRadioButton = new RadioButton();
+            ModePersonalRadioButton = new RadioButton();
+            ModeTraditionalRadioButton = new RadioButton();
             RoundTimerGroupBox = new GroupBox();
+            MasterTableForTimerCheckbox = new CheckBox();
             AdditionalMinutesPerRoundLabel = new Label();
             AdditionalMinutesPerRoundNud = new NumericUpDown();
             MinutesPerBoardLabel = new Label();
@@ -68,7 +70,6 @@ namespace TabScore2.Forms
             ManualHandEntryCheckbox = new CheckBox();
             SplashScreenGroupBox = new GroupBox();
             SplashScreenCheckbox = new CheckBox();
-            MasterTableForTimerCheckbox = new CheckBox();
             TravellerGroup.SuspendLayout();
             PlayersGroup.SuspendLayout();
             RankingListGroup.SuspendLayout();
@@ -220,25 +221,33 @@ namespace TabScore2.Forms
             // 
             // TabletMovesGroupBox
             // 
-            TabletMovesGroupBox.Controls.Add(TabletModePersonalRadioButton);
-            TabletMovesGroupBox.Controls.Add(TabletModeTraditionalRadioButton);
+            TabletMovesGroupBox.Controls.Add(ModeScorerRadioButton);
+            TabletMovesGroupBox.Controls.Add(ModePersonalRadioButton);
+            TabletMovesGroupBox.Controls.Add(ModeTraditionalRadioButton);
             resources.ApplyResources(TabletMovesGroupBox, "TabletMovesGroupBox");
             TabletMovesGroupBox.Name = "TabletMovesGroupBox";
             TabletMovesGroupBox.TabStop = false;
             // 
-            // TabletModePersonalRadioButton
+            // ModeScorerRadioButton
             // 
-            resources.ApplyResources(TabletModePersonalRadioButton, "TabletModePersonalRadioButton");
-            TabletModePersonalRadioButton.Name = "TabletModePersonalRadioButton";
-            TabletModePersonalRadioButton.TabStop = true;
-            TabletModePersonalRadioButton.UseVisualStyleBackColor = true;
+            resources.ApplyResources(ModeScorerRadioButton, "ModeScorerRadioButton");
+            ModeScorerRadioButton.Name = "ModeScorerRadioButton";
+            ModeScorerRadioButton.TabStop = true;
+            ModeScorerRadioButton.UseVisualStyleBackColor = true;
             // 
-            // TabletModeTraditionalRadioButton
+            // ModePersonalRadioButton
             // 
-            resources.ApplyResources(TabletModeTraditionalRadioButton, "TabletModeTraditionalRadioButton");
-            TabletModeTraditionalRadioButton.Name = "TabletModeTraditionalRadioButton";
-            TabletModeTraditionalRadioButton.TabStop = true;
-            TabletModeTraditionalRadioButton.UseVisualStyleBackColor = true;
+            resources.ApplyResources(ModePersonalRadioButton, "ModePersonalRadioButton");
+            ModePersonalRadioButton.Name = "ModePersonalRadioButton";
+            ModePersonalRadioButton.TabStop = true;
+            ModePersonalRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // ModeTraditionalRadioButton
+            // 
+            resources.ApplyResources(ModeTraditionalRadioButton, "ModeTraditionalRadioButton");
+            ModeTraditionalRadioButton.Name = "ModeTraditionalRadioButton";
+            ModeTraditionalRadioButton.TabStop = true;
+            ModeTraditionalRadioButton.UseVisualStyleBackColor = true;
             // 
             // RoundTimerGroupBox
             // 
@@ -251,6 +260,12 @@ namespace TabScore2.Forms
             resources.ApplyResources(RoundTimerGroupBox, "RoundTimerGroupBox");
             RoundTimerGroupBox.Name = "RoundTimerGroupBox";
             RoundTimerGroupBox.TabStop = false;
+            // 
+            // MasterTableForTimerCheckbox
+            // 
+            resources.ApplyResources(MasterTableForTimerCheckbox, "MasterTableForTimerCheckbox");
+            MasterTableForTimerCheckbox.Name = "MasterTableForTimerCheckbox";
+            MasterTableForTimerCheckbox.UseVisualStyleBackColor = true;
             // 
             // AdditionalMinutesPerRoundLabel
             // 
@@ -344,12 +359,6 @@ namespace TabScore2.Forms
             SplashScreenCheckbox.Name = "SplashScreenCheckbox";
             SplashScreenCheckbox.UseVisualStyleBackColor = true;
             // 
-            // TimerMasterCheckbox
-            // 
-            resources.ApplyResources(MasterTableForTimerCheckbox, "TimerMasterCheckbox");
-            MasterTableForTimerCheckbox.Name = "TimerMasterCheckbox";
-            MasterTableForTimerCheckbox.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             resources.ApplyResources(this, "$this");
@@ -403,8 +412,7 @@ namespace TabScore2.Forms
         private System.Windows.Forms.GroupBox EnterResultsMethodGroup;
         private System.Windows.Forms.ComboBox EnterResultsMethodCombobox;
         private System.Windows.Forms.GroupBox TabletMovesGroupBox;
-        private System.Windows.Forms.RadioButton TabletModePersonalRadioButton;
-        private System.Windows.Forms.RadioButton TabletModeTraditionalRadioButton;
+        private System.Windows.Forms.RadioButton ModeTraditionalRadioButton;
         private System.Windows.Forms.GroupBox RoundTimerGroupBox;
         private System.Windows.Forms.Label AdditionalMinutesPerRoundLabel;
         private System.Windows.Forms.NumericUpDown AdditionalMinutesPerRoundNud;
@@ -423,6 +431,8 @@ namespace TabScore2.Forms
         private ComboBox FromPerspectiveOfCombobox;
         private GroupBox SplashScreenGroupBox;
         private CheckBox SplashScreenCheckbox;
+        private RadioButton ModeScorerRadioButton;
+        private RadioButton ModePersonalRadioButton;
         private CheckBox MasterTableForTimerCheckbox;
     }
 }

@@ -39,7 +39,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "SelectTableNumber")?sectionId=' + section;
+            location.href = '@Url.Action("OKButtonClick", "SelectSection")?sectionId=' + section;
         }
     }
 </script>

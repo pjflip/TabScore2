@@ -237,9 +237,6 @@
   <data name="ErrorNoTabScoreDBtxt" xml:space="preserve">
     <value>Bestand TabScoreDB.txt bestaat niet. Herstart TabScoreStarter.exe.</value>
   </data>
-  <data name="ErrorNotAllIDs" xml:space="preserve">
-    <value>Selecteer een ID of kies 'Onbekend' voor alle spelers.</value>
-  </data>
   <data name="ErrorPermanentDB" xml:space="preserve">
     <value>Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScoreStarter.exe</value>
   </data>
@@ -264,13 +261,10 @@
   <data name="ErrorTableRegistered3" xml:space="preserve">
     <value>is al aangemeld. Kies hier alleen Aanmelden als u dit apparaat opnieuw wilt aanmelden voor deze tafel.</value>
   </data>
-  <data name="ErrorWaitAllIDs" xml:space="preserve">
-    <value>Wacht totdat alle speler-ID's voor deze tafel zijn ingevoerd.</value>
-  </data>
   <data name="ErrorWaitResult" xml:space="preserve">
     <value>Wacht totdat het resultaat voor dit spel is ingevoerd.</value>
   </data>
-  <data name="ErrorWaitResults" xml:space="preserve">
+  <data name="ErrorWaitAllResults" xml:space="preserve">
     <value>Wacht totdat de resultaten voor alle spellen zijn ingevoerd.</value>
   </data>
   <data name="FileNoHandRecords" xml:space="preserve">
@@ -314,9 +308,6 @@
   </data>
   <data name="N" xml:space="preserve">
     <value>N</value>
-  </data>
-  <data name="NeedAllIDs" xml:space="preserve">
-    <value>Voer alle speler-ID's in voordat OK wordt gekozen</value>
   </data>
   <data name="NoDatabasePath" xml:space="preserve">
     <value>Er is geen databasepad opgegeven</value>
@@ -527,5 +518,44 @@
   </data>
   <data name="BoardsStay" xml:space="preserve">
     <value>Laat deze tafel achter</value>
+  </data>
+  <data name="WarningTableSelect1" xml:space="preserve">
+    <value>U probeert dit apparaat bij Table te registreren</value>
+  </data>
+  <data name="WarningTableSelect2" xml:space="preserve">
+    <value>. Bevestig a.u.b. dat dit juist is</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bevestigen</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Selecteer paar/speler/teamnummer voor Noord</value>
+  </data>
+  <data name="ShowTableStatus" xml:space="preserve">
+    <value>Status van tabellen</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Klaar</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nee</value>
+  </data>
+  <data name="ScoreThisRound" xml:space="preserve">
+    <value>Voer deze ronde de puntentelling uit</value>
+  </data>
+  <data name="ViewOnly" xml:space="preserve">
+    <value>Bekijk alleen de scores</value>
+  </data>
+  <data name="ErrorScorerAlreadyExists" xml:space="preserve">
+    <value>Er is al een scorer geselecteerd voor deze ronde</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>U kunt niet selecteren om alleen de scores te bekijken totdat er een scorer is geselecteerd</value>
+  </data>
+  <data name="ErrorNotAllNames" xml:space="preserve">
+    <value>Zorg ervoor dat een ID of 'Onbekend' is ingevoerd voor alle spelers aan de tafel voordat u op OK drukt</value>
   </data>
 </root>

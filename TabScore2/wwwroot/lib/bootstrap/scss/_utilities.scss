@@ -1,8 +1,8 @@
 // Utilities
 
-$utilities: () !default;
+$busLogic: () !default;
 // stylelint-disable-next-line scss/dollar-variable-default
-$utilities: map-merge(
+$busLogic: map-merge(
   (
     // scss-docs-start utils-vertical-align
     "align": (
@@ -22,7 +22,7 @@ $utilities: map-merge(
       )
     ),
     // scss-docs-end utils-float
-    // Object Fit utilities
+    // Object Fit busLogic
     // scss-docs-start utils-object-fit
     "object-fit": (
       responsive: true,
@@ -36,7 +36,7 @@ $utilities: map-merge(
       )
     ),
     // scss-docs-end utils-object-fit
-    // Opacity utilities
+    // Opacity busLogic
     // scss-docs-start utils-opacity
     "opacity": (
       property: opacity,
@@ -169,12 +169,12 @@ $utilities: map-merge(
       local-vars: (
         "border-opacity": 1
       ),
-      values: $utilities-border-colors
+      values: $busLogic-border-colors
     ),
     "subtle-border-color": (
       property: border-color,
       class: border,
-      values: $utilities-border-subtle
+      values: $busLogic-border-subtle
     ),
     "border-width": (
       property: border-width,
@@ -193,7 +193,7 @@ $utilities: map-merge(
       )
     ),
     // scss-docs-end utils-borders
-    // Sizing utilities
+    // Sizing busLogic
     // scss-docs-start utils-sizing
     "width": (
       property: width,
@@ -248,7 +248,7 @@ $utilities: map-merge(
       values: (100: 100vh)
     ),
     // scss-docs-end utils-sizing
-    // Flex utilities
+    // Flex busLogic
     // scss-docs-start utils-flex
     "flex": (
       responsive: true,
@@ -347,7 +347,7 @@ $utilities: map-merge(
       ),
     ),
     // scss-docs-end utils-flex
-    // Margin utilities
+    // Margin busLogic
     // scss-docs-start utils-spacing
     "margin": (
       responsive: true,
@@ -391,7 +391,7 @@ $utilities: map-merge(
       class: ms,
       values: map-merge($spacers, (auto: auto))
     ),
-    // Negative margin utilities
+    // Negative margin busLogic
     "negative-margin": (
       responsive: true,
       property: margin,
@@ -434,7 +434,7 @@ $utilities: map-merge(
       class: ms,
       values: $negative-spacers
     ),
-    // Padding utilities
+    // Padding busLogic
     "padding": (
       responsive: true,
       property: padding,
@@ -580,7 +580,7 @@ $utilities: map-merge(
         "text-opacity": 1
       ),
       values: map-merge(
-        $utilities-text-colors,
+        $busLogic-text-colors,
         (
           "muted": var(--#{$prefix}secondary-color), // deprecated
           "black-50": rgba($black, .5), // deprecated
@@ -605,7 +605,7 @@ $utilities: map-merge(
     "text-color": (
       property: color,
       class: text,
-      values: $utilities-text-emphasis-colors
+      values: $busLogic-text-emphasis-colors
     ),
     // scss-docs-end utils-color
     // scss-docs-start utils-links
@@ -638,7 +638,7 @@ $utilities: map-merge(
         "link-underline-opacity": 1
       ),
       values: map-merge(
-        $utilities-links-underline,
+        $busLogic-links-underline,
         (
           null: rgba(var(--#{$prefix}link-color-rgb), var(--#{$prefix}link-underline-opacity, 1)),
         )
@@ -666,7 +666,7 @@ $utilities: map-merge(
         "bg-opacity": 1
       ),
       values: map-merge(
-        $utilities-bg-colors,
+        $busLogic-bg-colors,
         (
           "transparent": transparent,
           "body-secondary": rgba(var(--#{$prefix}secondary-bg-rgb), var(--#{$prefix}bg-opacity)),
@@ -688,7 +688,7 @@ $utilities: map-merge(
     "subtle-background-color": (
       property: background-color,
       class: bg,
-      values: $utilities-bg-subtle
+      values: $busLogic-bg-subtle
     ),
     // scss-docs-end utils-bg-color
     "gradient": (
@@ -802,5 +802,5 @@ $utilities: map-merge(
     )
     // scss-docs-end utils-zindex
   ),
-  $utilities
+  $busLogic
 );

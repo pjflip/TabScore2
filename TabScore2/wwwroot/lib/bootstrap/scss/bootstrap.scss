@@ -9,7 +9,7 @@
 @import "variables-dark";
 @import "maps";
 @import "mixins";
-@import "utilities";
+@import "busLogic";
 
 // Layout & components
 @import "root";
@@ -48,5 +48,5 @@
 @import "helpers";
 
 // Utilities
-@import "utilities/api";
+@import "busLogic/api";
 // scss-docs-end import-stack

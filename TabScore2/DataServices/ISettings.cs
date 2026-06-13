@@ -1,4 +1,6 @@
-﻿namespace TabScore2.DataServices
+﻿using TabScore2.Globals;
+
+namespace TabScore2.DataServices
 {
     public interface ISettings
     {
@@ -26,7 +28,7 @@
         bool DefaultManualHandRecordEntry { get; set; }
 
 
-        bool DevicesMove { get; set; }
+        Mode Mode { get; set; }
         string ShowHandRecordFromDirection { get; set; }
         bool ShowTimer { get; set; }
         int SecondsPerBoard { get; set; }

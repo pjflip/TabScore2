@@ -3,7 +3,7 @@
 
 namespace TabScore2.Models
 {
-    public class ShowRoundInfoModel()
+    public class ShowRoundInfoModel
     {
         public int RoundNumber { get; set; }
         public int NumberNorth { get; set; }  // Applies to NS pair in pairs and teams
@@ -19,5 +19,6 @@ namespace TabScore2.Models
         public bool NSMissing { get; set; } = false;
         public bool EWMissing { get; set; } = false;
         public int BoardsFromTable { get; set; } = -1;
+        public bool ShowScorerButtons { get; set; } = false;
     }
 }

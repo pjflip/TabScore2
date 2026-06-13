@@ -1,0 +1,783 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="es" original="TABSCORE2/RESOURCES/STRINGS.RESX">
+    <body>
+      <group id="TABSCORE2/RESOURCES/STRINGS.RESX" datatype="resx">
+        <trans-unit id="A" translate="yes" xml:space="preserve">
+          <source>A</source>
+          <target state="new">A</target>
+        </trans-unit>
+        <trans-unit id="All" translate="yes" xml:space="preserve">
+          <source>All</source>
+          <target state="new">Todo</target>
+        </trans-unit>
+        <trans-unit id="AllPass" translate="yes" xml:space="preserve">
+          <source>All PASS</source>
+          <target state="new">Todos PASAN</target>
+        </trans-unit>
+        <trans-unit id="Analysing" translate="yes" xml:space="preserve">
+          <source>Analysing...</source>
+          <target state="new">Analizando...</target>
+        </trans-unit>
+        <trans-unit id="AnalysisComplete" translate="yes" xml:space="preserve">
+          <source>Analysis complete</source>
+          <target state="new">Análisis completo</target>
+        </trans-unit>
+        <trans-unit id="ArbitralScore" translate="yes" xml:space="preserve">
+          <source>Arbitral score</source>
+          <target state="new">Puntuación arbitral</target>
+        </trans-unit>
+        <trans-unit id="Back" translate="yes" xml:space="preserve">
+          <source>Back</source>
+          <target state="new">Atrás</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="Board" translate="yes" xml:space="preserve">
+          <source>Board</source>
+          <target state="new">Tablilla</target>
+        </trans-unit>
+        <trans-unit id="Boards" translate="yes" xml:space="preserve">
+          <source>Boards</source>
+          <target state="new">Tablillas</target>
+        </trans-unit>
+        <trans-unit id="BoardsStay" translate="yes" xml:space="preserve">
+          <source>Leave at this table</source>
+          <target state="new">Déjelo en esta mesa</target>
+        </trans-unit>
+        <trans-unit id="ByOnTraveller" translate="yes" xml:space="preserve">
+          <source>By</source>
+          <target state="new">Para</target>
+        </trans-unit>
+        <trans-unit id="Cancel" translate="yes" xml:space="preserve">
+          <source>Cancel</source>
+          <target state="new">Cancelar</target>
+        </trans-unit>
+        <trans-unit id="ChangeHandRecordFile" translate="yes" xml:space="preserve">
+          <source>Change hand record file...</source>
+          <target state="new">Cambiar archivo de registro de la mano...</target>
+        </trans-unit>
+        <trans-unit id="ClosingMessage" translate="yes" xml:space="preserve">
+          <source>Are you sure you want to shut down TabScore2?</source>
+          <target state="new">¿Estás seguro de que quieres cerrar TabScore2?</target>
+        </trans-unit>
+        <trans-unit id="Confirm" translate="yes" xml:space="preserve">
+          <source>Confirm</source>
+          <target state="new">Confirmar</target>
+        </trans-unit>
+        <trans-unit id="ConfirmResult" translate="yes" xml:space="preserve">
+          <source>Confirm result</source>
+          <target state="new">Confirme resultado</target>
+        </trans-unit>
+        <trans-unit id="Contract" translate="yes" xml:space="preserve">
+          <source>Con&amp;shy;tract</source>
+          <target state="new">Con&amp;shy;trato</target>
+        </trans-unit>
+        <trans-unit id="DatabaseIncorrectSections" translate="yes" xml:space="preserve">
+          <source>Database contains incorrect Sections.  Maximum 4 Sections labelled A, B, C, D</source>
+          <target state="new">La base de datos contiene secciones incorrectas. Máximo 4 secciones etiquetadas A, B, C, D</target>
+        </trans-unit>
+        <trans-unit id="DatabaseNoRoundData" translate="yes" xml:space="preserve">
+          <source>Database contains incorrect Rounds</source>
+          <target state="new">La base de datos contiene rondas incorrectas</target>
+        </trans-unit>
+        <trans-unit id="DatabaseNoSections" translate="yes" xml:space="preserve">
+          <source>Database contains no Sections</source>
+          <target state="new">La base de datos no contiene secciones</target>
+        </trans-unit>
+        <trans-unit id="DatabaseNotAccessible" translate="yes" xml:space="preserve">
+          <source>Database is not accessible; check file and folder permissions</source>
+          <target state="new">No se puede acceder a la base de datos; comprobar los permisos de archivos y carpetas</target>
+        </trans-unit>
+        <trans-unit id="DatabaseNotExist" translate="yes" xml:space="preserve">
+          <source>Database passed in parameter string does not exist</source>
+          <target state="new">La base de datos pasada en la cadena de parámetros no existe</target>
+        </trans-unit>
+        <trans-unit id="DatabaseTooManyTables" translate="yes" xml:space="preserve">
+          <source>Database contains &gt; 30 Tables in a Section</source>
+          <target state="new">La base de datos contiene &gt; 30 mesas en una sección</target>
+        </trans-unit>
+        <trans-unit id="Dealer" translate="yes" xml:space="preserve">
+          <source>Dealer</source>
+          <target state="new">Dador</target>
+        </trans-unit>
+        <trans-unit id="E" translate="yes" xml:space="preserve">
+          <source>E</source>
+          <target state="new">E</target>
+        </trans-unit>
+        <trans-unit id="East" translate="yes" xml:space="preserve">
+          <source>East</source>
+          <target state="new">Este</target>
+        </trans-unit>
+        <trans-unit id="EastWest" translate="yes" xml:space="preserve">
+          <source>East/West</source>
+          <target state="new">Este/Oeste</target>
+        </trans-unit>
+        <trans-unit id="Edit" translate="yes" xml:space="preserve">
+          <source>Edit</source>
+          <target state="new">Editar</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="EndScreen" translate="yes" xml:space="preserve">
+          <source>End screen</source>
+          <target state="new">Pantalla final</target>
+        </trans-unit>
+        <trans-unit id="Enter" translate="yes" xml:space="preserve">
+          <source>Enter</source>
+          <target state="new">Entrar</target>
+        </trans-unit>
+        <trans-unit id="EnterContract" translate="yes" xml:space="preserve">
+          <source>Enter contract</source>
+          <target state="new">Introducir contrato</target>
+        </trans-unit>
+        <trans-unit id="EnterEditPlayerIds" translate="yes" xml:space="preserve">
+          <source>Enter/edit player IDs</source>
+          <target state="new">Introducir/editar ID de jugador</target>
+        </trans-unit>
+        <trans-unit id="EnterHandRecord" translate="yes" xml:space="preserve">
+          <source>Enter board</source>
+          <target state="new">Introducir tablilla</target>
+        </trans-unit>
+        <trans-unit id="EnterHandRecord2" translate="yes" xml:space="preserve">
+          <source> </source>
+          <target state="new"> </target>
+          <note from="MultilingualBuild">@MutedRule(WhiteSpaceTail)@MutedRule(WhiteSpaceLead)</note></trans-unit>
+        <trans-unit id="EnterID" translate="yes" xml:space="preserve">
+          <source>Enter ID for</source>
+          <target state="new">Introducir ID para</target>
+        </trans-unit>
+        <trans-unit id="EnterLead" translate="yes" xml:space="preserve">
+          <source>Enter lead</source>
+          <target state="new">Introducir la salida</target>
+        </trans-unit>
+        <trans-unit id="EnterPlayerIds" translate="yes" xml:space="preserve">
+          <source>Enter player IDs</source>
+          <target state="new">Ingresar ID de jugadores</target>
+        </trans-unit>
+        <trans-unit id="EnterTricksTaken" translate="yes" xml:space="preserve">
+          <source>Enter tricks taken</source>
+          <target state="new">Introducir bazas ganadas</target>
+        </trans-unit>
+        <trans-unit id="EnterValidContract" translate="yes" xml:space="preserve">
+          <source>Please enter a valid contract</source>
+          <target state="new">Por favor ingresa un contrato válido</target>
+        </trans-unit>
+        <trans-unit id="EnterValidResult" translate="yes" xml:space="preserve">
+          <source>Please enter a valid result</source>
+          <target state="new">Por favor ingresa un resultado válido</target>
+        </trans-unit>
+        <trans-unit id="Error" translate="yes" xml:space="preserve">
+          <source>Error</source>
+          <target state="new">Error</target>
+        </trans-unit>
+        <trans-unit id="ErrorDBConnection" translate="yes" xml:space="preserve">
+          <source>An error has occurred whilst connecting to the scoring database</source>
+          <target state="new">Se ha producido un error al conectarse a la base de datos de puntajes</target>
+        </trans-unit>
+        <trans-unit id="ErrorEnterResult" translate="yes" xml:space="preserve">
+          <source>Please enter a result (or Skip = Not played) for every board</source>
+          <target state="new">Introduce un resultado (o Omitir = no jugado) para cada tablilla</target>
+        </trans-unit>
+        <trans-unit id="ErrorNoDBSelected" translate="yes" xml:space="preserve">
+          <source>Please wait until the Tournament Director tells you to start</source>
+          <target state="new">Por favor espere hasta que el Director del Torneo le indique que comience</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorNoScorer" translate="yes" xml:space="preserve">
+          <source>You cannot select to view the scores until a scorer has been selected</source>
+          <target state="new">No puede seleccionar ver solo las puntuaciones hasta que se haya seleccionado un anotador</target>
+        </trans-unit>
+        <trans-unit id="ErrorNoTabScoreDBtxt" translate="yes" xml:space="preserve">
+          <source>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</source>
+          <target state="new">El archivo TabScoreDB.txt no existe. Reinicie TabScoreStarter.exe</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorNotAllIDs" translate="yes" xml:space="preserve">
+          <source></source>
+          <target state="new"></target></trans-unit>
+        <trans-unit id="ErrorNotAllNames" translate="yes" xml:space="preserve">
+          <source>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</source>
+          <target state="new">Asegúrese de haber ingresado una identificación o "Desconocido" para todos los jugadores en la mesa antes de presionar Aceptar</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorPermanentDB" translate="yes" xml:space="preserve">
+          <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScoreStarter.exe</source>
+          <target state="new">Error permanente de conexión de base de datos. Verifique el formato y los permisos de acceso para el archivo de la base de datos de puntajes y reinicie TabScoreStarter.exe</target>
+        </trans-unit>
+        <trans-unit id="ErrorReestablishConnection" translate="yes" xml:space="preserve">
+          <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet to your [section/]table number[/direction]</source>
+          <target state="new">Clic en OK para intentar restablecer la conexión. Si tiene éxito, vuelva a registrar esta tableta en su [sección/]número de mesa[/dirección]</target>
+        </trans-unit>
+        <trans-unit id="ErrorScorerAlreadyExists" translate="yes" xml:space="preserve">
+          <source>A scorer has already been selected for this round</source>
+          <target state="new">Ya se ha seleccionado un anotador para esta ronda</target>
+        </trans-unit>
+        <trans-unit id="ErrorScreen" translate="yes" xml:space="preserve">
+          <source>Error screen</source>
+          <target state="new">Pantalla de error</target>
+        </trans-unit>
+        <trans-unit id="ErrorTableNotReady1" translate="yes" xml:space="preserve">
+          <source>Table</source>
+          <target state="new">Mesa</target>
+        </trans-unit>
+        <trans-unit id="ErrorTableNotReady2" translate="yes" xml:space="preserve">
+          <source>is not yet ready.  Please wait</source>
+          <target state="new">aún no está lista. Espere por favor</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorTableRegistered1" translate="yes" xml:space="preserve">
+          <source>Table</source>
+          <target state="new">Mesa</target>
+        </trans-unit>
+        <trans-unit id="ErrorTableRegistered2" translate="yes" xml:space="preserve">
+          <source>and direction</source>
+          <target state="new">y dirección</target>
+        </trans-unit>
+        <trans-unit id="ErrorTableRegistered3" translate="yes" xml:space="preserve">
+          <source>is already registered.  Do not press Register unless you intend to register a new 
+tablet device at your current location</source>
+          <target state="new">ya están registradas. No presione Registrar a menos que tenga la intención de volver a registrar una tableta en su ubicación actual</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorWaitAllResults" translate="yes" xml:space="preserve">
+          <source>Please wait until there are results entered for every board</source>
+          <target state="new">Espere hasta que haya resultados introducidos ​​​​para cada tablilla</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ErrorWaitResult" translate="yes" xml:space="preserve">
+          <source>Please wait until there is a result entered for this board</source>
+          <target state="new">Espere hasta que haya un resultado introducido para esta tablilla</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="FileNoHandRecords" translate="yes" xml:space="preserve">
+          <source>File contains no hand records</source>
+          <target state="new">Archivo no contiene registros de las manos</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="ForSwiss" translate="yes" xml:space="preserve">
+          <source>For Swiss events, wait until the TD tells you and then press OK to get the new movement</source>
+          <target state="new">Para eventos suizos, espera hasta que el DT te lo indique y luego presiona OK para obtener el nuevo movimiento</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="FromRelayTable" translate="yes" xml:space="preserve">
+          <source>from Relay Table</source>
+          <target state="new">de la mesa de relevos</target>
+        </trans-unit>
+        <trans-unit id="FromTable" translate="yes" xml:space="preserve">
+          <source>from Table</source>
+          <target state="new">de la Mesa</target>
+        </trans-unit>
+        <trans-unit id="IfFinished" translate="yes" xml:space="preserve">
+          <source>If the event is finished, you can turn off the tablet device</source>
+          <target state="new">Si el evento ha terminado, puede apagar el dispositivo de tableta</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="IncludedInDatabase" translate="yes" xml:space="preserve">
+          <source>Included in scoring database</source>
+          <target state="new">Incluido en la base de datos de puntuación</target>
+        </trans-unit>
+        <trans-unit id="J" translate="yes" xml:space="preserve">
+          <source>J</source>
+          <target state="new">J</target>
+        </trans-unit>
+        <trans-unit id="K" translate="yes" xml:space="preserve">
+          <source>K</source>
+          <target state="new">K</target>
+        </trans-unit>
+        <trans-unit id="Lead" translate="yes" xml:space="preserve">
+          <source>Lead</source>
+          <target state="new">Salida</target>
+        </trans-unit>
+        <trans-unit id="LeadNoMatch" translate="yes" xml:space="preserve">
+          <source>Lead does not match hand record</source>
+          <target state="new">La salida no coincide con el registro de la mano</target>
+        </trans-unit>
+        <trans-unit id="MoveForRound" translate="yes" xml:space="preserve">
+          <source>Move for Round</source>
+          <target state="new">Mover por ronda</target>
+        </trans-unit>
+        <trans-unit id="MoveToSitOut" translate="yes" xml:space="preserve">
+          <source>Move to sit-out</source>
+          <target state="new">Mover a la mesa sentarse</target>
+        </trans-unit>
+        <trans-unit id="MoveToTable" translate="yes" xml:space="preserve">
+          <source>Move to Table</source>
+          <target state="new">Mover a la mesa</target>
+        </trans-unit>
+        <trans-unit id="N" translate="yes" xml:space="preserve">
+          <source>N</source>
+          <target state="new">N</target>
+        </trans-unit>
+        <trans-unit id="NT" translate="yes" xml:space="preserve">
+          <source>NT</source>
+          <target state="new">ST</target>
+        </trans-unit>
+        <trans-unit id="No" translate="yes" xml:space="preserve">
+          <source>No</source>
+          <target state="new">No</target>
+        </trans-unit>
+        <trans-unit id="NoDatabasePath" translate="yes" xml:space="preserve">
+          <source>No database path specified</source>
+          <target state="new">No se ha especificado ninguna ruta de base de datos</target>
+        </trans-unit>
+        <trans-unit id="NoGrpcServer" translate="yes" xml:space="preserve">
+          <source>The GrpcBwsDatabaseServer did not start.  Please check that the correct runtime libraries are installed</source>
+          <target state="new">El GrpcBwsDatabaseServer no se inició. Compruebe si están instaladas las bibliotecas de tiempo de ejecución correctas</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="NoNetwork" translate="yes" xml:space="preserve">
+          <source>This computer is not connected to a network</source>
+          <target state="new">Esta computadora no está conectada a una red</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="North" translate="yes" xml:space="preserve">
+          <source>North</source>
+          <target state="new">Norte</target>
+        </trans-unit>
+        <trans-unit id="NorthSouth" translate="yes" xml:space="preserve">
+          <source>North/South</source>
+          <target state="new">Norte/Sur</target>
+        </trans-unit>
+        <trans-unit id="NotPlayed" translate="yes" xml:space="preserve">
+          <source>Not played</source>
+          <target state="new">No jugado</target>
+        </trans-unit>
+        <trans-unit id="NotScoring" translate="yes" xml:space="preserve">
+          <source>This tablet device is not being used for scoring during this round.  Once a board has been scored, you can view it using the buttons below</source>
+          <target state="new">Esta tableta no se utiliza para dar puntos durante esta ronda. Una vez que se ha dado puntos a una tablilla, puede verlo usando los botones indicados mas abajo</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="OK" translate="yes" xml:space="preserve">
+          <source>OK</source>
+          <target state="new">OK</target>
+        </trans-unit>
+        <trans-unit id="Pair" translate="yes" xml:space="preserve">
+          <source>Pair</source>
+          <target state="new">Pareja</target>
+        </trans-unit>
+        <trans-unit id="PairNumber" translate="yes" xml:space="preserve">
+          <source>Pair No.</source>
+          <target state="new">Nro. de pareja</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="Pass" translate="yes" xml:space="preserve">
+          <source>PASS</source>
+          <target state="new">PASO</target>
+        </trans-unit>
+        <trans-unit id="PassToRelayTable" translate="yes" xml:space="preserve">
+          <source>Pass to relay table</source>
+          <target state="new">Pase a la mesa de relevos</target>
+        </trans-unit>
+        <trans-unit id="PassToTable" translate="yes" xml:space="preserve">
+          <source>Pass to Table</source>
+          <target state="new">Pase a la Mesa</target>
+        </trans-unit>
+        <trans-unit id="Percentage" translate="yes" xml:space="preserve">
+          <source>Percentage</source>
+          <target state="new">Porcentaje</target>
+        </trans-unit>
+        <trans-unit id="PercentageShort" translate="yes" xml:space="preserve">
+          <source>%age</source>
+          <target state="new">%</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="Player" translate="yes" xml:space="preserve">
+          <source>Player</source>
+          <target state="new">Jugador</target>
+        </trans-unit>
+        <trans-unit id="PlayerNumber" translate="yes" xml:space="preserve">
+          <source>Player ID</source>
+          <target state="new">ID de jugador</target>
+        </trans-unit>
+        <trans-unit id="Q" translate="yes" xml:space="preserve">
+          <source>Q</source>
+          <target state="new">Q</target>
+        </trans-unit>
+        <trans-unit id="Rank" translate="yes" xml:space="preserve">
+          <source>Rank</source>
+          <target state="new">Rango</target>
+        </trans-unit>
+        <trans-unit id="RankingList" translate="yes" xml:space="preserve">
+          <source>Ranking list</source>
+          <target state="new">Listado de clasificación</target>
+        </trans-unit>
+        <trans-unit id="Rd" translate="yes" xml:space="preserve">
+          <source>Rd</source>
+          <target state="new">Rda</target>
+        </trans-unit>
+        <trans-unit id="Ready" translate="yes" xml:space="preserve">
+          <source>Ready</source>
+          <target state="new">Listo</target>
+        </trans-unit>
+        <trans-unit id="Register" translate="yes" xml:space="preserve">
+          <source>Register</source>
+          <target state="new">Registrar</target>
+        </trans-unit>
+        <trans-unit id="Round" translate="yes" xml:space="preserve">
+          <source>Round</source>
+          <target state="new">Ronda</target>
+        </trans-unit>
+        <trans-unit id="S" translate="yes" xml:space="preserve">
+          <source>S</source>
+          <target state="new">S</target>
+        </trans-unit>
+        <trans-unit id="Score" translate="yes" xml:space="preserve">
+          <source>Score</source>
+          <target state="new">Puntos</target>
+        </trans-unit>
+        <trans-unit id="ScoreEntryComplete" translate="yes" xml:space="preserve">
+          <source>Score entry complete</source>
+          <target state="new">Entrada completa de puntos</target>
+        </trans-unit>
+        <trans-unit id="ScoreThisRound" translate="yes" xml:space="preserve">
+          <source>Do the scoring this round</source>
+          <target state="new">Haz la puntuación en esta ronda</target>
+        </trans-unit>
+        <trans-unit id="Section" translate="yes" xml:space="preserve">
+          <source>Section</source>
+          <target state="new">Sección</target>
+        </trans-unit>
+        <trans-unit id="SelectContestantNumber" translate="yes" xml:space="preserve">
+          <source>Select pair/player/team number for North</source>
+          <target state="new">Seleccione el número de pareja/jugador/equipo para Norte</target>
+        </trans-unit>
+        <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
+          <source>Select direction</source>
+          <target state="new">Seleccionar dirección</target>
+        </trans-unit>
+        <trans-unit id="SelectSection" translate="yes" xml:space="preserve">
+          <source>Select section</source>
+          <target state="new">Seleccionar sección</target>
+        </trans-unit>
+        <trans-unit id="SelectTableNumber" translate="yes" xml:space="preserve">
+          <source>Select table number</source>
+          <target state="new">Seleccionar número de mesa</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="SessionPaused" translate="yes" xml:space="preserve">
+          <source>Session paused</source>
+          <target state="new">Sesión pausada</target>
+        </trans-unit>
+        <trans-unit id="SessionRunning" translate="yes" xml:space="preserve">
+          <source>Session running</source>
+          <target state="new">Sesión en ejecución</target>
+        </trans-unit>
+        <trans-unit id="ShowBoards" translate="yes" xml:space="preserve">
+          <source>Show boards</source>
+          <target state="new">Mostrar tablillas</target>
+        </trans-unit>
+        <trans-unit id="ShowFinalRankingList" translate="yes" xml:space="preserve">
+          <source>Show final ranking list</source>
+          <target state="new">Mostrar lista de clasificación final</target>
+        </trans-unit>
+        <trans-unit id="ShowHandRecord" translate="yes" xml:space="preserve">
+          <source>Show hand record</source>
+          <target state="new">Mostrar registro de la mano</target>
+        </trans-unit>
+        <trans-unit id="ShowMove" translate="yes" xml:space="preserve">
+          <source>Show move</source>
+          <target state="new">Mostrar movimiento</target>
+        </trans-unit>
+        <trans-unit id="ShowPlayerIds" translate="yes" xml:space="preserve">
+          <source>Show player IDs</source>
+          <target state="new">Mostrar ID de jugador</target>
+        </trans-unit>
+        <trans-unit id="ShowRankingList" translate="yes" xml:space="preserve">
+          <source>Show ranking list</source>
+          <target state="new">Mostrar lista de clasificación</target>
+        </trans-unit>
+        <trans-unit id="ShowRoundInfo" translate="yes" xml:space="preserve">
+          <source>Show round info</source>
+          <target state="new">Mostrar información de la ronda</target>
+        </trans-unit>
+        <trans-unit id="ShowTableStatus" translate="yes" xml:space="preserve">
+          <source>Status of tables</source>
+          <target state="new">Estado de las tablas</target>
+        </trans-unit>
+        <trans-unit id="ShowTraveller" translate="yes" xml:space="preserve">
+          <source>Show traveller</source>
+          <target state="new">Mostrar viajero</target>
+        </trans-unit>
+        <trans-unit id="Sitout" translate="yes" xml:space="preserve">
+          <source>Sitout</source>
+          <target state="new">Sentada</target>
+        </trans-unit>
+        <trans-unit id="SittingOut" translate="yes" xml:space="preserve">
+          <source>Sitting out</source>
+          <target state="new">Sentarse</target>
+        </trans-unit>
+        <trans-unit id="SittingOutNoTable" translate="yes" xml:space="preserve">
+          <source>Sitting out away from the numbered tables</source>
+          <target state="new">Sentarse lejos de las mesas numeradas</target>
+        </trans-unit>
+        <trans-unit id="Skip" translate="yes" xml:space="preserve">
+          <source>Skip</source>
+          <target state="new">Omitir</target>
+        </trans-unit>
+        <trans-unit id="South" translate="yes" xml:space="preserve">
+          <source>South</source>
+          <target state="new">Sur</target>
+        </trans-unit>
+        <trans-unit id="StartScreen" translate="yes" xml:space="preserve">
+          <source>Start screen</source>
+          <target state="new">Pantalla de inicio</target>
+        </trans-unit>
+        <trans-unit id="StayAtTable" translate="yes" xml:space="preserve">
+          <source>Stay at Table</source>
+          <target state="new">Quédate en la Mesa</target>
+        </trans-unit>
+        <trans-unit id="Table" translate="yes" xml:space="preserve">
+          <source>Table</source>
+          <target state="new">Mesa</target>
+        </trans-unit>
+        <trans-unit id="TenShorthand" translate="yes" xml:space="preserve">
+          <source>T</source>
+          <target state="new">D</target>
+        </trans-unit>
+        <trans-unit id="To" translate="yes" xml:space="preserve">
+          <source>to</source>
+          <target state="new">a</target>
+        </trans-unit>
+        <trans-unit id="ToWelcome" translate="yes" xml:space="preserve">
+          <source>to</source>
+          <target state="new">a</target>
+        </trans-unit>
+        <trans-unit id="Traveller" translate="yes" xml:space="preserve">
+          <source>Traveller</source>
+          <target state="new">Viajero</target>
+        </trans-unit>
+        <trans-unit id="Tricks" translate="yes" xml:space="preserve">
+          <source>Tricks</source>
+          <target state="new">Bazas</target>
+        </trans-unit>
+        <trans-unit id="Unknown" translate="yes" xml:space="preserve">
+          <source>Unknown</source>
+          <target state="new">Desconocido</target>
+        </trans-unit>
+        <trans-unit id="Version" translate="yes" xml:space="preserve">
+          <source>Version</source>
+          <target state="new">Versión</target>
+        </trans-unit>
+        <trans-unit id="View" translate="yes" xml:space="preserve">
+          <source>View</source>
+          <target state="new">Mirar</target>
+        </trans-unit>
+        <trans-unit id="ViewOnly" translate="yes" xml:space="preserve">
+          <source>Only view the scores</source>
+          <target state="new">Ver solo las puntuaciones</target>
+        </trans-unit>
+        <trans-unit id="W" translate="yes" xml:space="preserve">
+          <source>W</source>
+          <target state="new">W</target>
+        </trans-unit>
+        <trans-unit id="WaitNextTable" translate="yes" xml:space="preserve">
+          <source>Please wait until the TD calls the move, and then move to the next table before pressing OK</source>
+          <target state="new">Espere hasta que el DT llame para moverse y luego cambie a la siguiente mesa antes de presionar OK</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="WaitTD" translate="yes" xml:space="preserve">
+          <source>Please wait until the Tournament Director tells you to start, and then press OK</source>
+          <target state="new">Espere hasta que el Director del Torneo le indique que comience y luego presione OK</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="WaitThisTable" translate="yes" xml:space="preserve">
+          <source>Please wait until the TD calls the move and this table is ready to start before pressing OK</source>
+          <target state="new">Espere hasta que el DT llame para moverse y esta mesa este lista para comenzar antes de presionar OK</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="Warning" translate="yes" xml:space="preserve">
+          <source>Warning</source>
+          <target state="new">Advertencia</target>
+        </trans-unit>
+        <trans-unit id="WarningHandRecordBack" translate="yes" xml:space="preserve">
+          <source>All hand record entries for this board will be lost.  Click on 'Back' to continue</source>
+          <target state="new">Se perderán todas las entradas de registro de la mano para este tablero. Haga clic en "Atrás" para continuar</target>
+          <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
+        <trans-unit id="WarningTableSelect1" translate="yes" xml:space="preserve">
+          <source>You are trying to register this device at Table</source>
+          <target state="new">Estás intentando registrar este dispositivo en Table</target>
+        </trans-unit>
+        <trans-unit id="WarningTableSelect2" translate="yes" xml:space="preserve">
+          <source>. Please confirm that this is correct</source>
+          <target state="new">. Por favor confirma que esto es correcto</target>
+        </trans-unit>
+        <trans-unit id="Welcome" translate="yes" xml:space="preserve">
+          <source>Welcome</source>
+          <target state="new">Bienvenidos</target>
+        </trans-unit>
+        <trans-unit id="West" translate="yes" xml:space="preserve">
+          <source>West</source>
+          <target state="new">Oeste</target>
+        </trans-unit>
+        <trans-unit id="Yes" translate="yes" xml:space="preserve">
+          <source>Yes</source>
+          <target state="new">Sí</target>
+        </trans-unit>
+        <trans-unit id="by" translate="yes" xml:space="preserve">
+          <source>by</source>
+          <target state="new">para</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+  <file datatype="xml" source-language="en-US" target-language="es" original="TABSCORE2/FORMS/SETTINGSFORM.RESX">
+    <body>
+      <group id="TABSCORE2/FORMS/SETTINGSFORM.RESX" datatype="resx">
+        <trans-unit id="$this.Text" translate="yes" xml:space="preserve">
+          <source>TabScore2 - Settings</source>
+          <target state="new">TabScore2 - Editar resultado</target>
+        </trans-unit>
+        <trans-unit id="AdditionalMinutesPerRoundLabel.Text" translate="yes" xml:space="preserve">
+          <source>Additional minutes per round</source>
+          <target state="new">Minutos adicionales por ronda</target>
+        </trans-unit>
+        <trans-unit id="CanxButton.Text" translate="yes" xml:space="preserve">
+          <source>Cancel</source>
+          <target state="new">Cancelar</target>
+        </trans-unit>
+        <trans-unit id="DoubleDummyCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Double dummy analysis for entered hands</source>
+          <target state="new">Realizar análisis double dummy</target>
+        </trans-unit>
+        <trans-unit id="EnterLeadCardCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Enter lead card</source>
+          <target state="new">Introducir la salida</target>
+        </trans-unit>
+        <trans-unit id="EnterResultsMethodCombobox.Items" translate="yes" xml:space="preserve">
+          <source>Tricks plus or minus</source>
+          <target state="new">Bazas más o menos</target>
+        </trans-unit>
+        <trans-unit id="EnterResultsMethodCombobox.Items1" translate="yes" xml:space="preserve">
+          <source>Total tricks won</source>
+          <target state="new">Total de bazas ganadas</target>
+        </trans-unit>
+        <trans-unit id="EnterResultsMethodGroup.Text" translate="yes" xml:space="preserve">
+          <source>Results entry method</source>
+          <target state="new">Ingrese el método de resultados</target>
+        </trans-unit>
+        <trans-unit id="FromPerspectiveOfCombobox.Items" translate="yes" xml:space="preserve">
+          <source>North</source>
+          <target state="new">Norte</target>
+        </trans-unit>
+        <trans-unit id="FromPerspectiveOfCombobox.Items1" translate="yes" xml:space="preserve">
+          <source>South</source>
+          <target state="new">Sur</target>
+        </trans-unit>
+        <trans-unit id="FromPerspectiveOfCombobox.Items2" translate="yes" xml:space="preserve">
+          <source>East</source>
+          <target state="new">Este</target>
+        </trans-unit>
+        <trans-unit id="FromPerspectiveOfCombobox.Items3" translate="yes" xml:space="preserve">
+          <source>West</source>
+          <target state="new">Oeste</target>
+        </trans-unit>
+        <trans-unit id="FromPerspectiveOfLabel.Text" translate="yes" xml:space="preserve">
+          <source>From the perspective of</source>
+          <target state="new">Desde la perspectiva de</target>
+        </trans-unit>
+        <trans-unit id="HandRecordGroup.Text" translate="yes" xml:space="preserve">
+          <source>Hand record</source>
+          <target state="new">Registro de la mano</target>
+        </trans-unit>
+        <trans-unit id="LeadCardGroup.Text" translate="yes" xml:space="preserve">
+          <source>Lead card</source>
+          <target state="new">Salida</target>
+        </trans-unit>
+        <trans-unit id="ManualHandEntryCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Allow manual hand record entry</source>
+          <target state="new">Permitir entrada manual de registros</target>
+        </trans-unit>
+        <trans-unit id="MasterTableForTimerCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Use table 1 as master table for round timer</source>
+          <target state="new">Utilice la mesa 1 como mesa maestra para el cronómetro redondo</target>
+        </trans-unit>
+        <trans-unit id="MinutesPerBoardLabel.Text" translate="yes" xml:space="preserve">
+          <source>Minutes per board</source>
+          <target state="new">minutos por tablilla</target>
+        </trans-unit>
+        <trans-unit id="ModePersonalRadioButton.Text" translate="yes" xml:space="preserve">
+          <source>Personal - devices move with players</source>
+          <target state="new">Personal - los dispositivos se mueven con los jugadores</target>
+        </trans-unit>
+        <trans-unit id="ModeScorerRadioButton.Text" translate="yes" xml:space="preserve">
+          <source>Scorer - select scorer each round</source>
+          <target state="new">Tanteador - seleccione el tanteador en cada ronda</target>
+        </trans-unit>
+        <trans-unit id="ModeTraditionalRadioButton.Text" translate="yes" xml:space="preserve">
+          <source>Traditional - 1 device per table</source>
+          <target state="new">Tradicional - 1 dispositivo por mesa</target>
+        </trans-unit>
+        <trans-unit id="NameSourceCombobox.Items" translate="yes" xml:space="preserve">
+          <source>Internal database</source>
+          <target state="new">Base de datos interna</target>
+        </trans-unit>
+        <trans-unit id="NameSourceCombobox.Items1" translate="yes" xml:space="preserve">
+          <source>External database</source>
+          <target state="new">Base de datos externa</target>
+        </trans-unit>
+        <trans-unit id="NameSourceCombobox.Items2" translate="yes" xml:space="preserve">
+          <source>No name source</source>
+          <target state="new">Sin fuente de nombres</target>
+        </trans-unit>
+        <trans-unit id="NameSourceCombobox.Items3" translate="yes" xml:space="preserve">
+          <source>Internal database first, then external</source>
+          <target state="new">Base de datos interna primero, luego externa</target>
+        </trans-unit>
+        <trans-unit id="NumberEntryEachRoundCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Player ID entry each round</source>
+          <target state="new">Entrada del ID de jugador en cada ronda</target>
+        </trans-unit>
+        <trans-unit id="PlayersGroup.Text" translate="yes" xml:space="preserve">
+          <source>Player names/IDs</source>
+          <target state="new">Nombres/IDs de jugadores</target>
+        </trans-unit>
+        <trans-unit id="RankingListGroup.Text" translate="yes" xml:space="preserve">
+          <source>Ranking list</source>
+          <target state="new">Listado de clasificación</target>
+        </trans-unit>
+        <trans-unit id="RoundTimerGroupBox.Text" translate="yes" xml:space="preserve">
+          <source>Round timer</source>
+          <target state="new">Reloj de ronda</target>
+        </trans-unit>
+        <trans-unit id="SaveButton.Text" translate="yes" xml:space="preserve">
+          <source>Save and close</source>
+          <target state="new">Guardar y cerrar</target>
+        </trans-unit>
+        <trans-unit id="ShowHandRecordCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Show hand record</source>
+          <target state="new">Mostrar registro de la mano</target>
+        </trans-unit>
+        <trans-unit id="ShowPercentageCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Show percentage on traveller</source>
+          <target state="new">Mostrar porcentaje sobre el viajero</target>
+        </trans-unit>
+        <trans-unit id="ShowRankingCombobox.Items" translate="yes" xml:space="preserve">
+          <source>Don't show</source>
+          <target state="new">No mostrar</target>
+        </trans-unit>
+        <trans-unit id="ShowRankingCombobox.Items1" translate="yes" xml:space="preserve">
+          <source>Show after each round</source>
+          <target state="new">Mostrar después de cada ronda</target>
+        </trans-unit>
+        <trans-unit id="ShowRankingCombobox.Items2" translate="yes" xml:space="preserve">
+          <source>Show at end of session</source>
+          <target state="new">Mostrar al final de la sesión</target>
+        </trans-unit>
+        <trans-unit id="ShowTimerCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Show round timer</source>
+          <target state="new">Mostrar reloj de ronda</target>
+        </trans-unit>
+        <trans-unit id="ShowTravellerCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Show traveller</source>
+          <target state="new">Mostrar viajero</target>
+        </trans-unit>
+        <trans-unit id="SplashScreenCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Show splash screen on startup</source>
+          <target state="new">Mostrar pantalla de presentación al inicio</target>
+        </trans-unit>
+        <trans-unit id="SplashScreenGroupBox.Text" translate="yes" xml:space="preserve">
+          <source>Splash screen</source>
+          <target state="new">Pantalla de presentación</target>
+        </trans-unit>
+        <trans-unit id="SuppressRankingListFirstXLabel.Text" translate="yes" xml:space="preserve">
+          <source>Don't show ranking list for first x rounds</source>
+          <target state="new">No mostrar el listado de clasificación para las x rondas primeras</target>
+        </trans-unit>
+        <trans-unit id="SuppressRankingListLastXLabel.Text" translate="yes" xml:space="preserve">
+          <source>Don't show ranking list for last x rounds</source>
+          <target state="new">No mostrar el listado de clasificación para las x rondas finales</target>
+        </trans-unit>
+        <trans-unit id="TabletMovesGroupBox.Text" translate="yes" xml:space="preserve">
+          <source>Table-top device mode</source>
+          <target state="new">Modo de dispositivo de mesa</target>
+        </trans-unit>
+        <trans-unit id="TravellerGroup.Text" translate="yes" xml:space="preserve">
+          <source>Traveller</source>
+          <target state="new">Viajero de la mano</target>
+        </trans-unit>
+        <trans-unit id="ValidateLeadCardCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Validate lead card</source>
+          <target state="new">Validar salida</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

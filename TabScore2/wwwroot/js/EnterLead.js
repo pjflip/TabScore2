@@ -96,7 +96,7 @@ function OKButtonClick() {
     if (document.getElementById("OKButton").disabled) return;
     if (!isSubmitted) {
         isSubmitted = true;
-        location.href = urlOKButtonClick + '?card=' + suit + card;
+        location.href = urlOKButtonClick + '&card=' + suit + card;
     }
 }
 

@@ -1,37 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model TabScore2.Models.SelectDirectionModel
-
-<div class="row mt-4">
-    <div class="col-12 text-center">
-        <h2>
-            @localizer["SelectDirection"]
-        </h2>
-    </div>
-</div>
-
-@if (!Model.NorthSouthMissing)
-{
-    <div class="row">
-        <div class="col-12 text-center">
-            <button id="dNorth" class="btn btn-secondary btn-lg m-1" style="width:8em" ontouchstart="touchAvailable = true; selectDirection('North')" onclick="if (!touchAvailable) selectDirection('North')">
-                @localizer["North"]/@localizer["South"]
-            </button>
-        </div>
-    </div>
-}
-
-@if (!Model.EastWestMissing)
-{
-    <div class="row">
-        <div class="col-12 text-center">
-            <button id="dEast" class="btn btn-secondary btn-lg m-1" style="width:8em" ontouchstart="touchAvailable = true; selectDirection('East')" onclick="if (!touchAvailable) selectDirection('East')">
-                @localizer["East"]/@localizer["West"]
-            </button>
-        </div>
-    </div>
-}
+@model SelectDirectionModel
 
 @if (Model.Confirm)
 {
@@ -69,6 +39,36 @@
             }
         }
     </script>
+}
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <h2>
+            @localizer["SelectDirection"]
+        </h2>
+    </div>
+</div>
+
+@if (!Model.NorthSouthMissing)
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <button id="dNorth" class="btn btn-secondary btn-lg m-1" style="width:8em" ontouchstart="touchAvailable = true; selectDirection('North')" onclick="if (!touchAvailable) selectDirection('North')">
+                @localizer["North"]/@localizer["South"]
+            </button>
+        </div>
+    </div>
+}
+
+@if (!Model.EastWestMissing)
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <button id="dEast" class="btn btn-secondary btn-lg m-1" style="width:8em" ontouchstart="touchAvailable = true; selectDirection('East')" onclick="if (!touchAvailable) selectDirection('East')">
+                @localizer["East"]/@localizer["West"]
+            </button>
+        </div>
+    </div>
 }
 
 <script>

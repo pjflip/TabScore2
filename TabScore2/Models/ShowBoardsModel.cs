@@ -9,6 +9,5 @@ namespace TabScore2.Models
     {
         public bool GotAllResults { get; set; } = true;
         public bool ShowViewButton { get; private set; } = showViewButton;
-        public string Message { get; set; } = string.Empty;
     }
 }

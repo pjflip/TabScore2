@@ -3,19 +3,19 @@
 
 using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using TabScore2.UtilityServices;
 
 namespace TabScore2.Controllers
 {
-    public class EnterHandRecordController(IDatabase iDatabase, IAppData iAppData, IUtilities iUtilities, ISettings iSettings) : Controller
+    public class EnterHandRecordController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index(int boardNumber)
@@ -37,8 +37,8 @@ namespace TabScore2.Controllers
             EnterHandRecordModel enterHandRecordModel = new(boardNumber);
             
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("EnterHandRecord", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["Title"] = busLogic.Title("EnterHandRecord", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             return View(enterHandRecordModel);
         }

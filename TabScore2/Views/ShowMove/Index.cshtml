@@ -1,7 +1,35 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model TabScore2.Models.ShowMoveModel
+@model ShowMoveModel
+
+@if (Model.TableNotReadyNumber > 0)
+{
+    <div id="newTableNotReadyModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <p>@localizer["ErrorTableNotReady1"] @Model.TableNotReadyNumber.ToString() @localizer["ErrorTableNotReady2"]</p>
+                </div>
+                <div class="modal-footer" style="justify-content:space-between">
+                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
+                        @localizer["OK"] <span class="icon-times-circle"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var newTableNotReadyModal = new bootstrap.Modal(document.getElementById("newTableNotReadyModal"), { backdrop: 'static' });
+        newTableNotReadyModal.show();
+    </script>
+}
 
 <div class="row mt-4">
     <div class="col-12 text-center">
@@ -96,7 +124,7 @@
     </div>
 }
 
-@if (Model.TabletDevicesPerTable > 1)
+@if (Model.DevicesPerTable > 1)
 {
     <div class="row mt-4">
         <div class="col-2">
@@ -118,34 +146,6 @@
         <div class="col-2">
         </div>
     </div>
-}
-
-@if (Model.TableNotReadyNumber > 0)
-{
-    <div id="newTableNotReadyModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header text-danger">
-                    <p class="modal-title text-center">
-                        <h3>@localizer["Warning"]</h3>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p>@localizer["ErrorTableNotReady1"] @Model.TableNotReadyNumber.ToString() @localizer["ErrorTableNotReady2"]</p>
-                </div>
-                <div class="modal-footer" style="justify-content:space-between">
-                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
-                        @localizer["OK"] <span class="icon-times-circle"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var newTableNotReadyModal = new bootstrap.Modal(document.getElementById("newTableNotReadyModal"), { backdrop: 'static' });
-        newTableNotReadyModal.show();
-    </script>
 }
 
 <script>

@@ -222,12 +222,6 @@
   <data name="SuppressRankingListLastXLabel.Text" xml:space="preserve">
     <value>Toon geen ranglijst voor de laatste x rondes</value>
   </data>
-  <data name="TabletModePersonalRadioButton.Text" xml:space="preserve">
-    <value>Persoonlijke modus - apparaat blijft bij spelers</value>
-  </data>
-  <data name="TabletModeTraditionalRadioButton.Text" xml:space="preserve">
-    <value>Tafelmodus - 1 apparaat per tafel</value>
-  </data>
   <data name="TabletMovesGroupBox.Text" xml:space="preserve">
     <value>Apparaatmodus</value>
   </data>
@@ -243,7 +237,16 @@
   <data name="SplashScreenCheckbox.Text" xml:space="preserve">
     <value>Opstartscherm weergeven bij opstarten</value>
   </data>
-  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
-    <value>Gebruik Tafel 1 als master om de rondetimer te starten</value>
+  <data name="ModePersonalRadioButton.Text" xml:space="preserve">
+    <value>Persoonlijk - apparaten bewegen met spelers mee</value>
+  </data>
+  <data name="ModeTraditionalRadioButton.Text" xml:space="preserve">
+    <value>Traditioneel - 1 apparaat per tafel</value>
+  </data>
+  <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
+    <value>Gebruik tabel 1 als hoofdtabel voor de rondetimer</value>
+  </data>
+  <data name="ModeScorerRadioButton.Text" xml:space="preserve">
+    <value>Scorer - selecteer elke ronde de scorer</value>
   </data>
 </root>

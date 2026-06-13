@@ -3,18 +3,18 @@
 
 using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using TabScore2.UtilityServices;
 
 namespace TabScore2.Controllers
 {
-    public class ShowMoveController(IDatabase iDatabase, IUtilities iUtilities, IAppData iAppData, ISettings iSettings) : Controller
+    public class ShowMoveController(IDatabase iDatabase, IBusLogic iBusLogic, IAppData iAppData, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
 
@@ -41,30 +41,16 @@ namespace TabScore2.Controllers
                 TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                 if (tableStatus.RoundNumber < newRoundNumber)
                 {
-                    // No tablet device has yet advanced this table to the next round, so show that this one is ready to do so
-                    switch (deviceStatus.Direction)
-                    {
-                        case Direction.North:
-                            tableStatus.ReadyForNextRoundNorth = true;
-                            break;
-                        case Direction.South:
-                            tableStatus.ReadyForNextRoundSouth = true;
-                            break;
-                        case Direction.East:
-                            tableStatus.ReadyForNextRoundEast = true;
-                            break;
-                        case Direction.West:
-                            tableStatus.ReadyForNextRoundWest = true;
-                            break;
-                    }
+                    // No device has yet advanced this table to the next round, so show that this one is ready to do so
+                    deviceStatus.ReadyForNextRound = true;
                 }
             }
 
-            ShowMoveModel showMoveModel = utilities.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
+            ShowMoveModel showMoveModel = busLogic.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("ShowMove", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.Location, deviceStatus);
+            ViewData["Title"] = busLogic.Title("ShowMove", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
 
             return View(showMoveModel);
@@ -76,60 +62,31 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            if (deviceStatus.DevicesPerTable > 1)  // Tablet devices are moving, so need to check if new table is ready
+            if (deviceStatus.DevicesPerTable > 1)  // Devices are moving, so need to check if new table is ready
             {
-                // Get the move for this tablet device
+                // Get the move for this device
                 List<Round> roundsList = database.GetRoundsList(deviceStatus.SectionId, newRoundNumber);
-                Move move = utilities.GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.PairNumber, deviceStatus.Direction);
+                Move move = busLogic.GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction);
 
                 if (move.NewTableNumber == 0)  // Move is to phantom table, so update and go straight to RoundInfo
                 {
-                    appData.UpdateDeviceStatus(deviceNumber, 0, newRoundNumber, Direction.Sitout);
+                    appData.UpdateDeviceStatus(deviceStatus, 0, newRoundNumber, Direction.Sitout);
                     HttpContext.Session.SetInt32("TableNumber", 0);
                     HttpContext.Session.SetString("Direction", Direction.Sitout.ToString());
                     return RedirectToAction("Index", "ShowRoundInfo");
                 }
 
-                // Check if the new table (the one we're trying to move to) is ready.  Expanded code here to make it easier to understand
-                bool newTableReady;
-                TableStatus newTableStatus = appData.GetTableStatus(deviceStatus.SectionId, move.NewTableNumber);
-                if (newTableStatus.RoundNumber == newRoundNumber)
+                if (!appData.IsTableReadyForNextRound(deviceStatus.SectionId, move.NewTableNumber, deviceStatus.RoundNumber))
                 {
-                    newTableReady = true;  // New table has already been advanced to next round by another tablet device, so is ready
-                }
-                else if (newTableStatus.RoundNumber < newRoundNumber - 1)
-                {
-                    newTableReady = false;  // New table hasn't yet reached the previous round (unlikely but possible)
-                }
-                else
-                {
-                    // New table is on the previous round
-                    // It is ready for the move if all tablet device locations are ready.  Sitout locations were set to 'ready' previously 
-                    if (deviceStatus.DevicesPerTable == 2 && newTableStatus.ReadyForNextRoundNorth && newTableStatus.ReadyForNextRoundEast)
-                    {
-                        newTableReady = true;
-                    }
-                    else if (deviceStatus.DevicesPerTable == 4 && newTableStatus.ReadyForNextRoundNorth && newTableStatus.ReadyForNextRoundSouth && newTableStatus.ReadyForNextRoundEast && newTableStatus.ReadyForNextRoundWest)
-                    {
-                        newTableReady = true;
-                    }
-                    else
-                    {
-                        newTableReady = false;
-                    }
-                }
-
-                if (newTableReady)  // Reset tablet device and table statuses for new round, and update session state
-                {
-                    appData.UpdateDeviceStatus(deviceNumber, move.NewTableNumber, newRoundNumber, move.NewDirection);
-                    appData.UpdateTableStatus(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber);
-                    HttpContext.Session.SetInt32("TableNumber", move.NewTableNumber);
-                    HttpContext.Session.SetString("Direction", move.NewDirection.ToString());
-                }
-                else  // Go back and wait
-                {
+                    // If new table not ready, go back and wait
                     return RedirectToAction("Index", "ShowMove", new { newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
                 }
+
+                // Reset tablet device and table statuses for new round, and update session state
+                appData.UpdateDeviceStatus(deviceStatus, move.NewTableNumber, newRoundNumber, move.NewDirection);
+                appData.UpdateTableStatus(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber);
+                HttpContext.Session.SetInt32("TableNumber", move.NewTableNumber);
+                HttpContext.Session.SetString("Direction", move.NewDirection.ToString());
             }
             else  // Tablet device not moving and is the only tablet device at this table
             {
@@ -139,6 +96,7 @@ namespace TabScore2.Controllers
 
             // Refresh settings for the start of the round.  Only done once per round.
             database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);
+                
             return RedirectToAction("Index", "ShowPlayerIds");
         }
     }

@@ -652,7 +652,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             return new InitializeReturnMessage() { ReturnMessage = string.Empty, IsIndividual = isIndividual };
         }
 
-        public void WebappInitialize(WebappInitializeMessage message)
+        public void WebappInitialize()
         {
             // Called only once when the webapp is first started.  It populates the static list of sections
             sectionsList.Clear();

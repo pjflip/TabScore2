@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
 using TabScore2.DataServices;
+using TabScore2.Globals;
 
 namespace TabScore2.Forms
 {
@@ -37,8 +38,9 @@ namespace TabScore2.Forms
             EnterResultsMethodCombobox.SelectedIndex = settings.EnterResultsMethod;
             ManualHandEntryCheckbox.Checked = settings.ManualHandRecordEntry;
 
-            TabletModePersonalRadioButton.Checked = settings.DevicesMove;
-            TabletModeTraditionalRadioButton.Checked = !settings.DevicesMove;
+            ModeTraditionalRadioButton.Checked = settings.Mode == Mode.Traditional;
+            ModePersonalRadioButton.Checked = settings.Mode == Mode.Personal;
+            ModeScorerRadioButton.Checked = settings.Mode == Mode.Scorer;
             FromPerspectiveOfCombobox.SelectedIndex = fromDirection.FindIndex(x => x == settings.ShowHandRecordFromDirection);
             ShowTimerCheckbox.Checked = settings.ShowTimer;
             MinutesPerBoardNud.Value = Convert.ToDecimal(settings.SecondsPerBoard) / 60;
@@ -79,7 +81,7 @@ namespace TabScore2.Forms
             settings.EnterResultsMethod = settings.DefaultEnterResultsMethod = EnterResultsMethodCombobox.SelectedIndex;
             settings.ManualHandRecordEntry = settings.DefaultManualHandRecordEntry = ManualHandEntryCheckbox.Checked;
 
-            settings.DevicesMove = TabletModePersonalRadioButton.Checked;
+            settings.Mode = ModeTraditionalRadioButton.Checked ? Mode.Traditional : ModePersonalRadioButton.Checked ? Mode.Personal : Mode.Scorer;
             settings.ShowHandRecordFromDirection = fromDirection[FromPerspectiveOfCombobox.SelectedIndex];
             settings.ShowTimer = ShowTimerCheckbox.Checked;
             settings.SecondsPerBoard = Convert.ToInt32(MinutesPerBoardNud.Value * 60);

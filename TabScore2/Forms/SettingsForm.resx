@@ -654,59 +654,92 @@
   <data name="&gt;&gt;EnterResultsMethodGroup.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="TabletModePersonalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="ModeScorerRadioButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
-  <data name="TabletModePersonalRadioButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 49</value>
+  <data name="ModeScorerRadioButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="TabletModePersonalRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="ModeScorerRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 84</value>
+  </data>
+  <data name="ModeScorerRadioButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>432, 24</value>
   </data>
-  <data name="TabletModePersonalRadioButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+  <data name="ModeScorerRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
-  <data name="TabletModePersonalRadioButton.Text" xml:space="preserve">
-    <value>Personal - tablets move with players</value>
+  <data name="ModeScorerRadioButton.Text" xml:space="preserve">
+    <value>Scorer - select scorer each round</value>
   </data>
-  <data name="&gt;&gt;TabletModePersonalRadioButton.Name" xml:space="preserve">
-    <value>TabletModePersonalRadioButton</value>
+  <data name="&gt;&gt;ModeScorerRadioButton.Name" xml:space="preserve">
+    <value>ModeScorerRadioButton</value>
   </data>
-  <data name="&gt;&gt;TabletModePersonalRadioButton.Type" xml:space="preserve">
+  <data name="&gt;&gt;ModeScorerRadioButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TabletModePersonalRadioButton.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ModeScorerRadioButton.Parent" xml:space="preserve">
     <value>TabletMovesGroupBox</value>
   </data>
-  <data name="&gt;&gt;TabletModePersonalRadioButton.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;ModeScorerRadioButton.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="TabletModeTraditionalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="ModePersonalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
-  <data name="TabletModeTraditionalRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="ModePersonalRadioButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ModePersonalRadioButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 54</value>
+  </data>
+  <data name="ModePersonalRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>432, 24</value>
+  </data>
+  <data name="ModePersonalRadioButton.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="ModePersonalRadioButton.Text" xml:space="preserve">
+    <value>Personal - devices move with players</value>
+  </data>
+  <data name="&gt;&gt;ModePersonalRadioButton.Name" xml:space="preserve">
+    <value>ModePersonalRadioButton</value>
+  </data>
+  <data name="&gt;&gt;ModePersonalRadioButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ModePersonalRadioButton.Parent" xml:space="preserve">
+    <value>TabletMovesGroupBox</value>
+  </data>
+  <data name="&gt;&gt;ModePersonalRadioButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="ModeTraditionalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="ModeTraditionalRadioButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 24</value>
   </data>
-  <data name="TabletModeTraditionalRadioButton.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="ModeTraditionalRadioButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>432, 24</value>
   </data>
-  <data name="TabletModeTraditionalRadioButton.TabIndex" type="System.Int32, mscorlib">
+  <data name="ModeTraditionalRadioButton.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="TabletModeTraditionalRadioButton.Text" xml:space="preserve">
-    <value>Traditional - 1 tablet per table</value>
+  <data name="ModeTraditionalRadioButton.Text" xml:space="preserve">
+    <value>Traditional - 1 device per table</value>
   </data>
-  <data name="&gt;&gt;TabletModeTraditionalRadioButton.Name" xml:space="preserve">
-    <value>TabletModeTraditionalRadioButton</value>
+  <data name="&gt;&gt;ModeTraditionalRadioButton.Name" xml:space="preserve">
+    <value>ModeTraditionalRadioButton</value>
   </data>
-  <data name="&gt;&gt;TabletModeTraditionalRadioButton.Type" xml:space="preserve">
+  <data name="&gt;&gt;ModeTraditionalRadioButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TabletModeTraditionalRadioButton.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ModeTraditionalRadioButton.Parent" xml:space="preserve">
     <value>TabletMovesGroupBox</value>
   </data>
-  <data name="&gt;&gt;TabletModeTraditionalRadioButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;ModeTraditionalRadioButton.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="TabletMovesGroupBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9.75pt, style=Bold</value>
@@ -715,7 +748,7 @@
     <value>396, 224</value>
   </data>
   <data name="TabletMovesGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>444, 80</value>
+    <value>444, 114</value>
   </data>
   <data name="TabletMovesGroupBox.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -735,34 +768,34 @@
   <data name="&gt;&gt;TabletMovesGroupBox.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="TimerMasterCheckbox.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="MasterTableForTimerCheckbox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
-  <data name="TimerMasterCheckbox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="MasterTableForTimerCheckbox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="TimerMasterCheckbox.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="MasterTableForTimerCheckbox.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 101</value>
   </data>
-  <data name="TimerMasterCheckbox.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="MasterTableForTimerCheckbox.Size" type="System.Drawing.Size, System.Drawing">
     <value>355, 24</value>
   </data>
-  <data name="TimerMasterCheckbox.TabIndex" type="System.Int32, mscorlib">
+  <data name="MasterTableForTimerCheckbox.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
-    <value>Use Table 1 as master to start round timer</value>
+  <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
+    <value>Use table 1 as master table for round timer</value>
   </data>
-  <data name="&gt;&gt;TimerMasterCheckbox.Name" xml:space="preserve">
-    <value>TimerMasterCheckbox</value>
+  <data name="&gt;&gt;MasterTableForTimerCheckbox.Name" xml:space="preserve">
+    <value>MasterTableForTimerCheckbox</value>
   </data>
-  <data name="&gt;&gt;TimerMasterCheckbox.Type" xml:space="preserve">
+  <data name="&gt;&gt;MasterTableForTimerCheckbox.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TimerMasterCheckbox.Parent" xml:space="preserve">
+  <data name="&gt;&gt;MasterTableForTimerCheckbox.Parent" xml:space="preserve">
     <value>RoundTimerGroupBox</value>
   </data>
-  <data name="&gt;&gt;TimerMasterCheckbox.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;MasterTableForTimerCheckbox.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="AdditionalMinutesPerRoundLabel.Font" type="System.Drawing.Font, System.Drawing">
@@ -1108,7 +1141,7 @@
     <value>NoControl</value>
   </data>
   <data name="SplashScreenCheckbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 24</value>
+    <value>6, 22</value>
   </data>
   <data name="SplashScreenCheckbox.Size" type="System.Drawing.Size, System.Drawing">
     <value>355, 24</value>
@@ -1135,7 +1168,7 @@
     <value>Segoe UI, 9.75pt, style=Bold</value>
   </data>
   <data name="SplashScreenGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>396, 313</value>
+    <value>396, 349</value>
   </data>
   <data name="SplashScreenGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>445, 52</value>

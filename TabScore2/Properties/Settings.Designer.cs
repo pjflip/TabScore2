@@ -25,13 +25,13 @@ namespace TabScore2.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DevicesMove {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Mode {
             get {
-                return ((bool)(this["DevicesMove"]));
+                return ((int)(this["Mode"]));
             }
             set {
-                this["DevicesMove"] = value;
+                this["Mode"] = value;
             }
         }
         

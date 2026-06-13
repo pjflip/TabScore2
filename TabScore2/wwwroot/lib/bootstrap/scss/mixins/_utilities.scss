@@ -1,5 +1,5 @@
 // Utility generator
-// Used to generate utilities & print utilities
+// Used to generate busLogic & print busLogic
 @mixin generate-utility($utility, $infix: "", $is-rfs-media-query: false) {
   $values: map-get($utility, values);
 
@@ -71,7 +71,7 @@
                 --#{$prefix}#{$local-var}: #{$variable};
               }
             }
-            #{$property}: $value if($enable-important-utilities, !important, null);
+            #{$property}: $value if($enable-important-busLogic, !important, null);
           }
         }
 
@@ -83,7 +83,7 @@
                   --#{$prefix}#{$local-var}: #{$variable};
                 }
               }
-              #{$property}: $value if($enable-important-utilities, !important, null);
+              #{$property}: $value if($enable-important-busLogic, !important, null);
             }
           }
         }

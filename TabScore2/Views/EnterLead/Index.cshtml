@@ -1,7 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model TabScore2.Models.EnterContractModel
+@model EnterContractModel
 
 <style>
     .btn-suit {
@@ -9,25 +9,33 @@
     }
 </style>
 
-<div id="leadNoMatchModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-primary">
-                <p class="modal-title text-center">
-                    <h3>@localizer["Warning"]</h3>
-                </p>
-            </div>
-            <div class="modal-body">
-                <p>@localizer["LeadNoMatch"]</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
-                    @localizer["OK"] <span class="icon-check-circle"></span>
-                </button>
+@if (Model.ShowValidateLeadWarning)
+{
+    <div id="leadNoMatchModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-primary">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <p>@localizer["LeadNoMatch"]</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
+                        @localizer["OK"] <span class="icon-check-circle"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    
+    <script>
+        var leadNoMatchModal = new bootstrap.Modal(document.getElementById("leadNoMatchModal"), { backdrop: 'static' })
+        leadNoMatchModal.show()
+    </script>
+}
 
 <div class="row mt-4">
     <div class="col-12 text-center p-0">
@@ -116,7 +124,7 @@
     </div>
 </div>
 
-@if (Model.LeadValidation != TabScore2.Globals.LeadValidationOptions.Validate)
+@if (!Model.ValidateLead)
 {
     <div class="row mt-2">
         <div class="col-12 text-center p-0">
@@ -127,17 +135,9 @@
     </div>
 }
 
-@if (Model.LeadValidation == TabScore2.Globals.LeadValidationOptions.Warning)
-{
-    <script>
-        var leadNoMatchModal = new bootstrap.Modal(document.getElementById("leadNoMatchModal"), { backdrop: 'static' })
-        leadNoMatchModal.show()
-    </script>
-}
-
 <script>
     var leadCard = "@Model.LeadCard";
-    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterLead")';
+    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterLead", new { validateLead = Model.ValidateLead })';
     var urlEnterContract = '@Url.Action("Index", "EnterContract")?boardNumber=@Model.BoardNumber';
 </script>
 <script src="~/js/EnterLead.js"></script>

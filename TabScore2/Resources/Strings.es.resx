@@ -244,7 +244,7 @@
   <data name="View" xml:space="preserve">
     <value>Mirar</value>
   </data>
-  <data name="ErrorWaitResults" xml:space="preserve">
+  <data name="ErrorWaitAllResults" xml:space="preserve">
     <value>Espere hasta que haya resultados introducidos ​​​​para cada tablilla</value>
   </data>
   <data name="ErrorWaitResult" xml:space="preserve">
@@ -298,17 +298,8 @@
   <data name="WaitNextTable" xml:space="preserve">
     <value>Espere hasta que el DT llame para moverse y luego cambie a la siguiente mesa antes de presionar OK</value>
   </data>
-  <data name="ErrorWaitAllIDs" xml:space="preserve">
-    <value>Espere hasta que se hayan introducido todos los ID de jugadores en esta mesa</value>
-  </data>
-  <data name="ErrorNotAllIDs" xml:space="preserve">
-    <value>Seleccione un ID o ´Desconocido´para cada jugador</value>
-  </data>
   <data name="EnterEditPlayerIds" xml:space="preserve">
     <value>Introducir/editar ID de jugador</value>
-  </data>
-  <data name="NeedAllIDs" xml:space="preserve">
-    <value>Introduce todas los ID de los jugadores antes de presionar OK</value>
   </data>
   <data name="RankingList" xml:space="preserve">
     <value>Listado de clasificación</value>
@@ -507,5 +498,44 @@
   </data>
   <data name="BoardsStay" xml:space="preserve">
     <value>Déjelo en esta mesa</value>
+  </data>
+  <data name="WarningTableSelect1" xml:space="preserve">
+    <value>Estás intentando registrar este dispositivo en Table</value>
+  </data>
+  <data name="WarningTableSelect2" xml:space="preserve">
+    <value>. Por favor confirma que esto es correcto</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Seleccione el número de pareja/jugador/equipo para Norte</value>
+  </data>
+  <data name="ShowTableStatus" xml:space="preserve">
+    <value>Estado de las tablas</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ScoreThisRound" xml:space="preserve">
+    <value>Haz la puntuación en esta ronda</value>
+  </data>
+  <data name="ViewOnly" xml:space="preserve">
+    <value>Ver solo las puntuaciones</value>
+  </data>
+  <data name="ErrorScorerAlreadyExists" xml:space="preserve">
+    <value>Ya se ha seleccionado un anotador para esta ronda</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>No puede seleccionar ver solo las puntuaciones hasta que se haya seleccionado un anotador</value>
+  </data>
+  <data name="ErrorNotAllNames" xml:space="preserve">
+    <value>Asegúrese de haber ingresado una identificación o "Desconocido" para todos los jugadores en la mesa antes de presionar Aceptar</value>
   </data>
 </root>

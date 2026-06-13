@@ -43,4 +43,11 @@ namespace TabScore2.Globals
         NS,
         EW
     }
+
+    public enum Mode
+    {
+        Traditional = 0,
+        Personal = 1,
+        Scorer = 2,
+    }
 }

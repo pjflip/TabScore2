@@ -5,7 +5,7 @@ using TabScore2.Globals;
 
 namespace TabScore2.Models
 {
-    public class EnterPlayerIdModel()
+    public class EnterPlayerIdModel
     {
         public Direction Direction { get; set; } = Direction.Null;
         public string DisplayDirection { get; set; } = string.Empty;

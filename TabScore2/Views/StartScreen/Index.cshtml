@@ -1,5 +1,32 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
 Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
+@if (TempData["WarningMessage"] != null)
+{
+    <div id="warningModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <p>@localizer[TempData["WarningMessage"]!.ToString()!]</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-bs-dismiss="modal">
+                        @localizer["OK"] <span class="icon-check-circle"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var warningModal = new bootstrap.Modal(document.getElementById("warningModal"), { backdrop: 'static' });
+        warningModal.show();
+    </script>
+}
 
 <div class="row mt-5">
     <div class="col-12 text-center">
@@ -40,34 +67,6 @@ Licensed under the Apache License, Version 2.0; you may not use this file except
     <div class="col">
     </div>
 </div>
-
-@if (TempData["WarningMessage"] != null)
-{
-    <div id="warningModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header text-danger">
-                    <p class="modal-title text-center">
-                        <h3>@localizer["Warning"]</h3>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p>@localizer[TempData["WarningMessage"]!.ToString()!]</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success" style="font-size: 1.3rem" data-bs-dismiss="modal">
-                        @localizer["OK"] <span class="icon-check-circle"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var warningModal = new bootstrap.Modal(document.getElementById("warningModal"), { backdrop: 'static' });
-        warningModal.show();
-    </script>
-}
 
 <script>
     var isSubmitted = false;

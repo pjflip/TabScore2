@@ -1,7 +1,35 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model TabScore2.Models.ShowBoardsModel
+@model ShowBoardsModel
+
+@if (TempData.ContainsKey("Message") && TempData["Message"] is string message && !string.IsNullOrEmpty(message))
+{
+    <div id="noResultModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                        <p>@localizer[message]</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
+                        @localizer["OK"] <span class="icon-check-circle"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var noResultModal = new bootstrap.Modal(document.getElementById("noResultModal"), { backdrop: 'static' });
+        noResultModal.show();
+    </script>
+}
 
 <div class="row mt-4">
     <div class="col-12 text-center p-4">
@@ -41,61 +69,6 @@
             </h4>
         </div>
     </div>
-}
-
-@if (Model.Message == "NORESULT")
-{
-    <div id="noResultModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header text-danger">
-                    <p class="modal-title text-center">
-                        <h3>@localizer["Warning"]</h3>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p>@localizer["ErrorWaitResult"]</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
-                        @localizer["OK"] <span class="icon-check-circle"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var noResultModal = new bootstrap.Modal(document.getElementById("noResultModal"), { backdrop: 'static' });
-        noResultModal.show();
-    </script>
-}
-else if (Model.Message == "NOTALLRESULTS")
-{
-    <div id="notAllResultsModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header text-danger">
-                    <p class="modal-title text-center">
-                        <h3>@localizer["Warning"]</h3>
-                    </p>
-                </div>
-                <div class="modal-body">
-                    <p>@localizer["ErrorWaitResults"]</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
-                        @localizer["OK"] <span class="icon-check-circle"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var notAllResultsModal = new bootstrap.Modal(document.getElementById("notAllResultsModal"), { backdrop: 'static' });
-        notAllResultsModal.show();
-    </script>
 }
 
 <script>

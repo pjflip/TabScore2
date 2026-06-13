@@ -1,9 +1,9 @@
 ﻿// TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
-using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
@@ -12,29 +12,30 @@ using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class SelectDirectionController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings) : Controller
+    public class SelectDirectionController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
     {
+        // Only used in Personal Mode and then only for one-winner pairs or individuals (when Winners = 1).
+        // Hence DevicesPerTable is either 2 or 4 depending on whether it's pairs or individuals.
+
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
-        private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
+        private readonly IBusLogic busLogic = iBusLogic;
 
         public ActionResult Index(int sectionId, int tableNumber, Direction direction = Direction.Null, bool confirm = false)
         {
-            TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
-            Section section = database.GetSection(sectionId);
-            SelectDirectionModel selectDirectionModel = new(tableStatus, section, direction, confirm);
+            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, direction, confirm);
 
-            ViewData["Title"] = $"{section.SectionLetter}{tableNumber}: {localizer["SelectDirection"]}";
-            ViewData["Header"] = $"{localizer["Table"]} {section.SectionLetter}{tableNumber}";
+            ViewData["Title"] = $"{model.SectionLetter}{tableNumber}: {localizer["SelectDirection"]}";
+            ViewData["Header"] = $"{localizer["Table"]} {model.SectionLetter}{tableNumber}";
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
             if (settings.IsIndividual)
             {
-                return View("Individual", selectDirectionModel);
+                return View("Individual", model);
             }
             else
             {
-                return View("Pair", selectDirectionModel);
+                return View("Pair", model);
             }
         }
 
@@ -42,17 +43,20 @@ namespace TabScore2.Controllers
         {
             TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
 
-            // Check if device is already registered for this location
-            if (appData.DeviceStatusExists(sectionId, tableNumber, direction) && confirm)
+            // Try to avoid multiple registrations for the same location (unless a replacement device), so check if device is already registered
+            // Use session state to keep track of any previous location for the current device
+            int deviceNumber = appData.GetDeviceNumber(sectionId, tableNumber, direction);  // Returns -1 if not found
+            if (deviceNumber != -1 && confirm)
             {
-                // Ok to change to this tablet, so set session state
+                // A device record exists for this section/table and it's ok to change to this device, so just set/reset session state
                 HttpContext.Session.SetInt32("SectionId", sectionId);
                 HttpContext.Session.SetInt32("TableNumber", tableNumber);
                 HttpContext.Session.SetString("Direction", direction.ToString());
             }
-            else if (appData.DeviceStatusExists(sectionId, tableNumber, direction))
+            else if (deviceNumber != -1)
             {
-                // Check if section and table number matches session state - if not go back to confirm
+                // A device record exists for this section/table
+                // Check if table number matches session state - if not go back to confirm
                 int savedSectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
                 int savedTableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
                 string savedDirection = HttpContext.Session.GetString("Direction") ?? string.Empty;
@@ -64,39 +68,33 @@ namespace TabScore2.Controllers
             }
             else
             {
-                // Not on list of registered devices, so need to add it
-                int pairNumber = 0;
-                if (direction == Direction.North)
+                // No device record exists, so we need to add it
+                int pairNumber = direction switch
                 {
-                    pairNumber = tableStatus.RoundData.NumberNorth;
-                }
-                else if (direction == Direction.East)
-                {
-                    pairNumber = tableStatus.RoundData.NumberEast;
-                }
-                else if (direction == Direction.South)
-                {
-                    pairNumber = tableStatus.RoundData.NumberSouth;
-                }
-                else if (direction == Direction.West)
-                {
-                    pairNumber = tableStatus.RoundData.NumberWest;
-                }
-                appData.AddDeviceStatus(sectionId, tableNumber, pairNumber, roundNumber, direction);
+                    Direction.North => tableStatus.RoundData.NumberNorth,
+                    Direction.East => tableStatus.RoundData.NumberEast,
+                    Direction.South => tableStatus.RoundData.NumberSouth,
+                    Direction.West => tableStatus.RoundData.NumberWest,
+                    _ => 0
+                };
+
+                // One device per player or one device per pair
+                int devicesPerTable = settings.IsIndividual ? 4 : 2;
+
+                deviceNumber = appData.AddDeviceStatus(sectionId, tableNumber, pairNumber, roundNumber, direction, devicesPerTable);
                 HttpContext.Session.SetInt32("SectionId", sectionId);
                 HttpContext.Session.SetInt32("TableNumber", tableNumber);
                 HttpContext.Session.SetString("Direction", direction.ToString());
             }
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(sectionId, tableNumber, direction);
-            if (settings.IsIndividual) deviceStatus.DevicesPerTable = 4; // One device per player
-            else deviceStatus.DevicesPerTable = 2; // One device per pair
 
             // DeviceNumber is the key for identifying this particular tablet device and is used throughout the rest of the application
-            HttpContext.Session.SetInt32("DeviceNumber", appData.GetDeviceNumber(deviceStatus));
+            HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
 
-            if (direction == Direction.North && tableStatus.ReadyForNextRoundNorth || direction == Direction.East && tableStatus.ReadyForNextRoundEast || direction == Direction.South && tableStatus.ReadyForNextRoundSouth || direction == Direction.West && tableStatus.ReadyForNextRoundWest)
+            int newRoundNumber = roundNumber + 1;
+            if (appData.IsTableReadyForNextRound(sectionId, tableNumber, newRoundNumber))
             {
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber = roundNumber + 1 });
+                // The table is showing that it is ready for the new round, so the current round must have finished
+                return RedirectToAction("Index", "ShowMove", new { newRoundNumber });
             }
             else
             {

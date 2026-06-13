@@ -14,7 +14,7 @@ namespace TabScore2.Models
         public int HighBoard { get;  set; }
         public int BoardsNewTable { get; set; }
         public bool BoardsStay { get; set; }
-        public int TabletDevicesPerTable { get; set; }
+        public int DevicesPerTable { get; set; }
         public int TableNotReadyNumber { get; set; }
     }
 }

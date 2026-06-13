@@ -110,7 +110,7 @@
 
       // Gutters
       //
-      // Make use of `.g-*`, `.gx-*` or `.gy-*` utilities to change spacing between the columns.
+      // Make use of `.g-*`, `.gx-*` or `.gy-*` busLogic to change spacing between the columns.
       @each $key, $value in $gutters {
         .g#{$infix}-#{$key},
         .gx#{$infix}-#{$key} {

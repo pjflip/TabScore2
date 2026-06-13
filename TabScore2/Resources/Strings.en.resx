@@ -201,8 +201,8 @@
   <data name="ErrorNoTabScoreDBtxt" xml:space="preserve">
     <value>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</value>
   </data>
-  <data name="ErrorNotAllIDs" xml:space="preserve">
-    <value>Please select an ID or 'Unknown' for all players</value>
+  <data name="ErrorNotAllNames" xml:space="preserve">
+    <value>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</value>
   </data>
   <data name="ErrorPermanentDB" xml:space="preserve">
     <value>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScoreStarter.exe</value>
@@ -228,13 +228,10 @@
   <data name="ErrorTableRegistered3" xml:space="preserve">
     <value>is already registered.  Do not press Register unless you intend to re-register a tablet device at your current location</value>
   </data>
-  <data name="ErrorWaitAllIDs" xml:space="preserve">
-    <value>Please wait until all the player IDs for this table have been entered</value>
-  </data>
   <data name="ErrorWaitResult" xml:space="preserve">
     <value>Please wait until there is a result entered for this board</value>
   </data>
-  <data name="ErrorWaitResults" xml:space="preserve">
+  <data name="ErrorWaitAllResults" xml:space="preserve">
     <value>Please wait until there are results entered for every board</value>
   </data>
   <data name="ForSwiss" xml:space="preserve">
@@ -266,9 +263,6 @@
   </data>
   <data name="N" xml:space="preserve">
     <value>N</value>
-  </data>
-  <data name="NeedAllIDs" xml:space="preserve">
-    <value>Please enter all the player IDs before pressing OK</value>
   </data>
   <data name="North" xml:space="preserve">
     <value>North</value>
@@ -527,5 +521,41 @@
   </data>
   <data name="BoardsStay" xml:space="preserve">
     <value>Leave at this table</value>
+  </data>
+  <data name="WarningTableSelect1" xml:space="preserve">
+    <value>You are trying to register this device at Table</value>
+  </data>
+  <data name="WarningTableSelect2" xml:space="preserve">
+    <value>. Please confirm that this is correct</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Select pair/player/team number for North</value>
+  </data>
+  <data name="ShowTableStatus" xml:space="preserve">
+    <value>Status of tables</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ScoreThisRound" xml:space="preserve">
+    <value>Do the scoring this round</value>
+  </data>
+  <data name="ViewOnly" xml:space="preserve">
+    <value>Only view the scores</value>
+  </data>
+  <data name="ErrorScorerAlreadyExists" xml:space="preserve">
+    <value>A scorer has already been selected for this round</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>You cannot select to view the scores until a scorer has been selected</value>
   </data>
 </root>

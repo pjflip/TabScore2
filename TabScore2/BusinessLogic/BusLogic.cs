@@ -10,9 +10,9 @@ using TabScore2.Globals;
 using TabScore2.Models;
 using TabScore2.Resources;
 
-namespace TabScore2.UtilityServices
+namespace TabScore2.BusinessLogic
 {
-    public class Utilities(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings) : IUtilities
+    public class BusLogic(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings) : IBusLogic
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IDatabase database = iDatabase;
@@ -21,9 +21,46 @@ namespace TabScore2.UtilityServices
         private static readonly char[] arbitralScoreSeparators = ['%', '-'];
 
         // PUBLIC CLASSES TO CREATE VIEW MODELS
-        public ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus, bool showWarning)
+        public SelectSectionModel CreateSelectSectionModel() { 
+            SelectSectionModel selectSectionModel = [];
+            selectSectionModel.AddRange(database.GetSectionsList());
+            return selectSectionModel;
+        }
+
+        public SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int tableNumber, bool confirm)
         {
-            ShowPlayerIdsModel showPlayerIdsModel = new(showWarning);
+            Section section = database.GetSection(sectionId);
+            return new()
+            {
+                SectionId = section.SectionId,
+                SectionLetter = section.SectionLetter,
+                TableNumber = tableNumber,
+                NumTables = section.NumberOfTables,
+                Confirm = confirm,
+            };
+        }
+
+        public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction direction, bool confirm)
+        {
+            TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
+            Section section = database.GetSection(sectionId);
+
+            return new()
+            {
+                SectionId = sectionId,
+                SectionLetter = section.SectionLetter,
+                TableNumber = tableNumber,
+                Direction = direction,
+                RoundNumber = tableStatus.RoundNumber,
+                NorthSouthMissing = tableStatus.RoundData.NumberNorth == 0 || tableStatus.RoundData.NumberNorth == section.MissingPair,
+                EastWestMissing = tableStatus.RoundData.NumberEast == 0 || tableStatus.RoundData.NumberEast == section.MissingPair,
+                Confirm = confirm
+            };
+        }
+
+        public ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus)
+        {
+            ShowPlayerIdsModel showPlayerIdsModel = new();
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             Round round = tableStatus.RoundData;
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
@@ -60,7 +97,6 @@ namespace TabScore2.UtilityServices
             }
 
             showPlayerIdsModel.NumberOfBlankEntries = showPlayerIdsModel.FindAll(x => x.DisplayName == string.Empty).Count;
-            showPlayerIdsModel.ShowMessage = deviceStatus.DevicesPerTable == 4 || (deviceStatus.DevicesPerTable == 2 && showPlayerIdsModel.Count == 4);
             return showPlayerIdsModel;
         }
 
@@ -126,7 +162,7 @@ namespace TabScore2.UtilityServices
             showMoveModel.Direction = deviceStatus.Direction;
             showMoveModel.NewRoundNumber = newRoundNumber;
             showMoveModel.TableNotReadyNumber = tableNotReadyNumber;
-            showMoveModel.TabletDevicesPerTable = deviceStatus.DevicesPerTable;
+            showMoveModel.DevicesPerTable = deviceStatus.DevicesPerTable;
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
 
             List<Round> roundsList = database.GetRoundsList(deviceStatus.SectionId, newRoundNumber);
@@ -166,7 +202,7 @@ namespace TabScore2.UtilityServices
             }
             else  // TabletDevicesPerTable > 1, so only need move for single player/pair.  Could be at phantom table, so use deviceStatus info
             {
-                showMoveModel.Add(GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.PairNumber, deviceStatus.Direction));
+                showMoveModel.Add(GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction));
             }
 
             showMoveModel.BoardsNewTable = -999;  // Default is not to show boards move
@@ -176,16 +212,16 @@ namespace TabScore2.UtilityServices
                 TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                 showMoveModel.LowBoard = tableStatus.RoundData.LowBoard;
                 showMoveModel.HighBoard = tableStatus.RoundData.HighBoard;
-                if (showMoveModel.Direction == Direction.North || ((tableStatus.RoundData.NumberNorth == 0 || tableStatus.RoundData.NumberNorth == missingPair) && showMoveModel.Direction == Direction.East))
+                if (showMoveModel.Direction == Direction.North || (tableStatus.RoundData.NumberNorth == 0 || tableStatus.RoundData.NumberNorth == missingPair) && showMoveModel.Direction == Direction.East)
                 {
                     showMoveModel.BoardsNewTable = GetBoardsNewTableNumber(roundsList, tableStatus.TableNumber, tableStatus.RoundData.LowBoard);
-                    showMoveModel.BoardsStay = (showMoveModel.BoardsNewTable == tableStatus.TableNumber);
+                    showMoveModel.BoardsStay = showMoveModel.BoardsNewTable == tableStatus.TableNumber;
                 }
             }
             return showMoveModel;
         }
 
-        public EnterContractModel CreateEnterContractModel(Result result, bool showTricks = false, LeadValidationOptions leadValidation = LeadValidationOptions.NoWarning)
+        public EnterContractModel CreateEnterContractModel(Result result, bool showTricks = false)
         {
             EnterContractModel enterContractModel = new()
             {
@@ -196,7 +232,6 @@ namespace TabScore2.UtilityServices
                 DeclarerNSEW = result.DeclarerNSEW,
                 LeadCard = result.LeadCard,
                 TricksTaken = result.TricksTaken,
-                LeadValidation = leadValidation,
                 Score = result.Score,
                 DeclarerNSEWDisplay = localizer[result.DeclarerNSEW],
                 ContractDisplay = GetContractDisplay(result, showTricks)
@@ -307,7 +342,7 @@ namespace TabScore2.UtilityServices
                     {
                         // Apply Neuberg formula here
                         int matchpoints = 2 * resultsWithContractList.FindAll(x => x.Score < result.Score).Count + resultsWithContractList.FindAll(x => x.Score == result.Score).Count - 1;
-                        double neuberg = ((matchpoints + 1) * resultsForThisBoard / (double)scoresForThisBoard) - 1.0;
+                        double neuberg = (matchpoints + 1) * resultsForThisBoard / (double)scoresForThisBoard - 1.0;
                         travellerResult.SortPercentage = neuberg / matchPointsMax * 100.0;
                     }
 
@@ -483,7 +518,7 @@ namespace TabScore2.UtilityServices
             else  // More than one tablet device per table
             {
                 // Only need to highlight one row entry, so use NumberNorth as proxy
-                showRankingListModel.NumberNorth = deviceStatus.PairNumber;
+                showRankingListModel.NumberNorth = deviceStatus.ContestantNumber;
             }
 
             showRankingListModel.AddRange(GetRankings(deviceStatus.SectionId));
@@ -492,6 +527,18 @@ namespace TabScore2.UtilityServices
 
 
         // OTHER PUBLIC UTLITY CLASSES
+
+        public void UpdateNamesForRound(TableStatus tableStatus)
+        {
+            Names names = database.GetNamesForRound(tableStatus.SectionId, tableStatus.RoundNumber, tableStatus.RoundData.NumberNorth, tableStatus.RoundData.NumberEast, tableStatus.RoundData.NumberSouth, tableStatus.RoundData.NumberWest);
+            tableStatus.RoundData.NameNorth = names.NameNorth;
+            tableStatus.RoundData.NameEast = names.NameEast;
+            tableStatus.RoundData.NameSouth = names.NameSouth;
+            tableStatus.RoundData.NameWest = names.NameWest;
+            tableStatus.RoundData.GotAllNames = names.GotAllNames;
+        }
+
+
         public Move GetMove(List<Round> roundsList, int tableNumber, int pairNumber, Direction direction)
         {
             Move move = new(pairNumber);
@@ -506,7 +553,7 @@ namespace TabScore2.UtilityServices
                     move.NewTableNumber = round.TableNumber;
                     move.NewDirection = Direction.North;
                     move.NewDirectionString = "North";
-                    move.Stay = (move.NewTableNumber == tableNumber && direction == Direction.North);
+                    move.Stay = move.NewTableNumber == tableNumber && direction == Direction.North;
                     if (round.NumberEast == 0) move.NewTableIsSitout = true;
                     return move;
                 }
@@ -518,7 +565,7 @@ namespace TabScore2.UtilityServices
                     move.NewTableNumber = round.TableNumber;
                     move.NewDirection = Direction.South;
                     move.NewDirectionString = "South";
-                    move.Stay = (move.NewTableNumber == tableNumber && direction == Direction.South);
+                    move.Stay = move.NewTableNumber == tableNumber && direction == Direction.South;
                     if (round.NumberEast == 0) move.NewTableIsSitout = true;
                     return move;
                 }
@@ -530,7 +577,7 @@ namespace TabScore2.UtilityServices
                     move.NewTableNumber = round.TableNumber;
                     move.NewDirection = Direction.East;
                     move.NewDirectionString = "East";
-                    move.Stay = (move.NewTableNumber == tableNumber && direction == Direction.East);
+                    move.Stay = move.NewTableNumber == tableNumber && direction == Direction.East;
                     if (round.NumberNorth == 0) move.NewTableIsSitout = true;
                     return move;
                 }
@@ -542,7 +589,7 @@ namespace TabScore2.UtilityServices
                     move.NewTableNumber = round.TableNumber;
                     move.NewDirection = Direction.West;
                     move.NewDirectionString = "West";
-                    move.Stay = (move.NewTableNumber == tableNumber && direction == Direction.West);
+                    move.Stay = move.NewTableNumber == tableNumber && direction == Direction.West;
                     if (round.NumberNorth == 0) move.NewTableIsSitout = true;
                     return move;
                 }
@@ -611,7 +658,7 @@ namespace TabScore2.UtilityServices
                         move.NewDirectionString = "Sitout";
                     }
                 }
-                move.Stay = (move.NewTableNumber == tableNumber && move.NewDirection == direction);
+                move.Stay = move.NewTableNumber == tableNumber && move.NewDirection == direction;
                 return move;
             }
         }
@@ -1148,7 +1195,7 @@ namespace TabScore2.UtilityServices
                     int matchpoints = 2 * currentBoardScoresList.FindAll(x => x.Score < result.Score).Count + currentBoardScoresList.FindAll(x => x.Score == result.Score).Count - 1;
 
                     // Apply Neuberg formula here
-                    double neuberg = ((matchpoints + 1) * maxResultsPerBoard / (double)scoresForThisBoard) - 1.0;
+                    double neuberg = (matchpoints + 1) * maxResultsPerBoard / (double)scoresForThisBoard - 1.0;
                     if (result.Remarks == "Wrong direction")
                     {
                         result.MatchpointsEW = neuberg;
@@ -1353,7 +1400,7 @@ namespace TabScore2.UtilityServices
                     int matchpoints = 2 * currentBoardScoresList.FindAll(x => x.Score < result.Score).Count + currentBoardScoresList.FindAll(x => x.Score == result.Score).Count - 1;
 
                     // Apply Neuberg formula here
-                    double neuberg = ((matchpoints + 1) * maxResultsPerBoard / (double)scoresForThisBoard) - 1.0;
+                    double neuberg = (matchpoints + 1) * maxResultsPerBoard / (double)scoresForThisBoard - 1.0;
                     if (result.Remarks == "Wrong direction")
                     {
                         result.MatchpointsEW = neuberg;

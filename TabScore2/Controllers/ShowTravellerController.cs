@@ -6,15 +6,15 @@ using TabScore2.Models;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
-using TabScore2.UtilityServices;
+using TabScore2.BusinessLogic;
 
 namespace TabScore2.Controllers
 {
-    public class ShowTravellerController(IDatabase iDatabase, IAppData iAppData, IUtilities iUtilities, ISettings iSettings) : Controller
+    public class ShowTravellerController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
-        private readonly IUtilities utilities = iUtilities;
+        private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index(int boardNumber, bool fromView = false)
@@ -35,12 +35,12 @@ namespace TabScore2.Controllers
                 deviceStatus.ResultData = database.GetResult(deviceStatus.SectionId, deviceStatus.TableNumber, deviceStatus.RoundNumber, boardNumber);
             }
            
-            ShowTravellerModel showTravellerModel = utilities.CreateShowTravellerModel(deviceStatus);
+            ShowTravellerModel showTravellerModel = busLogic.CreateShowTravellerModel(deviceStatus);
             showTravellerModel.FromView = fromView;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = utilities.Title("ShowTraveller", deviceStatus);
-            ViewData["Header"] = utilities.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["Title"] = busLogic.Title("ShowTraveller", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             if (fromView)
             {
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
