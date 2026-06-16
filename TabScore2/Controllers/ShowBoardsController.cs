@@ -57,7 +57,7 @@ namespace TabScore2.Controllers
                 ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
                 ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
                 ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
-                ViewData["ButtonOptions"] = ButtonOptions.OKEnabledAndBack;
+                ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
                 return View("ViewOnly", showBoardsModel);
             }
             else

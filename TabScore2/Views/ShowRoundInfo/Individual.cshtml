@@ -17,7 +17,7 @@
                     <p>@localizer[message]</p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" data-bs-dismiss="modal">
+                    <button class="btn  btn-lg btn-success" data-bs-dismiss="modal">
                         @localizer["OK"] <span class="icon-check-circle"></span>
                     </button>
                 </div>
@@ -117,29 +117,8 @@
     </div>
 }
 
-@if (Model.ShowScorerButtons)
-{
-    <div class="row mt-4">
-        <div class="col-12 text-center">
-            <button id="scoreThisRound" class="btn btn-secondary" onclick="ScoreThisRoundButtonClick()">
-                @localizer["ScoreThisRound"]
-            </button>
-        </div>
-    </div>
-
-    <div class="row mt-2">
-        <div class="col-12 text-center">
-            <button id="viewOnly" class="btn btn-outline-secondary" onclick="ViewOnlyButtonClick()">
-                @localizer["ViewOnly"]
-            </button>
-        </div>
-    </div>
-}
-
 <script>
     var urlOKButtonClick = '@Url.Action("OKButtonClick", "ShowRoundInfo")';
     var urlBackButtonClick = '@Url.Action("BackButtonClick", "ShowRoundInfo")';
-    var urlScoreThisRoundButtonClick = '@Url.Action("ScoreThisRoundButtonClick", "ShowRoundInfo")';
-    var urlViewOnlyButtonClick = '@Url.Action("ViewOnlyButtonClick", "ShowRoundInfo")';
 </script>
 <script src="~/js/ShowRoundInfo.js"></script>

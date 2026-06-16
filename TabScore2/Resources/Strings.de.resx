@@ -552,10 +552,13 @@
   <data name="ErrorScorerAlreadyExists" xml:space="preserve">
     <value>Für diese Runde wurde bereits ein Torschütze ausgewählt</value>
   </data>
-  <data name="ErrorNoScorer" xml:space="preserve">
-    <value>Sie können nicht auswählen, nur die Ergebnisse anzuzeigen, bis ein Torschütze ausgewählt wurde</value>
-  </data>
   <data name="ErrorNotAllNames" xml:space="preserve">
     <value>Bitte stellen Sie sicher, dass für alle Spieler am Tisch eine ID oder „Unbekannt“ eingegeben wurde, bevor Sie auf „OK“ klicken</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>Sie können sich erst dann für die Anzeige der Ergebnisse entscheiden, wenn ein Punktezähler ausgewählt wurde</value>
+  </data>
+  <data name="SelectScorer" xml:space="preserve">
+    <value>Den Punktezähler wählen</value>
   </data>
 </root>

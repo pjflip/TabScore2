@@ -587,6 +587,9 @@ tablet device at your current location</value>
     <value>A scorer has already been selected for this round</value>
   </data>
   <data name="ErrorNoScorer" xml:space="preserve">
-    <value>You cannot select to view the scores until a scorer has been selected</value>
+    <value>You cannot choose just to view the scores until a scorer has been selected</value>
+  </data>
+  <data name="SelectScorer" xml:space="preserve">
+    <value>Select the scorer</value>
   </data>
 </root>

@@ -247,6 +247,6 @@
     <value>Utilice la mesa 1 como mesa maestra para el cronómetro redondo</value>
   </data>
   <data name="ModeScorerRadioButton.Text" xml:space="preserve">
-    <value>Tanteador - seleccione el tanteador en cada ronda</value>
+    <value>Anotador - seleccione el anotador en cada ronda</value>
   </data>
 </root>

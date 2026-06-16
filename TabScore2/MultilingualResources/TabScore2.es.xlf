@@ -180,16 +180,13 @@
           <target state="new">Por favor espere hasta que el Director del Torneo le indique que comience</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorNoScorer" translate="yes" xml:space="preserve">
-          <source>You cannot select to view the scores until a scorer has been selected</source>
-          <target state="new">No puede seleccionar ver solo las puntuaciones hasta que se haya seleccionado un anotador</target>
+          <source>You cannot choose just to view the scores until a scorer has been selected</source>
+          <target state="new">No puedes elegir simplemente ver las puntuaciones hasta que se haya seleccionado un anotador</target>
         </trans-unit>
         <trans-unit id="ErrorNoTabScoreDBtxt" translate="yes" xml:space="preserve">
           <source>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</source>
           <target state="new">El archivo TabScoreDB.txt no existe. Reinicie TabScoreStarter.exe</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
-        <trans-unit id="ErrorNotAllIDs" translate="yes" xml:space="preserve">
-          <source></source>
-          <target state="new"></target></trans-unit>
         <trans-unit id="ErrorNotAllNames" translate="yes" xml:space="preserve">
           <source>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</source>
           <target state="new">Asegúrese de haber ingresado una identificación o "Desconocido" para todos los jugadores en la mesa antes de presionar Aceptar</target>
@@ -426,6 +423,10 @@ tablet device at your current location</source>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>
           <target state="new">Seleccionar dirección</target>
+        </trans-unit>
+        <trans-unit id="SelectScorer" translate="yes" xml:space="preserve">
+          <source>Select the scorer</source>
+          <target state="new">Selecciona el anotador</target>
         </trans-unit>
         <trans-unit id="SelectSection" translate="yes" xml:space="preserve">
           <source>Select section</source>
@@ -679,7 +680,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="ModeScorerRadioButton.Text" translate="yes" xml:space="preserve">
           <source>Scorer - select scorer each round</source>
-          <target state="new">Tanteador - seleccione el tanteador en cada ronda</target>
+          <target state="new">Anotador - seleccione el anotador en cada ronda</target>
         </trans-unit>
         <trans-unit id="ModeTraditionalRadioButton.Text" translate="yes" xml:space="preserve">
           <source>Traditional - 1 device per table</source>

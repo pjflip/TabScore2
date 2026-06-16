@@ -552,10 +552,13 @@
   <data name="ErrorScorerAlreadyExists" xml:space="preserve">
     <value>Er is al een scorer geselecteerd voor deze ronde</value>
   </data>
-  <data name="ErrorNoScorer" xml:space="preserve">
-    <value>U kunt niet selecteren om alleen de scores te bekijken totdat er een scorer is geselecteerd</value>
-  </data>
   <data name="ErrorNotAllNames" xml:space="preserve">
     <value>Zorg ervoor dat een ID of 'Onbekend' is ingevoerd voor alle spelers aan de tafel voordat u op OK drukt</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>U kunt er niet voor kiezen alleen de scores te bekijken totdat er een scorer is geselecteerd</value>
+  </data>
+  <data name="SelectScorer" xml:space="preserve">
+    <value>Selecteer de scorer</value>
   </data>
 </root>

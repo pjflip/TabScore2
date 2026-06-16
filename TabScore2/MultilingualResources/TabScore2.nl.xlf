@@ -180,8 +180,8 @@
           <target state="new">Wacht tot de wedstrijdleider aangeeft dat gestart kan worden.</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorNoScorer" translate="yes" xml:space="preserve">
-          <source>You cannot select to view the scores until a scorer has been selected</source>
-          <target state="new">U kunt niet selecteren om alleen de scores te bekijken totdat er een scorer is geselecteerd</target>
+          <source>You cannot choose just to view the scores until a scorer has been selected</source>
+          <target state="new">U kunt er niet voor kiezen alleen de scores te bekijken totdat er een scorer is geselecteerd</target>
         </trans-unit>
         <trans-unit id="ErrorNoTabScoreDBtxt" translate="yes" xml:space="preserve">
           <source>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</source>
@@ -423,6 +423,10 @@ tablet device at your current location</source>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>
           <target state="new">Kies speelrichting</target>
+        </trans-unit>
+        <trans-unit id="SelectScorer" translate="yes" xml:space="preserve">
+          <source>Select the scorer</source>
+          <target state="new">Selecteer de scorer</target>
         </trans-unit>
         <trans-unit id="SelectSection" translate="yes" xml:space="preserve">
           <source>Select section</source>

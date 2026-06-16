@@ -7,6 +7,5 @@ namespace TabScore2.Models
 {
     public class ShowPlayerIdsModel : List<PlayerEntry>
     {
-        public int NumberOfBlankEntries { get; set; } = 0;
     }
 }

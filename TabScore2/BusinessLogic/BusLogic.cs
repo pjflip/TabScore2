@@ -60,12 +60,12 @@ namespace TabScore2.BusinessLogic
 
         public ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus)
         {
-            ShowPlayerIdsModel showPlayerIdsModel = new();
+            ShowPlayerIdsModel showPlayerIdsModel = [];
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             Round round = tableStatus.RoundData;
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
 
-            if (deviceStatus.DevicesPerTable == 1)
+            if (settings.Mode == Mode.Scorer || deviceStatus.DevicesPerTable == 1) // Scorer enters all names
             {
                 if (round.NumberNorth != 0 && round.NumberNorth != missingPair)
                 {
@@ -78,7 +78,7 @@ namespace TabScore2.BusinessLogic
                     showPlayerIdsModel.Add(CreatePlayerEntry(round, Direction.West));
                 }
             }
-            else if (deviceStatus.DevicesPerTable == 2)
+            else if (deviceStatus.DevicesPerTable == 2)  // Personal Mode and pairs, so both pairs enter their names
             {
                 if (deviceStatus.Direction == Direction.North)
                 {
@@ -91,12 +91,11 @@ namespace TabScore2.BusinessLogic
                     showPlayerIdsModel.Add(CreatePlayerEntry(round, Direction.West));
                 }
             }
-            else  // tabletDevicesPerTable == 4
+            else  // Personal Mode and individual, so all 4 players enter their own name
             {
                 showPlayerIdsModel.Add(CreatePlayerEntry(round, deviceStatus.Direction));
             }
 
-            showPlayerIdsModel.NumberOfBlankEntries = showPlayerIdsModel.FindAll(x => x.DisplayName == string.Empty).Count;
             return showPlayerIdsModel;
         }
 

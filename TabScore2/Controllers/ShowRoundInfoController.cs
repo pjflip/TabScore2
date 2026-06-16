@@ -64,13 +64,7 @@ namespace TabScore2.Controllers
                 deviceStatus.AtSitoutTable = false;
             }
 
-            if (!deviceStatus.AtSitoutTable && settings.Mode == Mode.Scorer)
-            {
-                // In Scorer Mode, we need to choose the scorer
-                ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
-                model.ShowScorerButtons = true;
-            }
-            else if (deviceStatus.RoundNumber == 1 || deviceStatus.DevicesPerTable > 1)
+            if (deviceStatus.RoundNumber == 1 || deviceStatus.DevicesPerTable > 1)
             {
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             }
@@ -119,38 +113,6 @@ namespace TabScore2.Controllers
             tableStatus.RoundNumber--;
             tableStatus.RoundData = database.GetRound(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber);
             return RedirectToAction("Index", "ShowMove", new { newRoundNumber});
-        }
-
-        public ActionResult ScoreThisRoundButtonClick()
-        {
-            int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-
-            if (appData.SetDeviceAsScorer(deviceNumber))
-            {
-                return RedirectToAction("Index", "ShowBoards");
-            }
-            else
-            {
-                TempData["Message"] = "ErrorScorerAlreadyExists";
-                return RedirectToAction("Index", "ShowRoundInfo");
-            }
-        }
-
-        public ActionResult ViewOnlyButtonClick()
-        {
-            int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-
-            if (appData.SetDeviceAsViewer(deviceNumber))
-            {
-                return RedirectToAction("Index", "ShowBoards");
-            }
-            else
-            {
-                TempData["Message"] = "ErrorNoScorer";
-                return RedirectToAction("Index", "ShowRoundInfo");
-            }
         }
     }
 }

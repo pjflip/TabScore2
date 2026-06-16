@@ -61,8 +61,8 @@ namespace TabScore2.DataServices
             }
             else
             {
-                // New table is on the current round.  It is then ready for the next round if all devices at that table have either advanced to the next round
-                // or are ready for the next round.  This means that if there are no devices at this table, then the table is automatically ready for the next round
+                // New table is on the current round.  It is then ready for the next round if all devices at the new table have either advanced to the next round
+                // or are ready for the next round.  This means that if there are no devices at the new table, then the table is automatically ready for the next round
                 return !deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == sectionId && deviceStatus.TableNumber == newTableNumber
                   && deviceStatus.RoundNumber < newRoundNumber && !deviceStatus.ReadyForNextRound);
             }
@@ -182,8 +182,8 @@ namespace TabScore2.DataServices
         {
             DeviceStatus deviceStatus = GetDeviceStatus(deviceNumber);
             bool scorerAtTable = deviceStatusList.Any(device => device.SectionId == deviceStatus.SectionId && device.TableNumber == deviceStatus.TableNumber
-              && device.RoundNumber == deviceStatus.RoundNumber && device.Scoring);
-            if (scorerAtTable) return false;  // There is already a scorer at this table, so can't set this device as Scorer
+              && device.RoundNumber == deviceStatus.RoundNumber && device.Direction != deviceStatus.Direction && device.Scoring);
+            if (scorerAtTable) return false;  // Another device is already set as Scoring at this table, so can't set this device as Scoring
             deviceStatus.Scoring = true;
             return true;
         }
@@ -192,8 +192,8 @@ namespace TabScore2.DataServices
         {
             DeviceStatus deviceStatus = GetDeviceStatus(deviceNumber);
             bool scorerAtTable = deviceStatusList.Any(device => device.SectionId == deviceStatus.SectionId && device.TableNumber == deviceStatus.TableNumber
-              && device.RoundNumber == deviceStatus.RoundNumber && device.Scoring);
-            if (!scorerAtTable) return false;  // There is no scorer at this table, so can't set this device as Viewer
+              && device.RoundNumber == deviceStatus.RoundNumber && device.Direction != deviceStatus.Direction && device.Scoring);
+            if (!scorerAtTable) return false;  // No other device is set as Scoring at this table, so can't set this device as Viewer
             return true;
         }
 

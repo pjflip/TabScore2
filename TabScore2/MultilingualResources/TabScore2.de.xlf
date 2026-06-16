@@ -180,16 +180,13 @@
           <target state="new">Bitte warten Sie, bis der Turnierleiter Sie zum Starten auffordert</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorNoScorer" translate="yes" xml:space="preserve">
-          <source>You cannot select to view the scores until a scorer has been selected</source>
-          <target state="new">Sie können nicht auswählen, nur die Ergebnisse anzuzeigen, bis ein Torschütze ausgewählt wurde</target>
+          <source>You cannot choose just to view the scores until a scorer has been selected</source>
+          <target state="new">Sie können sich erst dann für die Anzeige der Ergebnisse entscheiden, wenn ein Punktezähler ausgewählt wurde</target>
         </trans-unit>
         <trans-unit id="ErrorNoTabScoreDBtxt" translate="yes" xml:space="preserve">
           <source>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</source>
           <target state="new">Die Datei TabScoreDB.txt existiert nicht. Bitte starten Sie TabScoreStarter.exe neu</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
-        <trans-unit id="ErrorNotAllIDs" translate="yes" xml:space="preserve">
-          <source></source>
-          <target state="new"></target></trans-unit>
         <trans-unit id="ErrorNotAllNames" translate="yes" xml:space="preserve">
           <source>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</source>
           <target state="new">Bitte stellen Sie sicher, dass für alle Spieler am Tisch eine ID oder „Unbekannt“ eingegeben wurde, bevor Sie auf „OK“ klicken</target>
@@ -426,6 +423,10 @@ tablet device at your current location</source>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>
           <target state="new">Richtung wählen</target>
+        </trans-unit>
+        <trans-unit id="SelectScorer" translate="yes" xml:space="preserve">
+          <source>Select the scorer</source>
+          <target state="new">Den Punktezähler wählen</target>
         </trans-unit>
         <trans-unit id="SelectSection" translate="yes" xml:space="preserve">
           <source>Select section</source>

@@ -34,7 +34,7 @@ namespace TabScore2.Controllers
 
             ViewData["Title"] = $"{localizer["Section"]} {model.SectionLetter}: {localizer["SelectTableNumber"]}";
             ViewData["Header"] = $"{localizer["Section"]} {model.SectionLetter}";
-            ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
+            ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
             return View(model);   
         }
 

@@ -15,17 +15,3 @@ function BackButtonClick() {
         location.href = urlBackButtonClick;
     }
 }
-
-function ScoreThisRoundButtonClick() {
-    if (!isSubmitted) {
-        isSubmitted = true;
-        location.href = urlScoreThisRoundButtonClick;
-    }
-}
-
-function ViewOnlyButtonClick() {
-    if (!isSubmitted) {
-        isSubmitted = true;
-        location.href = urlViewOnlyButtonClick;
-    }
-}

@@ -19,6 +19,5 @@ namespace TabScore2.Models
         public bool NSMissing { get; set; } = false;
         public bool EWMissing { get; set; } = false;
         public int BoardsFromTable { get; set; } = -1;
-        public bool ShowScorerButtons { get; set; } = false;
     }
 }

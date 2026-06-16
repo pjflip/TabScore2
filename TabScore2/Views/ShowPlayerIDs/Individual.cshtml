@@ -6,7 +6,7 @@
 <div id="notAllNamesModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header text-primary">
+            <div class="modal-header text-danger">
                 <p class="modal-title text-center">
                     <h3>@localizer["Warning"]</h3>
                 </p>
@@ -72,7 +72,7 @@
 
     function OKButtonClick() {
         if (document.getElementById("OKButton").disabled) return;
-        if (Number(@Model.NumberOfBlankEntries) > 0) {
+        if ('@Model.Any(PlayerEntry => PlayerEntry.DisplayName == string.Empty)' === '@true') {
             notAllNamesModal.show();
         }
         else {
@@ -91,7 +91,7 @@
     }
 </script>
 
-@if (TempData.ContainsKey("ShowWarning"))
+@if (TempData.ContainsKey("ShowWarning") && TempData["Message"] is string message && !string.IsNullOrEmpty(message))
 {
     <script>
         notAllNamesModal.show();

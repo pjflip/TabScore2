@@ -532,10 +532,13 @@
   <data name="ErrorScorerAlreadyExists" xml:space="preserve">
     <value>Ya se ha seleccionado un anotador para esta ronda</value>
   </data>
-  <data name="ErrorNoScorer" xml:space="preserve">
-    <value>No puede seleccionar ver solo las puntuaciones hasta que se haya seleccionado un anotador</value>
-  </data>
   <data name="ErrorNotAllNames" xml:space="preserve">
     <value>Asegúrese de haber ingresado una identificación o "Desconocido" para todos los jugadores en la mesa antes de presionar Aceptar</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>No puedes elegir simplemente ver las puntuaciones hasta que se haya seleccionado un anotador</value>
+  </data>
+  <data name="SelectScorer" xml:space="preserve">
+    <value>Selecciona el anotador</value>
   </data>
 </root>

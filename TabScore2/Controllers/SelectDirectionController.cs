@@ -41,6 +41,7 @@ namespace TabScore2.Controllers
 
         public ActionResult OKButtonClick(int sectionId, int tableNumber, Direction direction, int roundNumber, bool confirm)
         {
+            // Get the table status, creating a new table status record if needed
             TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
 
             // Try to avoid multiple registrations for the same location (unless a replacement device), so check if device is already registered
@@ -90,11 +91,9 @@ namespace TabScore2.Controllers
             // DeviceNumber is the key for identifying this particular tablet device and is used throughout the rest of the application
             HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
 
-            int newRoundNumber = roundNumber + 1;
-            if (appData.IsTableReadyForNextRound(sectionId, tableNumber, newRoundNumber))
+            if (settings.Mode == Mode.Scorer)
             {
-                // The table is showing that it is ready for the new round, so the current round must have finished
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber });
+                return RedirectToAction("Index", "SelectScorer");
             }
             else
             {

@@ -1,7 +1,6 @@
 ﻿// TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
-using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
 using TabScore2.BusinessLogic;
 using TabScore2.Classes;
@@ -11,9 +10,8 @@ using TabScore2.Models;
 
 namespace TabScore2.Controllers
 {
-    public class ShowPlayerIdsController(IDatabase iDatabase, IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
+    public class ShowPlayerIdsController(IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
     {
-        private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
@@ -28,7 +26,7 @@ namespace TabScore2.Controllers
             // Update names from database if not done very recently
             if (deviceStatus.NamesUpdateRequired) busLogic.UpdateNamesForRound(tableStatus);
 
-            if (tableStatus.RoundData.GotAllNames && deviceStatus.RoundNumber > 1 && !settings.NumberEntryEachRound)
+            if (tableStatus.RoundData.GotAllNames && !settings.NumberEntryEachRound)
             {
                 // Player numbers not needed if all names have already been entered and names are not being updated each round
                 deviceStatus.NamesUpdateRequired = false;  // No round update required in RoundInfo as it's just been done
