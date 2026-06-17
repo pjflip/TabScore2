@@ -31,10 +31,12 @@ TabScore2 is currently limited to 4 sections (A, B, C and D in that order) and
 30 tables per section.  It can be used for pairs, teams, Swiss events, and  
 individual events (provided the scoring program supports them).
 
-TabScore2 can operate in 2 modes: Traditional Mode with one table-top device 
-per table (like Bridgemate); or Personal Mode where the table-top devices
-move with players.  Personal mode allows players to use their own tablets or 
-phones, avoiding the need for bridge clubs to invest in expensive hardware.
+TabScore2 can operate in 3 modes: Traditional Mode with one table-top device 
+per table (like Bridgemate); Personal Mode where the table-top devices
+move with players; and Scorer Mode which is similar to Personal Mode but allows
+the scorer at the table to be chosen each round.  Personal Mode and Scorer Mode
+allow players to use their own tablets or phones, avoiding the need for bridge 
+clubs to invest in expensive hardware.
 
 TabScore2 implements a range of display options which can be set by the
 scoring program, or from its Settings window.  See the User Guide for more
