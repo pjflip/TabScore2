@@ -15,13 +15,13 @@ function pollRankingListener() {
     var new_tbody = document.createElement("tbody");
     for (var i = 0; i < rankingList.length; i++) {
         var row = new_tbody.insertRow(i);
-        if (rankingList[i].pairNo == pairNS) row.className = "table-success";
-        if (rankingList[i].pairNo == pairEW) row.className = "table-warning";
+        if (rankingList[i].contestantNumber == contestantNumberNorth) row.className = "table-success";
+        if (rankingList[i].contestantNumber == contestantNumberEast) row.className = "table-warning";
         var cellRank = row.insertCell(0);
         var cellPairNumber = row.insertCell(1);
         var cellScore = row.insertCell(2);
         cellRank.innerHTML = rankingList[i].rank;
-        cellPairNumber.innerHTML = rankingList[i].pairNo;
+        cellPairNumber.innerHTML = rankingList[i].contestantNumber;
         cellScore.innerHTML = rankingList[i].score + "%";
     }
     var old_tbody = document.getElementById("tableBody");

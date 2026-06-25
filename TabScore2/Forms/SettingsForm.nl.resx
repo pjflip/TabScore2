@@ -249,4 +249,7 @@
   <data name="ModeScorerRadioButton.Text" xml:space="preserve">
     <value>Scorer - selecteer elke ronde de scorer</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Registreer u op paar-/spelernummer in plaats van op tafelnummer</value>
+  </data>
 </root>

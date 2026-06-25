@@ -13,10 +13,10 @@ namespace GrpcSharedContracts.SharedClasses
         [DataMember(Order = 3)] public int TableNumber { get; set; }
         [DataMember(Order = 4)] public int RoundNumber { get; set; }
         [DataMember(Order = 5)] public int BoardNumber { get; set; }
-        [DataMember(Order = 6)] public int NumberNorth { get; set; }
-        [DataMember(Order = 7)] public int NumberEast { get; set; }
-        [DataMember(Order = 8)] public int NumberSouth { get; set; }
-        [DataMember(Order = 9)] public int NumberWest { get; set; }
+        [DataMember(Order = 6)] public int ContestantNumberNorth { get; set; }
+        [DataMember(Order = 7)] public int ContestantNumberEast { get; set; }
+        [DataMember(Order = 8)] public int ContestantNumberSouth { get; set; }
+        [DataMember(Order = 9)] public int ContestantNumberWest { get; set; }
         [DataMember(Order = 10)] public string DeclarerNSEW { get; set; } = string.Empty;
         [DataMember(Order = 11)] public bool Vulnerable { get; set; }
         [DataMember(Order = 12)] public int ContractLevel { get; set; }

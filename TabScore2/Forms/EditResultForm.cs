@@ -35,8 +35,8 @@ namespace TabScore2.Forms
             boxTable.Text = result.TableNumber.ToString();
             boxRound.Text = result.RoundNumber.ToString();
             boxBoard.Text = result.BoardNumber.ToString();
-            boxNorth.Text = result.NumberNorth.ToString();
-            boxEast.Text = result.NumberEast.ToString();
+            boxNorth.Text = result.ContestantNumberNorth.ToString();
+            boxEast.Text = result.ContestantNumberEast.ToString();
 
             // Set up combo boxes
             if (result.ContractLevel >= 0)

@@ -33,7 +33,7 @@ namespace TabScore2.DataServices
             TableStatus? tableStatus = tableStatusList.Find(x => x.SectionId == sectionId && x.TableNumber == tableNumber);
             if (tableStatus == null)
             {
-                int roundNumber = database.GetNumberOfLastRoundWithResults(sectionId, tableNumber);
+                int roundNumber = database.GetLastRoundWithResultsForTable(sectionId, tableNumber);
                 tableStatus = new TableStatus {
                     SectionId = sectionId,
                     TableNumber = tableNumber,
@@ -92,9 +92,14 @@ namespace TabScore2.DataServices
         // DEVICESTATUS
         private static readonly List<DeviceStatus> deviceStatusList = [];
 
-        public int GetDeviceNumber(int sectionId, int tableNumber, Direction direction = Direction.North)
+        public int GetDeviceNumberByTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North)
         {
-            return deviceStatusList.FindLastIndex(x => x.SectionId == sectionId && x.TableNumber == tableNumber && x.Direction == direction);
+            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
+        }
+
+        public int GetDeviceNumberByContestant(int sectionId, int contestantNumber)
+        {
+            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.ContestantNumber == contestantNumber);
         }
 
         public DeviceStatus GetDeviceStatus(int deviceNumber)
@@ -102,10 +107,54 @@ namespace TabScore2.DataServices
             return deviceStatusList[deviceNumber];
         }
 
-        public int AddDeviceStatus(int sectionId, int tableNumber, int contestantNumber, int roundNumber, Direction direction = Direction.North, 
-          int devicesPerTable = 1)
+        public int AddDeviceStatusForTable(int sectionId, int tableNumber)
         {
+            // One device per table
+
+            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
+            database.RegisterTable(sectionId, tableNumber);
+
+            // Get the table status, creating new if required
+            TableStatus tableStatus = GetTableStatus(sectionId, tableNumber);
             string sectionLetter = database.GetSection(sectionId).SectionLetter;
+
+            deviceStatusList.Add(new()
+            {
+                SectionId = sectionId,
+                SectionLetter = sectionLetter,
+                Location = sectionLetter + tableNumber.ToString(),
+                TableNumber = tableNumber,
+                ContestantNumber = tableStatus.RoundData.ContestantNumberNorth,
+                RoundNumber = tableStatus.RoundNumber,
+                Direction = Direction.North,
+                DevicesPerTable = 1,
+                Scoring = true,
+            });
+            return deviceStatusList.Count - 1;  // Return the index of the new device status
+        }
+
+        public int AddDeviceStatusForTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North)
+        {
+            // More than one device per table.  Registering by section/table/direction 
+            
+            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
+            database.RegisterTable(sectionId, tableNumber);
+
+            // Get the table status, creating new if required
+            TableStatus tableStatus = GetTableStatus(sectionId, tableNumber);
+            string sectionLetter = database.GetSection(sectionId).SectionLetter;
+            
+            int contestantNumber = direction switch
+            {
+                Direction.North => tableStatus.RoundData.ContestantNumberNorth,
+                Direction.East => tableStatus.RoundData.ContestantNumberEast,
+                Direction.South => tableStatus.RoundData.ContestantNumberSouth,
+                Direction.West => tableStatus.RoundData.ContestantNumberWest,
+                _ => 0
+            };
+
+            // Number of devices per table depends on whether it's an individual event.  Stored in the deviceStatus (not settings) as can vary by section
+            int devicesPerTable = settings.IsIndividual ? 4 : 2;
 
             // In Traditional/Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
             bool scoring = settings.Mode == Mode.Traditional || (settings.Mode == Mode.Personal && direction == Direction.North);
@@ -117,8 +166,48 @@ namespace TabScore2.DataServices
                 Location = GetDeviceStatusLocation(sectionLetter, tableNumber, direction, devicesPerTable),
                 TableNumber = tableNumber,
                 ContestantNumber = contestantNumber,
-                RoundNumber = roundNumber,
+                RoundNumber = tableStatus.RoundNumber,
                 Direction = direction,
+                DevicesPerTable = devicesPerTable,
+                Scoring = scoring,
+            });
+            return deviceStatusList.Count - 1;  // Return the index of the new device status
+        }
+
+        public int AddDeviceStatusForContestant(int sectionId, int contestantNumber)
+        {
+            // More than one device per table.  Registering by contestant number
+
+            // Need to find a location for this contestant.  If there are already results, use the location of the last result
+            Location location = database.GetLastLocationWithResultsForContestant(sectionId, contestantNumber);
+            if (location.TableNumber == 0)
+            {
+                // No results yet, so use the contestant's starting location from the movement
+                location = database.GetStartLocationForContestant(sectionId, contestantNumber);
+            }
+
+            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
+            database.RegisterTable(sectionId, location.TableNumber);
+
+            // Create a new table status if required
+            GetTableStatus(sectionId, location.TableNumber);
+            string sectionLetter = database.GetSection(sectionId).SectionLetter;
+
+            // Number of devices per table depends on whether it's an individual event.  Stored in the deviceStatus (not settings) as can vary by section
+            int devicesPerTable = settings.IsIndividual ? 4 : 2;
+
+            // In Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
+            bool scoring = settings.Mode == Mode.Personal && location.Direction == Direction.North;
+
+            deviceStatusList.Add(new()
+            {
+                SectionId = sectionId,
+                SectionLetter = sectionLetter,
+                Location = GetDeviceStatusLocation(sectionLetter, location.TableNumber, location.Direction, devicesPerTable),
+                TableNumber = location.TableNumber,
+                ContestantNumber = contestantNumber,
+                RoundNumber = location.RoundNumber,
+                Direction = location.Direction,
                 DevicesPerTable = devicesPerTable,
                 Scoring = scoring,
             });
@@ -263,7 +352,7 @@ namespace TabScore2.DataServices
         public void AddHandEvaluation(Hand hand)
         {
             if (hand.BoardNumber == 0 || hand.NorthSpades == "###") return;  // No valid hand
-            HandEvaluation handEvaluation = new(hand.SectionId, hand.BoardNumber);
+            HandEvaluation handEvaluation = new() { SectionId = hand.SectionId, BoardNumber = hand.BoardNumber };
 
             StringBuilder pbnString = new();
             switch ((hand.BoardNumber - 1) % 4)

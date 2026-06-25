@@ -307,9 +307,6 @@
   <data name="Rank" xml:space="preserve">
     <value>Rango</value>
   </data>
-  <data name="PlayerNumber" xml:space="preserve">
-    <value>ID de jugador</value>
-  </data>
   <data name="Percentage" xml:space="preserve">
     <value>Porcentaje</value>
   </data>

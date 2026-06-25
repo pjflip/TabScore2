@@ -10,49 +10,51 @@ namespace GrpcSharedContracts
     public interface IBwsDatabaseService
     {
         // GENERAL
-        [OperationContract] InitializeReturnMessage Initialize(InitializeMessage message);
-        [OperationContract] void WebappInitialize();
-        [OperationContract] IsDatabaseConnectionOKMessage IsDatabaseConnectionOK();
+        [OperationContract] InitializeResponse Initialize(InitializeRequest request);
+        [OperationContract] ErrorResponse WebappInitialize();
+        [OperationContract] ErrorResponse CheckDatabaseConnection();
 
         // SECTION
         [OperationContract] List<Section> GetSectionsList();
-        [OperationContract] Section GetSection(SectionIdMessage message);
+        [OperationContract] Section GetSection(SectionRequest request);
 
 
         // TABLE
-        [OperationContract] void RegisterTable(SectionTableMessage message);
+        [OperationContract] void RegisterTable(SectionTableRequest request);
 
         // ROUND
-        [OperationContract] void UpdateNumberOfRoundsInSection(SectionIdMessage message);
-        [OperationContract] NumberOfLastRoundWithResultsMessage GetNumberOfLastRoundWithResults(SectionTableMessage message);
-        [OperationContract] List<Round> GetRoundsList(SectionRoundMessage message);
-        [OperationContract] Round GetRound(SectionTableRoundMessage message);
+        [OperationContract] ErrorResponse UpdateNumberOfRoundsInSection(SectionRequest request);
+        [OperationContract] RoundNumberResponse GetLastRoundWithResultsForTable(SectionTableRequest request);
+        [OperationContract] LocationResponse GetLastLocationWithResultsForContestant(SectionContestantRequest request);
+        [OperationContract] LocationResponse GetStartLocationForContestant(SectionContestantRequest request);
+        [OperationContract] RoundsListResponse GetRoundsList(SectionRoundRequest request);  // Specific round
+        [OperationContract] RoundsListResponse GetRoundsList(SectionRequest request);  // All rounds
+        [OperationContract] RoundResponse GetRound(SectionTableRoundRequest request);
 
         // RESULT = RECEIVEDDATA
-        [OperationContract] Result GetResult(SectionTableRoundBoardMessage message);
-        [OperationContract] void SetResult(Result result);
-        [OperationContract] List<Result> GetResultsList(ResultsListMessage message);
+        [OperationContract] ResultResponse GetResult(SectionTableRoundBoardRequest request);
+        [OperationContract] ErrorResponse SetResult(Result result);
+        [OperationContract] ResultsListResponse GetResultsList(ResultsListRequest request);
 
         // PLAYERNAMES
-        [OperationContract] PlayerNameMessage GetInternalPlayerName(PlayerMessage message);
+        [OperationContract] PlayerNameResponse GetInternalPlayerName(PlayerRequest request);
 
         // PLAYERNUMBERS
-        [OperationContract] void UpdatePlayer(UpdatePlayerNumberMessage message);
-        [OperationContract] Names GetNamesForRound(NamesForRoundMessage message);
+        [OperationContract] ErrorResponse UpdatePlayer(UpdatePlayerRequest request);
+        [OperationContract] NamesForTableRoundResponse GetNamesForTableRound(NamesForRoundRequest request);
 
         // HANDRECORD
-        [OperationContract] HandsCountMessage GetHandsCount();
+        [OperationContract] HandsCountResponse GetHandsCount();
         [OperationContract] List<Hand> GetHandsList();
-        [OperationContract] Hand GetHand(SectionBoardMessage message);
-        [OperationContract] void AddHand(Hand hand);
-        [OperationContract] void AddHands(List<Hand> newHandsList);
+        [OperationContract] Hand GetHand(SectionBoardRequest request);
+        [OperationContract] ErrorResponse AddHand(Hand hand);
+        [OperationContract] ErrorResponse AddHands(List<Hand> newHandsList);
 
         // SETTINGS
-        [OperationContract] public DatabaseSettings GetDatabaseSettings(SectionRoundMessage message);
-
-        [OperationContract] void SetDatabaseSettings(DatabaseSettings databaseSettings);
+        [OperationContract] DatabaseSettings GetDatabaseSettings(SectionRoundRequest request);
+        [OperationContract] ErrorResponse SetDatabaseSettings(DatabaseSettings databaseSettings);
 
         // RANKINGLIST
-        [OperationContract] List<Ranking> GetRankingList(SectionIdMessage message);
+        [OperationContract] RankingListResponse GetRankingList(SectionRequest request);
     }
 }

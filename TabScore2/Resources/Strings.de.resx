@@ -132,9 +132,6 @@
   <data name="Q" xml:space="preserve">
     <value>D</value>
   </data>
-  <data name="PlayerNumber" xml:space="preserve">
-    <value>Spieler-ID</value>
-  </data>
   <data name="Rank" xml:space="preserve">
     <value>Rang</value>
   </data>

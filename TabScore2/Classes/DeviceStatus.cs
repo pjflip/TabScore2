@@ -6,7 +6,7 @@ using TabScore2.Globals;
 
 namespace TabScore2.Classes
 {
-    public class DeviceStatus()
+    public class DeviceStatus
     {
         public required int SectionId { get; set; }
         public required string SectionLetter { get; set; }

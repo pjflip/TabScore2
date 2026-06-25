@@ -8,10 +8,10 @@ namespace TabScore2.Models
     public class ShowRankingListModel : List<Ranking>
     {
         public int RoundNumber { get; set; }
-        public int NumberNorth { get; set; } = 0;
-        public int NumberEast { get; set; } = 0;
-        public int NumberSouth { get; set; } = 0;
-        public int NumberWest { get; set; } = 0;
+        public int ContestantNumberNorth { get; set; } = 0;
+        public int ContestantNumberEast { get; set; } = 0;
+        public int ContestantNumberSouth { get; set; } = 0;
+        public int ContestantNumberWest { get; set; } = 0;
         public bool FinalRankingList { get; set; } = false;
     }
 }

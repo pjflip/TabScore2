@@ -47,13 +47,13 @@ namespace TabScore2.Controllers
             // Check if a sitout table.  If so, the device is automatically ready for the next round
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
 
-            if (tableStatus.RoundData.NumberNorth == 0 || tableStatus.RoundData.NumberNorth == missingPair)
+            if (tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair)
             {
                 deviceStatus.ReadyForNextRound = true;
                 deviceStatus.AtSitoutTable = true;
                 model.NSMissing = true;
             }
-            else if (tableStatus.RoundData.NumberEast == 0 || tableStatus.RoundData.NumberEast == missingPair)
+            else if (tableStatus.RoundData.ContestantNumberEast == 0 || tableStatus.RoundData.ContestantNumberEast == missingPair)
             {
                 deviceStatus.ReadyForNextRound = true;
                 deviceStatus.AtSitoutTable = true;

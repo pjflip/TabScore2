@@ -249,4 +249,7 @@
   <data name="ModeScorerRadioButton.Text" xml:space="preserve">
     <value>Anotador - seleccione el anotador en cada ronda</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Regístrese por pareja/número de jugador en lugar de por número de mesa</value>
+  </data>
 </root>

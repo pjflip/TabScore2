@@ -11,8 +11,9 @@ namespace TabScore2.BusinessLogic
     public interface IBusLogic
     {
         SelectSectionModel CreateSelectSectionModel();
-        SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int tableNumber, bool confirm);
-        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction direction, bool confirm);
+        SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int confirmTableNumber);
+        SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber);
+        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection);
         ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus);
         EnterPlayerIdModel CreateEnterPlayerIdModel(Direction direction);
         ShowRoundInfoModel CreateShowRoundInfoModel(DeviceStatus deviceStatus);

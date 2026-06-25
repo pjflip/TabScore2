@@ -298,5 +298,17 @@ namespace TabScore2.Properties {
                 this["MasterTableForTimer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RegisterByContestantNumber {
+            get {
+                return ((bool)(this["RegisterByContestantNumber"]));
+            }
+            set {
+                this["RegisterByContestantNumber"] = value;
+            }
+        }
     }
 }

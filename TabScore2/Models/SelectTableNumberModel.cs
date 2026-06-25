@@ -7,9 +7,8 @@ namespace TabScore2.Models
     {
         public int SectionId { get; set; }
         public string SectionLetter { get; set; } = "A";
-        public int TableNumber { get; set; }
         public int NumTables { get; set; }
-        public bool Confirm { get; set; } = false;
+        public int ConfirmTableNumber { get; set; } = 0;
         public bool ShowTableStatusButton { get; set; } = false;
     }
 }

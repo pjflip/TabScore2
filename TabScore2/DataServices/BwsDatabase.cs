@@ -3,6 +3,8 @@
 
 using GrpcSharedContracts;
 using GrpcSharedContracts.SharedClasses;
+using TabScore2.Classes;
+using TabScore2.Globals;
 
 namespace TabScore2.DataServices
 {
@@ -16,7 +18,7 @@ namespace TabScore2.DataServices
         // ============================
         public string Initialize(string pathToDatabase)  // Called from main form when path to database is set
         {
-            InitializeReturnMessage initializeReturnMessage = client.Initialize(new InitializeMessage() { 
+            InitializeResponse initializeReturnMessage = client.Initialize(new InitializeRequest() { 
                 PathToDatabase = pathToDatabase,
                 DefaultShowTraveller = settings.DefaultShowTraveller,
                 DefaultShowPercentage = settings.DefaultShowPercentage,
@@ -29,25 +31,26 @@ namespace TabScore2.DataServices
                 DefaultNameSource = settings.DefaultNameSource,
                 DefaultManualHandRecordEntry = settings.DefaultManualHandRecordEntry
             });
-            if (initializeReturnMessage.ReturnMessage == string.Empty)
+            if (initializeReturnMessage.ErrorMessage == string.Empty)
             {
                 settings.IsIndividual = initializeReturnMessage.IsIndividual;
                 GetDatabaseSettings();
             }
-            return initializeReturnMessage.ReturnMessage;
+            return initializeReturnMessage.ErrorMessage;
         }
 
         public void WebappInitialize()  // Called from webapp StartScreen and run just once.  After this point, changing the TabletsMove setting will have no effect
         {
             GetDatabaseSettings();    // Refresh setting as these can be changed by the scoring program
-            client.WebappInitialize();
+            ErrorResponse errorResponse = client.WebappInitialize();
+            if (errorResponse.ErrorMessage != string.Empty) throw new Exception(errorResponse.ErrorMessage);
         }
 
         public bool IsDatabaseConnectionOK()
         {
-            return client.IsDatabaseConnectionOK().IsDatabaseConnectionOK;
-        } 
-        
+            ErrorResponse errorResponse = client.CheckDatabaseConnection();
+            return errorResponse.ErrorMessage == string.Empty;
+        }
 
         // ========================================
         // Implement methods to access the database
@@ -56,7 +59,7 @@ namespace TabScore2.DataServices
         // SECTION
         public Section GetSection(int sectionId)
         {
-            return client.GetSection(new SectionIdMessage() { SectionId = sectionId });
+            return client.GetSection(new SectionRequest() { SectionId = sectionId });
         }
 
         public List<Section> GetSectionsList()
@@ -67,7 +70,7 @@ namespace TabScore2.DataServices
         // TABLE
         public void RegisterTable(int sectionId, int tableNumber)
         {
-            client.RegisterTable(new SectionTableMessage() { SectionId = sectionId, TableNumber = tableNumber });
+            client.RegisterTable(new SectionTableRequest() { SectionId = sectionId, TableNumber = tableNumber });
         }
 
         // ROUND
@@ -75,46 +78,106 @@ namespace TabScore2.DataServices
         {
             if (forceDatabaseRead)
             {
-                client.UpdateNumberOfRoundsInSection(new SectionIdMessage() { SectionId = sectionId });
+                ErrorResponse errorResponse = client.UpdateNumberOfRoundsInSection(new SectionRequest() { SectionId = sectionId });
+                if (errorResponse.ErrorMessage != string.Empty) throw new Exception(errorResponse.ErrorMessage);
             }
-            return client.GetSection(new SectionIdMessage() { SectionId = sectionId }).NumberOfRounds;
+            return client.GetSection(new SectionRequest() { SectionId = sectionId }).NumberOfRounds;
         }
 
-        public int GetNumberOfLastRoundWithResults(int sectionId, int tableNumber)
+        public int GetLastRoundWithResultsForTable(int sectionId, int tableNumber)
         {
-            return client.GetNumberOfLastRoundWithResults(new SectionTableMessage() { SectionId = sectionId, TableNumber = tableNumber }).NumberOfLastRoundWithResults;
+            RoundNumberResponse response = client.GetLastRoundWithResultsForTable(new SectionTableRequest() { SectionId = sectionId, TableNumber = tableNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.RoundNumber;
         }
 
-        public List<Round> GetRoundsList(int sectionId, int roundNumber) 
+        public Location GetLastLocationWithResultsForContestant(int sectionId, int contestantNumber)
         {
-            return client.GetRoundsList(new SectionRoundMessage() { SectionId = sectionId, RoundNumber = roundNumber });
+            LocationResponse response = client.GetLastLocationWithResultsForContestant(
+              new SectionContestantRequest() { SectionId = sectionId, ContestantNumber = contestantNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return new() 
+            { 
+                TableNumber = response.TableNumber, 
+                RoundNumber = response.RoundNumber,
+                Direction = response.Direction switch
+                {
+                    "North" => Direction.North,
+                    "East" => Direction.East,
+                    "South" => Direction.South,
+                    "West" => Direction.West,
+                    _ => Direction.Null,
+                }
+            };
+        }
+
+        public Location GetStartLocationForContestant(int sectionId, int contestantNumber)
+        {
+            LocationResponse response = client.GetStartLocationForContestant(new SectionContestantRequest() { SectionId = sectionId, ContestantNumber = contestantNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return new()
+            {
+                TableNumber = response.TableNumber,
+                RoundNumber = response.RoundNumber,
+                Direction = response.Direction switch
+                {
+                    "North" => Direction.North,
+                    "East" => Direction.East,
+                    "South" => Direction.South,
+                    "West" => Direction.West,
+                    _ => Direction.Null,
+                }
+            };
+        }
+
+        public List<Round> GetRoundsList(int sectionId, int roundNumber)
+        {
+            RoundsListResponse response = client.GetRoundsList(new SectionRoundRequest() { SectionId = sectionId, RoundNumber = roundNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Rounds;
+        }
+
+        public List<Round> GetRoundsList(int sectionId)
+        {
+            RoundsListResponse response = client.GetRoundsList(new SectionRequest() { SectionId = sectionId });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Rounds;
         }
 
         public Round GetRound(int sectionId, int tableNumber, int roundNumber)
         {
-            return client.GetRound(new SectionTableRoundMessage { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber });
+            RoundResponse response = client.GetRound(new SectionTableRoundRequest { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Round;
         }
 
         // RECEIVEDDATA
         public Result GetResult(int sectionId, int tableNumber, int roundNumber, int boardNumber)
         {
-            return client.GetResult(new SectionTableRoundBoardMessage { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, BoardNumber = boardNumber });
+            ResultResponse response = client.GetResult(new SectionTableRoundBoardRequest { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, BoardNumber = boardNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Result;
         }
 
         public void SetResult(Result result)
         {
-            client.SetResult(result);
+            ErrorResponse errorResponse = client.SetResult(result);
+            if (errorResponse.ErrorMessage != string.Empty) throw new Exception(errorResponse.ErrorMessage);
         }
 
         public List<Result> GetResultsList(int sectionId = 0, int lowBoard = 0, int highBoard = 0, int tableNumber = 0, int roundNumber = 0)
         {
-            return client.GetResultsList(new ResultsListMessage() { SectionId = sectionId, LowBoard = lowBoard, HighBoard = highBoard, TableNumber = tableNumber, RoundNumber = roundNumber });
+            ResultsListResponse response = client.GetResultsList(new ResultsListRequest() { SectionId = sectionId, LowBoard = lowBoard, HighBoard = highBoard, TableNumber = tableNumber, RoundNumber = roundNumber });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Results;
         }
 
         // PLAYERNAMES
         public string GetInternalPlayerName(string PlayerId)
         {
-            string name = client.GetInternalPlayerName(new PlayerMessage() { PlayerId = PlayerId }).PlayerName;
+            PlayerNameResponse response = client.GetInternalPlayerName(new PlayerRequest() { PlayerId = PlayerId });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            string name = response.PlayerName;
             if (name == "Unknown")
             {
                 return "#" + PlayerId;
@@ -126,14 +189,23 @@ namespace TabScore2.DataServices
         }
 
         // PLAYERNUMBERS
-        public Names GetNamesForRound(int sectionId, int roundNumber, int numberNorth, int numberEast, int numberSouth, int numberWest)
+        public NamesForRound GetNamesForTableRound(int sectionId, int roundNumber, int numberNorth, int numberEast, int numberSouth, int numberWest)
         {
-            return client.GetNamesForRound(new NamesForRoundMessage { SectionId = sectionId, RoundNumber = roundNumber, NumberNorth = numberNorth, NumberEast = numberEast, NumberSouth = numberSouth, NumberWest = numberWest });
+            NamesForTableRoundResponse response = client.GetNamesForTableRound(new NamesForRoundRequest { SectionId = sectionId, RoundNumber = roundNumber, ContestantNumberNorth = numberNorth, ContestantNumberEast = numberEast, ContestantNumberSouth = numberSouth, ContestantNumberWest = numberWest });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return new() {
+                NameNorth = response.NameNorth,
+                NameEast = response.NameEast,
+                NameSouth = response.NameSouth,
+                NameWest = response.NameWest,
+                GotAllNames = (numberNorth == 0 || response.NameNorth != string.Empty && response.NameSouth != string.Empty) 
+                  && (numberEast == 0 || response.NameEast != string.Empty && response.NameWest != string.Empty),
+            };
         }
 
         public void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, string playerId, string playerName)
         {
-            client.UpdatePlayer(new UpdatePlayerNumberMessage() { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, DirectionLetter = directionLetter, PairNumber = pairNumber, PlayerId = playerId, PlayerName = playerName });
+            client.UpdatePlayer(new UpdatePlayerRequest() { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, DirectionLetter = directionLetter, ContestantNumber = pairNumber, PlayerId = playerId, PlayerName = playerName });
         }
 
         // HANDRECORD
@@ -149,7 +221,7 @@ namespace TabScore2.DataServices
 
         public Hand GetHand(int sectionId, int boardNumber)
         {
-            return client.GetHand(new SectionBoardMessage { SectionId = sectionId, BoardNumber = boardNumber });
+            return client.GetHand(new SectionBoardRequest { SectionId = sectionId, BoardNumber = boardNumber });
         }
 
         public void AddHand(Hand hand)
@@ -166,7 +238,7 @@ namespace TabScore2.DataServices
         // SETTINGS
         public void GetDatabaseSettings(int sectionId = 1, int roundNumber = 0)
         { 
-            DatabaseSettings databaseSettings = client.GetDatabaseSettings(new SectionRoundMessage() { SectionId = sectionId, RoundNumber = roundNumber });
+            DatabaseSettings databaseSettings = client.GetDatabaseSettings(new SectionRoundRequest() { SectionId = sectionId, RoundNumber = roundNumber });
             if (databaseSettings.UpdateRequired)
             {
                 settings.ShowTraveller = databaseSettings.ShowTraveller;
@@ -203,7 +275,9 @@ namespace TabScore2.DataServices
         // RANKINGLIST
         public List<Ranking> GetRankingList(int sectionId)
         {
-            return client.GetRankingList(new SectionIdMessage() { SectionId = sectionId });
+            RankingListResponse response = client.GetRankingList(new SectionRequest() { SectionId = sectionId });
+            if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
+            return response.Rankings;
         }
     }
 }

@@ -547,7 +547,7 @@
     <value>Segoe UI, 9.75pt, style=Bold</value>
   </data>
   <data name="CanxButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>632, 430</value>
+    <value>629, 486</value>
   </data>
   <data name="CanxButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>186, 33</value>
@@ -574,7 +574,7 @@
     <value>Segoe UI, 9.75pt, style=Bold</value>
   </data>
   <data name="SaveButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>414, 430</value>
+    <value>414, 486</value>
   </data>
   <data name="SaveButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>186, 33</value>
@@ -654,6 +654,36 @@
   <data name="&gt;&gt;EnterResultsMethodGroup.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9pt</value>
+  </data>
+  <data name="RegisterByContestantNumberCheckbox.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="RegisterByContestantNumberCheckbox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>18, 114</value>
+  </data>
+  <data name="RegisterByContestantNumberCheckbox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 24</value>
+  </data>
+  <data name="RegisterByContestantNumberCheckbox.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Register by pair/player number rather than table number</value>
+  </data>
+  <data name="&gt;&gt;RegisterByContestantNumberCheckbox.Name" xml:space="preserve">
+    <value>RegisterByContestantNumberCheckbox</value>
+  </data>
+  <data name="&gt;&gt;RegisterByContestantNumberCheckbox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RegisterByContestantNumberCheckbox.Parent" xml:space="preserve">
+    <value>TabletMovesGroupBox</value>
+  </data>
+  <data name="&gt;&gt;RegisterByContestantNumberCheckbox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="ModeScorerRadioButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
@@ -682,7 +712,7 @@
     <value>TabletMovesGroupBox</value>
   </data>
   <data name="&gt;&gt;ModeScorerRadioButton.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="ModePersonalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
@@ -712,7 +742,7 @@
     <value>TabletMovesGroupBox</value>
   </data>
   <data name="&gt;&gt;ModePersonalRadioButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="ModeTraditionalRadioButton.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
@@ -739,7 +769,7 @@
     <value>TabletMovesGroupBox</value>
   </data>
   <data name="&gt;&gt;ModeTraditionalRadioButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="TabletMovesGroupBox.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9.75pt, style=Bold</value>
@@ -748,7 +778,7 @@
     <value>396, 224</value>
   </data>
   <data name="TabletMovesGroupBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>444, 114</value>
+    <value>444, 152</value>
   </data>
   <data name="TabletMovesGroupBox.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1168,7 +1198,7 @@
     <value>Segoe UI, 9.75pt, style=Bold</value>
   </data>
   <data name="SplashScreenGroupBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>396, 349</value>
+    <value>396, 393</value>
   </data>
   <data name="SplashScreenGroupBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>445, 52</value>

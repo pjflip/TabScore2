@@ -72,19 +72,19 @@ namespace TabScore2.Controllers
             {
                 case Direction.North:
                     tableStatus.RoundData.NameNorth = playerName;
-                    pairNumber = tableStatus.RoundData.NumberNorth;
+                    pairNumber = tableStatus.RoundData.ContestantNumberNorth;
                     break;
                 case Direction.South:
                     tableStatus.RoundData.NameSouth = playerName;
-                    pairNumber = tableStatus.RoundData.NumberSouth;
+                    pairNumber = tableStatus.RoundData.ContestantNumberSouth;
                     break;
                 case Direction.East:
                     tableStatus.RoundData.NameEast = playerName;
-                    pairNumber = tableStatus.RoundData.NumberEast;
+                    pairNumber = tableStatus.RoundData.ContestantNumberEast;
                     break;
                 case Direction.West:
                     tableStatus.RoundData.NameWest = playerName;
-                    pairNumber = tableStatus.RoundData.NumberWest;
+                    pairNumber = tableStatus.RoundData.ContestantNumberWest;
                     break;
             }
             database.UpdatePlayer(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, directionLetter, pairNumber, playerId, playerName);

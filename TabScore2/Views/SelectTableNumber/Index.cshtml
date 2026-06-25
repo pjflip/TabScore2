@@ -3,7 +3,7 @@
 
 @model SelectTableNumberModel
 
-@if (Model.Confirm)
+@if (Model.ConfirmTableNumber > 0)
 {
     <div id="tableRegisteredModal" class="modal fade">
         <div class="modal-dialog">
@@ -14,7 +14,7 @@
                     </p>
                 </div>
                 <div class="modal-body">
-                    <p>@localizer["ErrorTableRegistered1"] @Model.TableNumber @localizer["ErrorTableRegistered3"]</p>
+                    <p>@localizer["ErrorTableRegistered1"] @Model.ConfirmTableNumber @localizer["ErrorTableRegistered3"]</p>
                 </div>
                 <div class="modal-footer" style="justify-content:space-between">
                     <button class="btn btn-lg btn-danger" onclick="modalLogOn()">
@@ -35,7 +35,7 @@
         function modalLogOn() {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "SelectTableNumber")?sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&confirm=true';
+                location.href = '@Url.Action("OKButtonClick", "SelectTableNumber")?tableNumber=@Model.ConfirmTableNumber&confirm=true';
             }
         }
     </script>

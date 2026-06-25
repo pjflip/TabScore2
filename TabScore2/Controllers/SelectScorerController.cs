@@ -25,8 +25,8 @@ namespace TabScore2.Controllers
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
 
-            if (tableStatus.RoundData.NumberNorth == 0 || tableStatus.RoundData.NumberNorth == missingPair
-              || tableStatus.RoundData.NumberEast == 0 || tableStatus.RoundData.NumberEast == missingPair) return RedirectToAction("Index", "ShowPlayerIds");
+            if (tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair
+              || tableStatus.RoundData.ContestantNumberEast == 0 || tableStatus.RoundData.ContestantNumberEast == missingPair) return RedirectToAction("Index", "ShowPlayerIds");
 
             ViewData["Title"] = busLogic.Title("SelectScorer", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);

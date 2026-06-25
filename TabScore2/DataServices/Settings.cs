@@ -127,6 +127,12 @@ namespace TabScore2.DataServices
             set { Properties.Settings.Default.ShowSplashScreen = value; Properties.Settings.Default.Save(); }
         }
 
+        public bool RegisterByContestantNumber
+        {
+            get { return Properties.Settings.Default.RegisterByContestantNumber; }
+            set { Properties.Settings.Default.RegisterByContestantNumber = value; Properties.Settings.Default.Save(); }
+        }
+
         // Settings related to the operation of the scoring database
         public bool DatabaseReady
         {

@@ -27,7 +27,6 @@ namespace TabScore2.DataServices
         int DefaultEnterResultsMethod { get; set; }
         bool DefaultManualHandRecordEntry { get; set; }
 
-
         Mode Mode { get; set; }
         string ShowHandRecordFromDirection { get; set; }
         bool ShowTimer { get; set; }
@@ -38,6 +37,7 @@ namespace TabScore2.DataServices
         int SuppressRankingListForFirstXRounds { get; set; }
         int SuppressRankingListForLastXRounds { get; set; }
         bool ShowSplashScreen { get; set; }
+        public bool RegisterByContestantNumber { get; set; }
 
         bool DatabaseReady { get; set; }
         bool IsIndividual { get; set; }

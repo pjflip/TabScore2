@@ -5,7 +5,7 @@ using TabScore2.Globals;
 
 namespace TabScore2.Classes
 {
-    public class Move(int pairNumber)
+    public class Move
     {
         public int NewTableNumber { get; set; }
         public string DirectionString { get; set; } = string.Empty;
@@ -13,6 +13,6 @@ namespace TabScore2.Classes
         public string NewDirectionString { get; set; } = string.Empty;
         public bool Stay { get; set; }
         public bool NewTableIsSitout { get; set; } = false;
-        public int PairNumber { get; set; } = pairNumber;
+        public int ContestantNumber { get; set; }
     }
 }

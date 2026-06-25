@@ -6,10 +6,10 @@ namespace TabScore2.Models
     public class ShowRoundInfoModel
     {
         public int RoundNumber { get; set; }
-        public int NumberNorth { get; set; }  // Applies to NS pair in pairs and teams
-        public int NumberEast { get; set; }  // Applies to EW pair in pairs and teams
-        public int NumberSouth { get; set; }
-        public int NumberWest { get; set; }
+        public int ContestantNumberNorth { get; set; }  // Applies to NS pair in pairs and teams
+        public int ContestantNumberEast { get; set; }  // Applies to EW pair in pairs and teams
+        public int ContestantNumberSouth { get; set; }
+        public int ContestantNumberWest { get; set; }
         public string DisplayNameNorth { get; set; } = string.Empty;
         public string DisplayNameSouth { get; set; } = string.Empty;
         public string DisplayNameEast { get; set; } = string.Empty;

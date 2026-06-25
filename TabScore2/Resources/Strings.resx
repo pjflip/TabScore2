@@ -349,10 +349,6 @@ tablet device at your current location</value>
   <data name="Rank" xml:space="preserve">
     <value>Rank</value>
   </data>
-  <data name="PlayerNumber" xml:space="preserve">
-    <value>Player ID</value>
-    
-  </data>
   <data name="Percentage" xml:space="preserve">
     <value>Percentage</value>
   </data>

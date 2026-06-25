@@ -17,42 +17,42 @@
             <thead class="thead-dark">
                 <tr>
                     <th>@localizer["Rank"]</th>
-                    <th>@localizer["PlayerNumber"]</th>
+                    <th>@localizer["Player"]</th>
                     <th>@localizer["Percentage"]</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 @foreach (var Result in Model)
                 {
-                    if (Model.NumberNorth == Result.PairNo)
+                    if (Model.ContestantNumberNorth == Result.ContestantNumber)
                     {
                         <tr class="table-success">
                             <td>@Result.Rank</td>
-                            <td>@Result.PairNo</td>
+                            <td>@Result.ContestantNumber</td>
                             <td>@Result.Score%</td>
                         </tr>
                     }
-                    else if (Model.NumberSouth == Result.PairNo)
+                    else if (Model.ContestantNumberSouth == Result.ContestantNumber)
                     {
                         <tr class="table-warning">
                             <td>@Result.Rank</td>
-                            <td>@Result.PairNo</td>
+                            <td>@Result.ContestantNumber</td>
                             <td>@Result.Score%</td>
                         </tr>
                     }
-                    else if (Model.NumberEast == Result.PairNo)
+                    else if (Model.ContestantNumberEast == Result.ContestantNumber)
                     {
                         <tr class="table-danger">
                             <td>@Result.Rank</td>
-                            <td>@Result.PairNo</td>
+                            <td>@Result.ContestantNumber</td>
                             <td>@Result.Score%</td>
                         </tr>
                     }
-                    else if (Model.NumberWest == Result.PairNo)
+                    else if (Model.ContestantNumberWest == Result.ContestantNumber)
                     {
                         <tr class="table-info">
                             <td>@Result.Rank</td>
-                            <td>@Result.PairNo</td>
+                            <td>@Result.ContestantNumber</td>
                             <td>@Result.Score%</td>
                         </tr>
                     }
@@ -60,7 +60,7 @@
                     {
                         <tr>
                             <td>@Result.Rank</td>
-                            <td>@Result.PairNo</td>
+                            <td>@Result.ContestantNumber</td>
                             <td>@Result.Score%</td>
                         </tr>
                     }
@@ -76,9 +76,9 @@
     var urlShowMove = '@Url.Action("Index", "ShowMove")?newRoundNumber=' + (@Model.RoundNumber + 1).toString();
     var urlShowBoards = '@Url.Action("Index", "ShowBoards")';
     var finalRankingList = @Model.FinalRankingList.ToString().ToLower();
-    var pairNS = @Model.NumberNorth;
-    var pairEW = @Model.NumberEast;
-    var south = @Model.NumberSouth;
-    var west = @Model.NumberWest;
+    var contestantNumberNorth = @Model.ContestantNumberNorth;
+    var contestantNumberEast = @Model.ContestantNumberEast;
+    var contestantNumberSouth = @Model.ContestantNumberSouth;
+    var contestantNumberWest = @Model.ContestantNumberWest;
 </script>
 <script src="~/js/IndividualRankingList.js"></script>

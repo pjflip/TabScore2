@@ -3,11 +3,11 @@
 
 namespace TabScore2.Classes
 {
-    public class ShowBoardsResult(int boardNumber, int contractLevel, string displayContract, string remarks)
+    public class ShowBoardsResult
     {
-        public int BoardNumber { get; set; } = boardNumber;
-        public int ContractLevel { get; set; } = contractLevel;
-        public string DisplayContract { get; set; } = displayContract;
-        public string Remarks { get; set; } = remarks;
+        public int BoardNumber { get; set; }
+        public int ContractLevel { get; set; }
+        public required string DisplayContract { get; set; }
+        public required string Remarks { get; set; }
     }
 }

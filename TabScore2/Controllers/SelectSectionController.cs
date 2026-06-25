@@ -4,16 +4,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using TabScore2.BusinessLogic;
+using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
 using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class SelectSectionController(IStringLocalizer<Strings> iLocalizer, IBusLogic iBusLogic) : Controller
+    public class SelectSectionController(IStringLocalizer<Strings> iLocalizer, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IBusLogic busLogic = iBusLogic;
+        private readonly ISettings settings = iSettings;
 
         public ActionResult Index()
         {
@@ -35,7 +37,14 @@ namespace TabScore2.Controllers
         public ActionResult OKButtonClick(int sectionId)
         {
             HttpContext.Session.SetInt32("SectionId", sectionId);
-            return RedirectToAction("Index", "SelectTableNumber");
+            if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
+            {
+                return RedirectToAction("Index", "SelectContestantNumber");
+            }
+            else
+            {
+                return RedirectToAction("Index", "SelectTableNumber");
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
 
 @model SelectDirectionModel
 
-@if (Model.Confirm)
+@if (Model.ConfirmDirection != Direction.Null)
 {
     <div id="tableDirectionRegisteredModal" class="modal fade">
         <div class="modal-dialog">
@@ -14,7 +14,7 @@
                     </p>
                 </div>
                 <div class="modal-body">
-                    <p>@localizer["ErrorTableRegistered1"] @Model.TableNumber @localizer["ErrorTableRegistered2"] @Model.Direction @localizer["ErrorTableRegistered3"]</p>
+                    <p>@localizer["ErrorTableRegistered1"] @Model.TableNumber @localizer["ErrorTableRegistered2"] @Model.ConfirmDirection @localizer["ErrorTableRegistered3"]</p>
                 </div>
                 <div class="modal-footer" style="justify-content:space-between">
                     <button class="btn btn-lg btn-danger" ontouchstart="modalLogOn()" onclick="modalLogOn()">
@@ -35,7 +35,7 @@
         function modalLogOn() {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "SelectDirection")?sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&direction=@Model.Direction&roundNumber=@Model.RoundNumber&confirm=true';
+                location.href = '@Url.Action("OKButtonClick", "SelectDirection")?sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&direction=@Model.ConfirmDirection&roundNumber=@Model.RoundNumber&confirm=true';
             }
         }
     </script>

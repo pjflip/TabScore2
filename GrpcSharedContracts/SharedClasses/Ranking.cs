@@ -9,7 +9,7 @@ namespace GrpcSharedContracts.SharedClasses
     public class Ranking
     {
         [DataMember(Order = 1)] public string Orientation { get; set; } = string.Empty;
-        [DataMember(Order = 2)] public int PairNo { get; set; }  // Doubles as player number for individuals and team number for teams
+        [DataMember(Order = 2)] public int ContestantNumber { get; set; }  // Pair number for pairs, player number for individuals, team number for teams
         [DataMember(Order = 3)] public string Score { get; set; } = string.Empty;
         [DataMember(Order = 4)] public double ScoreDecimal { get; set; }
         [DataMember(Order = 5)] public string Rank { get; set; } = string.Empty;

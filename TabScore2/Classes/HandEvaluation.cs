@@ -3,10 +3,10 @@
 
 namespace TabScore2.Classes
 {
-    public class HandEvaluation(int sectionId, int boardNumber)
+    public class HandEvaluation
     {
-        public int SectionId { get; set; } = sectionId;
-        public int BoardNumber { get; set; } = boardNumber;
+        public int SectionId { get; set; }
+        public int BoardNumber { get; set; }
         public int NorthSpades { get; set; } = -1;  // Indicates no hand evaluation
         public int NorthHearts { get; set; }
         public int NorthDiamonds { get; set; }

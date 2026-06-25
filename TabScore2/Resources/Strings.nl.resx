@@ -351,9 +351,6 @@
   <data name="Player" xml:space="preserve">
     <value>Speler</value>
   </data>
-  <data name="PlayerNumber" xml:space="preserve">
-    <value>Speler-ID</value>
-  </data>
   <data name="Q" xml:space="preserve">
     <value>V</value>
   </data>

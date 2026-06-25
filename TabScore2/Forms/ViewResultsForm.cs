@@ -25,7 +25,7 @@ namespace TabScore2.Forms
             DataGridViewResults.AutoGenerateColumns = false;
             foreach (Result result in ResultsList)
             {
-                DataGridViewResults.Rows.Add(result.SectionLetter, result.TableNumber, result.RoundNumber, result.BoardNumber, result.NumberNorth, result.NumberEast);
+                DataGridViewResults.Rows.Add(result.SectionLetter, result.TableNumber, result.RoundNumber, result.BoardNumber, result.ContestantNumberNorth, result.ContestantNumberEast);
             }
             DataGridViewResults.Sort(DataGridViewResults.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
             EditResultButton.Enabled = (DataGridViewResults.SelectedRows.Count == 1);

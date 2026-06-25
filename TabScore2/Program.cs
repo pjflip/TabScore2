@@ -78,9 +78,17 @@ namespace TabScore2
             if (!isDevelopment) {
                 // In the production environment, the scoring program may start TabScore2 using a different current working directory
                 webApplicationOptions = new() { ContentRootPath = Application.StartupPath };
+
+                // Disable console output in production environment, as it is not needed and may cause issues when running the application in a Windows service
+                Console.SetOut(StreamWriter.Null);
+                Console.SetError(StreamWriter.Null);
             }
 
             WebApplicationBuilder webAppBuilder = WebApplication.CreateBuilder(webApplicationOptions);
+
+            // Clear default logging providers as logging is not very useful given the way TabScore2 is deployed
+            webAppBuilder.Logging.ClearProviders();
+
             webAppBuilder.Services.AddLocalization();
             webAppBuilder.Services.AddControllersWithViews();
             webAppBuilder.Services.AddCodeFirstGrpcClient<IBwsDatabaseService>(option => { option.Address = grpcAddress; });

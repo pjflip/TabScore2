@@ -50,6 +50,7 @@ namespace TabScore2.Forms
             SuppressRankingListFirstXNud.Value = settings.SuppressRankingListForFirstXRounds;
             SuppressRankingListLastXNud.Value = settings.SuppressRankingListForLastXRounds;
             SplashScreenCheckbox.Checked = settings.ShowSplashScreen;
+            RegisterByContestantNumberCheckbox.Checked = settings.RegisterByContestantNumber;
 
             ShowPercentageCheckbox.Enabled = ShowTravellerCheckbox.Checked;
             ShowHandRecordCheckbox.Enabled = ShowTravellerCheckbox.Checked;
@@ -57,10 +58,11 @@ namespace TabScore2.Forms
             ValidateLeadCardCheckbox.Enabled = EnterLeadCardCheckbox.Checked;
             DoubleDummyCheckbox.Enabled = ManualHandEntryCheckbox.Checked;
             NumberEntryEachRoundCheckbox.Enabled = !(NameSourceCombobox.SelectedIndex == 2);
-            MasterTableForTimerCheckbox.Enabled = MinutesPerBoardNud.Enabled = AdditionalMinutesPerRoundNud.Enabled = MinutesPerBoardLabel.Enabled 
+            MasterTableForTimerCheckbox.Enabled = MinutesPerBoardNud.Enabled = AdditionalMinutesPerRoundNud.Enabled = MinutesPerBoardLabel.Enabled
               = AdditionalMinutesPerRoundLabel.Enabled = ShowTimerCheckbox.Checked;
             SuppressRankingListFirstXLabel.Enabled = SuppressRankingListFirstXNud.Enabled = (ShowRankingCombobox.SelectedIndex == 1);
             SuppressRankingListLastXLabel.Enabled = SuppressRankingListLastXNud.Enabled = (ShowRankingCombobox.SelectedIndex == 1);
+            RegisterByContestantNumberCheckbox.Enabled = settings.Mode != Mode.Traditional;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -91,6 +93,7 @@ namespace TabScore2.Forms
             settings.SuppressRankingListForFirstXRounds = Convert.ToInt32(SuppressRankingListFirstXNud.Value);
             settings.SuppressRankingListForLastXRounds = Convert.ToInt32(SuppressRankingListLastXNud.Value);
             settings.ShowSplashScreen = SplashScreenCheckbox.Checked;
+            settings.RegisterByContestantNumber = RegisterByContestantNumberCheckbox.Checked;
 
             database.SetDatabaseSettings();
             Close();
@@ -132,6 +135,11 @@ namespace TabScore2.Forms
         private void NameSourceCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
             NumberEntryEachRoundCheckbox.Enabled = !(NameSourceCombobox.SelectedIndex == 2);
+        }
+
+        private void ModeTraditionalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RegisterByContestantNumberCheckbox.Enabled = !ModeTraditionalRadioButton.Checked;
         }
     }
 }

@@ -364,10 +364,6 @@ tablet device at your current location</source>
           <source>Player</source>
           <target state="new">Speler</target>
         </trans-unit>
-        <trans-unit id="PlayerNumber" translate="yes" xml:space="preserve">
-          <source>Player ID</source>
-          <target state="new">Speler-ID</target>
-        </trans-unit>
         <trans-unit id="Q" translate="yes" xml:space="preserve">
           <source>Q</source>
           <target state="new">V</target>
@@ -713,6 +709,10 @@ tablet device at your current location</source>
         <trans-unit id="RankingListGroup.Text" translate="yes" xml:space="preserve">
           <source>Ranking list</source>
           <target state="new">Ranglijst</target>
+        </trans-unit>
+        <trans-unit id="RegisterByContestantNumberCheckbox.Text" translate="yes" xml:space="preserve">
+          <source>Register by pair/player number rather than table number</source>
+          <target state="new">Registreer u op paar-/spelernummer in plaats van op tafelnummer</target>
         </trans-unit>
         <trans-unit id="RoundTimerGroupBox.Text" translate="yes" xml:space="preserve">
           <source>Round timer</source>

@@ -29,10 +29,10 @@ namespace TabScore2.Controllers
             {
                 // No result set for this board yet, so get result (if any) from database and set pair/player numbers
                 result = database.GetResult(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, boardNumber);
-                result.NumberNorth = tableStatus.RoundData.NumberNorth;
-                result.NumberEast = tableStatus.RoundData.NumberEast;
-                result.NumberSouth = tableStatus.RoundData.NumberSouth;
-                result.NumberWest = tableStatus.RoundData.NumberWest;
+                result.ContestantNumberNorth = tableStatus.RoundData.ContestantNumberNorth;
+                result.ContestantNumberEast = tableStatus.RoundData.ContestantNumberEast;
+                result.ContestantNumberSouth = tableStatus.RoundData.ContestantNumberSouth;
+                result.ContestantNumberWest = tableStatus.RoundData.ContestantNumberWest;
                 deviceStatus.ResultData = result;
             }
 

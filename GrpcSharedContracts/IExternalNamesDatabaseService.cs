@@ -8,6 +8,6 @@ namespace GrpcSharedContracts
     [ServiceContract]
     public interface IExternalNamesDatabaseService
     {
-        [OperationContract] PlayerNameMessage GetExternalPlayerName(PlayerMessage request);
+        [OperationContract] PlayerNameResponse GetExternalPlayerName(PlayerRequest request);
     }
 }

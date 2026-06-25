@@ -17,26 +17,26 @@
             <thead class="thead-dark">
                 <tr>
                     <th>@localizer["Rank"]</th>
-                    <th>@localizer["PairNumber"]</th>
+                    <th>@localizer["Pair"]</th>
                     <th>@localizer["Percentage"]</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 @foreach (var Rank in Model)
                 {
-                    if (Model.NumberNorth == Rank.PairNo)
+                    if (Model.ContestantNumberNorth == Rank.ContestantNumber)
                     {
                         <tr class="table-success">
                             <td>@Rank.Rank</td>
-                            <td>@Rank.PairNo</td>
+                            <td>@Rank.ContestantNumber</td>
                             <td>@Rank.Score%</td>
                         </tr>
                     }
-                    else if (Model.NumberEast == Rank.PairNo)
+                    else if (Model.ContestantNumberEast == Rank.ContestantNumber)
                     {
                         <tr class="table-warning">
                             <td>@Rank.Rank</td>
-                            <td>@Rank.PairNo</td>
+                            <td>@Rank.ContestantNumber</td>
                             <td>@Rank.Score%</td>
                         </tr>
                     }
@@ -44,7 +44,7 @@
                     {
                         <tr>
                             <td>@Rank.Rank</td>
-                            <td>@Rank.PairNo</td>
+                            <td>@Rank.ContestantNumber</td>
                             <td>@Rank.Score%</td>
                         </tr>
                     }
@@ -60,7 +60,7 @@
     var urlShowMove = '@Url.Action("Index", "ShowMove")?newRoundNumber=' + (@Model.RoundNumber + 1).toString();
     var urlShowBoards = '@Url.Action("Index", "ShowBoards")';
     var finalRankingList = @Model.FinalRankingList.ToString().ToLower();
-    var pairNS = @Model.NumberNorth;
-    var pairEW = @Model.NumberEast;
+    var contestantNumberNorth = @Model.ContestantNumberNorth;
+    var contestantNumberEast = @Model.ContestantNumberEast;
 </script>
 <script src="~/js/OneWinnerRankingList.js"></script>

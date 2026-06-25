@@ -22,9 +22,12 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(int sectionId, int tableNumber, Direction direction = Direction.Null, bool confirm = false)
+        public ActionResult Index(Direction confirmDirection = Direction.Null)
         {
-            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, direction, confirm);
+            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
+            int tableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
+
+            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, confirmDirection);
 
             ViewData["Title"] = $"{model.SectionLetter}{tableNumber}: {localizer["SelectDirection"]}";
             ViewData["Header"] = $"{localizer["Table"]} {model.SectionLetter}{tableNumber}";
@@ -39,51 +42,34 @@ namespace TabScore2.Controllers
             }
         }
 
-        public ActionResult OKButtonClick(int sectionId, int tableNumber, Direction direction, int roundNumber, bool confirm)
+        public ActionResult OKButtonClick(Direction direction, bool confirm)
         {
-            // Get the table status, creating a new table status record if needed
-            TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
+            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
+            int tableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
 
             // Try to avoid multiple registrations for the same location (unless a replacement device), so check if device is already registered
             // Use session state to keep track of any previous location for the current device
-            int deviceNumber = appData.GetDeviceNumber(sectionId, tableNumber, direction);  // Returns -1 if not found
+            int deviceNumber = appData.GetDeviceNumberByTableDirection(sectionId, tableNumber, direction);  // Returns -1 if not found
             if (deviceNumber != -1 && confirm)
             {
-                // A device record exists for this section/table and it's ok to change to this device, so just set/reset session state
-                HttpContext.Session.SetInt32("SectionId", sectionId);
-                HttpContext.Session.SetInt32("TableNumber", tableNumber);
+                // A device record exists for this section/table/direction and it's ok to change to this device, so just reset session state
                 HttpContext.Session.SetString("Direction", direction.ToString());
             }
             else if (deviceNumber != -1)
             {
-                // A device record exists for this section/table
-                // Check if table number matches session state - if not go back to confirm
-                int savedSectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-                int savedTableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
+                // A device record exists for this section/table/direction
+                // Check if direction matches session state - if not go back to confirm
+                // If, at this stage, the user has got the section or table number wrong, then they'd need to restart
                 string savedDirection = HttpContext.Session.GetString("Direction") ?? string.Empty;
-                if (sectionId != savedSectionId || tableNumber != savedTableNumber || direction.ToString() != savedDirection)
+                if (direction.ToString() != savedDirection)
                 {
-                    return RedirectToAction("Index", "SelectDirection", new { sectionId, tableNumber, direction, confirm = true });
+                    return RedirectToAction("Index", "SelectDirection", new { confirmDirection = direction });
                 }
                 // else = session state matches, so this is a re-registration and nothing more to do
             }
             else
             {
-                // No device record exists, so we need to add it
-                int pairNumber = direction switch
-                {
-                    Direction.North => tableStatus.RoundData.NumberNorth,
-                    Direction.East => tableStatus.RoundData.NumberEast,
-                    Direction.South => tableStatus.RoundData.NumberSouth,
-                    Direction.West => tableStatus.RoundData.NumberWest,
-                    _ => 0
-                };
-
-                // One device per player or one device per pair
-                int devicesPerTable = settings.IsIndividual ? 4 : 2;
-
-                deviceNumber = appData.AddDeviceStatus(sectionId, tableNumber, pairNumber, roundNumber, direction, devicesPerTable);
-                HttpContext.Session.SetInt32("SectionId", sectionId);
+                deviceNumber = appData.AddDeviceStatusForTableDirection(sectionId, tableNumber, direction);
                 HttpContext.Session.SetInt32("TableNumber", tableNumber);
                 HttpContext.Session.SetString("Direction", direction.ToString());
             }

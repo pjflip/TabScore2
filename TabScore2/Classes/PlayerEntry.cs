@@ -5,10 +5,10 @@ using TabScore2.Globals;
 
 namespace TabScore2.Classes
 {
-    public class PlayerEntry(string displayName, int number, Direction direction)
+    public class PlayerEntry
     {
-        public string DisplayName { get; private set; } = displayName;
-        public int Number { get; private set; } = number;
-        public Direction Direction { get; private set; } = direction;
+        public required string DisplayName { get; set; }
+        public int ContestantNumber { get; set; }
+        public Direction Direction { get; set; }
     }
 }

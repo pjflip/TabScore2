@@ -52,6 +52,7 @@ namespace TabScore2.Forms
             EnterResultsMethodGroup = new GroupBox();
             EnterResultsMethodCombobox = new ComboBox();
             TabletMovesGroupBox = new GroupBox();
+            RegisterByContestantNumberCheckbox = new CheckBox();
             ModeScorerRadioButton = new RadioButton();
             ModePersonalRadioButton = new RadioButton();
             ModeTraditionalRadioButton = new RadioButton();
@@ -221,12 +222,19 @@ namespace TabScore2.Forms
             // 
             // TabletMovesGroupBox
             // 
+            TabletMovesGroupBox.Controls.Add(RegisterByContestantNumberCheckbox);
             TabletMovesGroupBox.Controls.Add(ModeScorerRadioButton);
             TabletMovesGroupBox.Controls.Add(ModePersonalRadioButton);
             TabletMovesGroupBox.Controls.Add(ModeTraditionalRadioButton);
             resources.ApplyResources(TabletMovesGroupBox, "TabletMovesGroupBox");
             TabletMovesGroupBox.Name = "TabletMovesGroupBox";
             TabletMovesGroupBox.TabStop = false;
+            // 
+            // RegisterByContestantNumberCheckbox
+            // 
+            resources.ApplyResources(RegisterByContestantNumberCheckbox, "RegisterByContestantNumberCheckbox");
+            RegisterByContestantNumberCheckbox.Name = "RegisterByContestantNumberCheckbox";
+            RegisterByContestantNumberCheckbox.UseVisualStyleBackColor = true;
             // 
             // ModeScorerRadioButton
             // 
@@ -248,6 +256,7 @@ namespace TabScore2.Forms
             ModeTraditionalRadioButton.Name = "ModeTraditionalRadioButton";
             ModeTraditionalRadioButton.TabStop = true;
             ModeTraditionalRadioButton.UseVisualStyleBackColor = true;
+            ModeTraditionalRadioButton.CheckedChanged += ModeTraditionalRadioButton_CheckedChanged;
             // 
             // RoundTimerGroupBox
             // 
@@ -434,5 +443,6 @@ namespace TabScore2.Forms
         private RadioButton ModeScorerRadioButton;
         private RadioButton ModePersonalRadioButton;
         private CheckBox MasterTableForTimerCheckbox;
+        private CheckBox RegisterByContestantNumberCheckbox;
     }
 }

@@ -4,6 +4,7 @@
 using GrpcSharedContracts.SharedClasses;
 using TabScore2.Classes;
 using TabScore2.Globals;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TabScore2.DataServices
 {
@@ -17,9 +18,12 @@ namespace TabScore2.DataServices
         IEnumerable<TableStatusDisplay> GetAllTableStatuses();
         void UpdateTableStatus(int sectionId, int tableNumber, int roundNumber);
 
-        int GetDeviceNumber(int sectionId, int tableNumber, Direction direction = Direction.North);
+        int GetDeviceNumberByTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North);
+        int GetDeviceNumberByContestant(int sectionId, int contestantNumber);
         DeviceStatus GetDeviceStatus(int deviceNumber);
-        int AddDeviceStatus(int sectionId, int tableNumber, int pairNumber, int roundNumber, Direction direction = Direction.North, int devicesPerTable = 1);
+        int AddDeviceStatusForTable(int sectionId, int tableNumber);
+        int AddDeviceStatusForTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North);
+        int AddDeviceStatusForContestant(int sectionId, int contestant);
         void UpdateDeviceStatus(DeviceStatus deviceStatus, int tableNumber, int roundNumber, Direction direction);
         bool SetDeviceAsScorer(int deviceNumber);
         bool SetDeviceAsViewer(int deviceNumber);

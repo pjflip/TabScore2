@@ -11,7 +11,7 @@ namespace TabScore2.DataServices
 
         public string GetExternalPlayerName(string playerId)
         {
-            return client!.GetExternalPlayerName(new PlayerMessage() { PlayerId = playerId }).PlayerName;
+            return client!.GetExternalPlayerName(new PlayerRequest() { PlayerId = playerId }).PlayerName;
         }
     }
 }

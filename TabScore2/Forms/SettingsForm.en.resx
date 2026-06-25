@@ -249,4 +249,7 @@
   <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
     <value>Use table 1 as master table for round timer</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Register by pair/player number rather than table number</value>
+  </data>
 </root>

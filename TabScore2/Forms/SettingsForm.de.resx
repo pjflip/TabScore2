@@ -249,4 +249,7 @@
   <data name="ModeScorerRadioButton.Text" xml:space="preserve">
     <value>Punktezähler - Wählen Sie für jede Runde den Punktezähler aus</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Registrieren Sie sich anhand der Paar-/Spielernummer und nicht anhand der Tischnummer</value>
+  </data>
 </root>
