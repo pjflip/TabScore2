@@ -23,7 +23,14 @@ namespace TabScore2.Controllers
             if (model.Count == 1)  // Check if only one section - if so use it
             {
                 HttpContext.Session.SetInt32("SectionId", model[0].SectionId);
-                return RedirectToAction("Index", "SelectTableNumber");
+                if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
+                {
+                    return RedirectToAction("Index", "SelectContestantNumber");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "SelectTableNumber");
+                }
             }
             else  // Get section
             {

@@ -27,8 +27,8 @@ namespace GrpcSharedContracts
         [OperationContract] RoundNumberResponse GetLastRoundWithResultsForTable(SectionTableRequest request);
         [OperationContract] LocationResponse GetLastLocationWithResultsForContestant(SectionContestantRequest request);
         [OperationContract] LocationResponse GetStartLocationForContestant(SectionContestantRequest request);
-        [OperationContract] RoundsListResponse GetRoundsList(SectionRoundRequest request);  // Specific round
-        [OperationContract] RoundsListResponse GetRoundsList(SectionRequest request);  // All rounds
+        [OperationContract] RoundsListResponse GetRoundsListForSectionRound(SectionRoundRequest request);  // Specific round
+        [OperationContract] RoundsListResponse GetRoundsListForSection(SectionRequest request);  // All rounds for section
         [OperationContract] RoundResponse GetRound(SectionTableRoundRequest request);
 
         // RESULT = RECEIVEDDATA

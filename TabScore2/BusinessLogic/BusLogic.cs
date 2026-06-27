@@ -44,7 +44,7 @@ namespace TabScore2.BusinessLogic
             Section section = database.GetSection(sectionId);
 
             // Need a list of all possible contestant numbers.  We can't rely on the PlayerNumbers table, so use the movement
-            List<Round> roundsList = database.GetRoundsList(sectionId);
+            List<Round> roundsList = database.GetRoundsListForSection(sectionId);
             HashSet<int> contestantNumbers = [];
             foreach (Round round in roundsList) 
             {
@@ -189,7 +189,7 @@ namespace TabScore2.BusinessLogic
             showMoveModel.DevicesPerTable = deviceStatus.DevicesPerTable;
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
 
-            List<Round> roundsList = database.GetRoundsList(deviceStatus.SectionId, newRoundNumber);
+            List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
             if (deviceStatus.DevicesPerTable == 1)
             {
                 TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
@@ -690,7 +690,7 @@ namespace TabScore2.BusinessLogic
         public int GetBoardsFromTableNumber(TableStatus tableStatus)
         {
             // Get a list of all possible tables from which boards could have moved (ie where the boards were in the previous round)
-            List<Round> tableList = database.GetRoundsList(tableStatus.SectionId, tableStatus.RoundNumber - 1).FindAll(x => x.LowBoard == tableStatus.RoundData.LowBoard);
+            List<Round> tableList = database.GetRoundsListForSectionRound(tableStatus.SectionId, tableStatus.RoundNumber - 1).FindAll(x => x.LowBoard == tableStatus.RoundData.LowBoard);
             if (tableList.Count == 0)
             {
                 // No table, so boards must have come from relay table

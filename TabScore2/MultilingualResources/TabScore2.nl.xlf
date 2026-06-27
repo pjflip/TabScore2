@@ -167,6 +167,16 @@
           <source>Error</source>
           <target state="new">Fout</target>
         </trans-unit>
+        <trans-unit id="ErrorContestantRegistered1" translate="yes" xml:space="preserve">
+          <source>Pair or player</source>
+          <target state="new">Paar of speler</target>
+        </trans-unit>
+        <trans-unit id="ErrorContestantRegistered3" translate="yes" xml:space="preserve">
+          <source>is already registered.  Do not press Register unless you intend to register a new 
+tablet device</source>
+          <target state="new">is al geregistreerd.  Druk niet op Registreren tenzij u van plan bent een nieuwe te registreren 
+tablet-apparaat</target>
+        </trans-unit>
         <trans-unit id="ErrorDBConnection" translate="yes" xml:space="preserve">
           <source>An error has occurred whilst connecting to the scoring database</source>
           <target state="new">Verbindingsfout met de scoring database</target>
@@ -196,8 +206,8 @@
           <target state="new">Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScoreStarter.exe</target>
         </trans-unit>
         <trans-unit id="ErrorReestablishConnection" translate="yes" xml:space="preserve">
-          <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet to your [section/]table number[/direction]</source>
-          <target state="new">Kies OK om verbinding opnieuw tot stand te brengen. Daarna, meld dit apparaat opnieuw aan met uw [section/]tafelnummer[/direction]</target>
+          <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet</source>
+          <target state="new">Klik op OK om te proberen de verbinding te herstellen.  Indien succesvol, registreer deze tablet dan opnieuw</target>
         </trans-unit>
         <trans-unit id="ErrorScorerAlreadyExists" translate="yes" xml:space="preserve">
           <source>A scorer has already been selected for this round</source>

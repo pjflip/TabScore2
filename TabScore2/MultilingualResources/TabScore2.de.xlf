@@ -167,6 +167,16 @@
           <source>Error</source>
           <target state="new">Fehler</target>
         </trans-unit>
+        <trans-unit id="ErrorContestantRegistered1" translate="yes" xml:space="preserve">
+          <source>Pair or player</source>
+          <target state="new">Paar oder Spieler</target>
+        </trans-unit>
+        <trans-unit id="ErrorContestantRegistered3" translate="yes" xml:space="preserve">
+          <source>is already registered.  Do not press Register unless you intend to register a new 
+tablet device</source>
+          <target state="new">ist bereits registriert.  Klicken Sie nicht auf „Registrieren“, es sei denn, Sie beabsichtigen, ein neues Konto zu registrieren 
+Tablet-Gerät</target>
+        </trans-unit>
         <trans-unit id="ErrorDBConnection" translate="yes" xml:space="preserve">
           <source>An error has occurred whilst connecting to the scoring database</source>
           <target state="new">Beim Verbinden mit der Scoring-Datenbank ist ein Fehler aufgetreten</target>
@@ -196,8 +206,8 @@
           <target state="new">Permanenter Datenbankverbindungsfehler. Bitte überprüfen Sie das Format und die Zugriffsberechtigungen für die Scoring-Datenbank-Datei und starten Sie TabScoreStarter.exe neu</target>
         </trans-unit>
         <trans-unit id="ErrorReestablishConnection" translate="yes" xml:space="preserve">
-          <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet to your [section/]table number[/direction]</source>
-          <target state="new">Bitte drücken Sie auf OK, um  die Verbindung wiederherzustellen. Wenn erfolgreich, registrieren Sie dieses Tablet bitte erneut für Ihre [Abschnitt, Tischnummer, Richtung]</target>
+          <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet</source>
+          <target state="new">Klicken Sie bitte auf OK, um zu versuchen, die Verbindung wiederherzustellen.  Bei Erfolg registrieren Sie dieses Tablet bitte erneut</target>
         </trans-unit>
         <trans-unit id="ErrorScorerAlreadyExists" translate="yes" xml:space="preserve">
           <source>A scorer has already been selected for this round</source>

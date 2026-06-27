@@ -557,7 +557,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             }
         }
 
-        public RoundsListResponse GetRoundsList(SectionRoundRequest request)
+        public RoundsListResponse GetRoundsListForSectionRound(SectionRoundRequest request)
         {
             try
             {
@@ -606,7 +606,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             }
         }
 
-        public RoundsListResponse GetRoundsList(SectionRequest request)
+        public RoundsListResponse GetRoundsListForSection(SectionRequest request)
         {
             try
             {

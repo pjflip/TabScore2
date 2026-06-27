@@ -220,9 +220,6 @@
   <data name="ErrorDBConnection" xml:space="preserve">
     <value>Se ha producido un error al conectarse a la base de datos de puntajes</value>
   </data>
-  <data name="ErrorReestablishConnection" xml:space="preserve">
-    <value>Clic en OK para intentar restablecer la conexión. Si tiene éxito, vuelva a registrar esta tableta en su [sección/]número de mesa[/dirección]</value>
-  </data>
   <data name="Back" xml:space="preserve">
     <value>Atrás</value>
   </data>
@@ -537,5 +534,15 @@
   </data>
   <data name="SelectScorer" xml:space="preserve">
     <value>Selecciona el anotador</value>
+  </data>
+  <data name="ErrorReestablishConnection" xml:space="preserve">
+    <value>Haga clic en Aceptar para intentar restablecer la conexión.  Si tiene éxito, vuelva a registrar esta tableta</value>
+  </data>
+  <data name="ErrorContestantRegistered1" xml:space="preserve">
+    <value>Pareja o jugador</value>
+  </data>
+  <data name="ErrorContestantRegistered3" xml:space="preserve">
+    <value>ya está registrado.  No presione Registrar a menos que desee registrar un nuevo 
+dispositivo tableta</value>
   </data>
 </root>

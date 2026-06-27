@@ -1,0 +1,236 @@
+﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
+     Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
+
+@model SelectContestantNumberModel
+
+@if (Model.ConfirmContestantNumber > 0)
+{
+    <div id="contestantRegisteredModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-danger">
+                    <p class="modal-title text-center">
+                        <h3>@localizer["Warning"]</h3>
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <p>@localizer["ErrorContestantRegistered1"] @Model.ConfirmContestantNumber @localizer["ErrorContestantRegistered3"]</p>
+                </div>
+                <div class="modal-footer" style="justify-content:space-between">
+                    <button class="btn btn-lg btn-danger" onclick="modalLogOn()">
+                        <span class="icon-check-circle"></span> @localizer["Register"]
+                    </button>
+                    <button class="btn btn-lg btn-success" data-bs-dismiss="modal">
+                        @localizer["Cancel"] <span class="icon-times-circle"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var contestantRegisteredModal = new bootstrap.Modal(document.getElementById("contestantRegisteredModal"), { backdrop: 'static' });
+        contestantRegisteredModal.show();
+
+        function modalLogOn() {
+            if (!isSubmitted) {
+                isSubmitted = true;
+                location.href = '@Url.Action("OKButtonClick", "selectContestantNumber")?contestantNumber=@Model.ConfirmContestantNumber&confirm=true';
+            }
+        }
+    </script>
+}
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <h2>
+            @localizer["SelectContestantNumber"]
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center p-0">
+        @for (int i = 1; i <= Model.NumContestants && i < 6; i++)
+        {
+            <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                @Model.ContestantNumbers[i]
+            </button>
+        }
+    </div>
+</div>
+
+@if (Model.NumContestants > 5)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 6; i <= Model.NumContestants && i < 11; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 10)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 11; i <= Model.NumContestants && i < 16; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 15)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 16; i <= Model.NumContestants && i < 21; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+@if (Model.NumContestants > 20)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 21; i <= Model.NumContestants && i < 26; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 25)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 26; i <= Model.NumContestants && i < 31; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 30)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 31; i <= Model.NumContestants && i < 36; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 35)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 36; i <= Model.NumContestants && i < 41; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 40)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 41; i <= Model.NumContestants && i < 46; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 45)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 46; i <= Model.NumContestants && i < 51; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 50)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 51; i <= Model.NumContestants && i < 56; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@if (Model.NumContestants > 55)
+{
+    <div class="row">
+        <div class="col-12 text-center p-0">
+            @for (int i = 56; i <= Model.NumContestants && i < 61; i++)
+            {
+                <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
+                    @Model.ContestantNumbers[i]
+                </button>
+            }
+        </div>
+    </div>
+}
+
+<script>
+    var contestantNumber = "";
+    var isSubmitted = false;
+
+    function selectContestantNumber(n) {
+        if (contestantNumber != "") {
+           document.getElementById("tn" + contestantNumber).className = "btn btn-primary btn-lg m-1 px-0";
+        }
+        document.getElementById("tn" + n).className = "btn btn-warning btn-lg m-1 px-0";
+        contestantNumber = n;
+        document.getElementById("OKButton").disabled = false;
+    }
+
+    function OKButtonClick() {
+        if (document.getElementById("OKButton").disabled) return;
+        if (!isSubmitted) {
+            isSubmitted = true;
+            location.href = '@Url.Action("OKButtonClick", "SelectContestantNumber")?contestantNumber=' + contestantNumber + '&confirm=false';
+        }
+    }
+</script>

@@ -249,7 +249,7 @@ tablet device at your current location</value>
     <value>An error has occurred whilst connecting to the scoring database</value>
   </data>
   <data name="ErrorReestablishConnection" xml:space="preserve">
-    <value>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet to your [section/]table number[/direction]</value>
+    <value>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
@@ -587,5 +587,12 @@ tablet device at your current location</value>
   </data>
   <data name="SelectScorer" xml:space="preserve">
     <value>Select the scorer</value>
+  </data>
+  <data name="ErrorContestantRegistered1" xml:space="preserve">
+    <value>Pair or player</value>
+  </data>
+  <data name="ErrorContestantRegistered3" xml:space="preserve">
+    <value>is already registered.  Do not press Register unless you intend to register a new 
+tablet device</value>
   </data>
 </root>

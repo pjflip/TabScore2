@@ -71,7 +71,7 @@ namespace TabScore2.Controllers
             }
 
             // Devices aremoving, so get the move for this device
-            List<Round> roundsList = database.GetRoundsList(deviceStatus.SectionId, newRoundNumber);
+            List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
             Move move = busLogic.GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction);
 
             if (move.NewTableNumber == 0)  // Move is to phantom table, so update and go straight to RoundInfo

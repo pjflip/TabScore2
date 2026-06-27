@@ -153,9 +153,6 @@
   <data name="ErrorPermanentDB" xml:space="preserve">
     <value>Permanenter Datenbankverbindungsfehler. Bitte überprüfen Sie das Format und die Zugriffsberechtigungen für die Scoring-Datenbank-Datei und starten Sie TabScoreStarter.exe neu</value>
   </data>
-  <data name="ErrorReestablishConnection" xml:space="preserve">
-    <value>Bitte drücken Sie auf OK, um  die Verbindung wiederherzustellen. Wenn erfolgreich, registrieren Sie dieses Tablet bitte erneut für Ihre [Abschnitt, Tischnummer, Richtung]</value>
-  </data>
   <data name="Table" xml:space="preserve">
     <value>Tisch</value>
   </data>
@@ -557,5 +554,15 @@
   </data>
   <data name="SelectScorer" xml:space="preserve">
     <value>Den Punktezähler wählen</value>
+  </data>
+  <data name="ErrorReestablishConnection" xml:space="preserve">
+    <value>Klicken Sie bitte auf OK, um zu versuchen, die Verbindung wiederherzustellen.  Bei Erfolg registrieren Sie dieses Tablet bitte erneut</value>
+  </data>
+  <data name="ErrorContestantRegistered1" xml:space="preserve">
+    <value>Paar oder Spieler</value>
+  </data>
+  <data name="ErrorContestantRegistered3" xml:space="preserve">
+    <value>ist bereits registriert.  Klicken Sie nicht auf „Registrieren“, es sei denn, Sie beabsichtigen, ein neues Konto zu registrieren 
+Tablet-Gerät</value>
   </data>
 </root>

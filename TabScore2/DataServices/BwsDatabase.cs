@@ -130,16 +130,16 @@ namespace TabScore2.DataServices
             };
         }
 
-        public List<Round> GetRoundsList(int sectionId, int roundNumber)
+        public List<Round> GetRoundsListForSectionRound(int sectionId, int roundNumber)
         {
-            RoundsListResponse response = client.GetRoundsList(new SectionRoundRequest() { SectionId = sectionId, RoundNumber = roundNumber });
+            RoundsListResponse response = client.GetRoundsListForSectionRound(new SectionRoundRequest() { SectionId = sectionId, RoundNumber = roundNumber });
             if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
             return response.Rounds;
         }
 
-        public List<Round> GetRoundsList(int sectionId)
+        public List<Round> GetRoundsListForSection(int sectionId)
         {
-            RoundsListResponse response = client.GetRoundsList(new SectionRequest() { SectionId = sectionId });
+            RoundsListResponse response = client.GetRoundsListForSection(new SectionRequest() { SectionId = sectionId });
             if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
             return response.Rounds;
         }

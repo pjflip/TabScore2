@@ -108,7 +108,7 @@ namespace TabScore2
             webAppBuilder.WebHost.ConfigureKestrel((context, serverOptions) => { serverOptions.Listen(IPAddress.Any, 5213); });
 
             WebApplication webApp = webAppBuilder.Build();
-            webApp.UseExceptionHandler("/ErrorScreen/Index");
+            // webApp.UseExceptionHandler("/ErrorScreen/Index");
             webApp.UseWebOptimizer();
             webApp.UseStaticFiles();
             webApp.UseAuthorization();

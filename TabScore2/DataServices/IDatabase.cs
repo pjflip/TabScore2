@@ -27,8 +27,8 @@ namespace TabScore2.DataServices
         int GetLastRoundWithResultsForTable(int sectionId, int tableNumber);
         Location GetLastLocationWithResultsForContestant(int sectionId, int contestantNumber);
         Location GetStartLocationForContestant(int sectionId, int contestantNumber);
-        public List<Round> GetRoundsList(int sectionId, int roundNumber);  // Specific round
-        public List<Round> GetRoundsList(int sectionId);  // All rounds
+        public List<Round> GetRoundsListForSectionRound(int sectionId, int roundNumber);  // Specific round
+        public List<Round> GetRoundsListForSection(int sectionId);  // All rounds
         public Round GetRound(int sectionId, int tableNumber, int roundNumber);
 
         // RESULT = RECEIVEDDATA
