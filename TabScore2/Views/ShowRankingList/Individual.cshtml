@@ -18,7 +18,7 @@
                 <tr>
                     <th>@localizer["Rank"]</th>
                     <th>@localizer["Player"]</th>
-                    <th>@localizer["Percentage"]</th>
+                    <th>@localizer["Score"]</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -29,7 +29,7 @@
                         <tr class="table-success">
                             <td>@Result.Rank</td>
                             <td>@Result.ContestantNumber</td>
-                            <td>@Result.Score%</td>
+                            <td>@Result.Score</td>
                         </tr>
                     }
                     else if (Model.ContestantNumberSouth == Result.ContestantNumber)
@@ -37,7 +37,7 @@
                         <tr class="table-warning">
                             <td>@Result.Rank</td>
                             <td>@Result.ContestantNumber</td>
-                            <td>@Result.Score%</td>
+                            <td>@Result.Score</td>
                         </tr>
                     }
                     else if (Model.ContestantNumberEast == Result.ContestantNumber)
@@ -45,7 +45,7 @@
                         <tr class="table-danger">
                             <td>@Result.Rank</td>
                             <td>@Result.ContestantNumber</td>
-                            <td>@Result.Score%</td>
+                            <td>@Result.Score</td>
                         </tr>
                     }
                     else if (Model.ContestantNumberWest == Result.ContestantNumber)
@@ -53,7 +53,7 @@
                         <tr class="table-info">
                             <td>@Result.Rank</td>
                             <td>@Result.ContestantNumber</td>
-                            <td>@Result.Score%</td>
+                            <td>@Result.Score</td>
                         </tr>
                     }
                     else
@@ -61,7 +61,7 @@
                         <tr>
                             <td>@Result.Rank</td>
                             <td>@Result.ContestantNumber</td>
-                            <td>@Result.Score%</td>
+                            <td>@Result.Score</td>
                         </tr>
                     }
                 }

@@ -146,8 +146,8 @@ namespace GrpcSharedContracts
     {
         [DataMember(Order = 1)] public string ErrorMessage { get; set; } = string.Empty;
         [DataMember(Order = 2)] public int TableNumber { get; set; } = 0;
-        [DataMember(Order = 2)] public int RoundNumber { get; set; } = 0;
-        [DataMember(Order = 3)] public string Direction { get; set; } = string.Empty;
+        [DataMember(Order = 3)] public int RoundNumber { get; set; } = 0;
+        [DataMember(Order = 4)] public string Direction { get; set; } = string.Empty;
     }
 
     [DataContract]

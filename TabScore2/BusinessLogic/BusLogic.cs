@@ -183,16 +183,18 @@ namespace TabScore2.BusinessLogic
         public ShowMoveModel CreateShowMoveModel(DeviceStatus deviceStatus, int newRoundNumber, int tableNotReadyNumber)
         {
             ShowMoveModel showMoveModel = [];
+            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             showMoveModel.Direction = deviceStatus.Direction;
             showMoveModel.NewRoundNumber = newRoundNumber;
             showMoveModel.TableNotReadyNumber = tableNotReadyNumber;
             showMoveModel.DevicesPerTable = deviceStatus.DevicesPerTable;
             int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
+            bool showBoards;
 
             List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
-            if (deviceStatus.DevicesPerTable == 1)
+            if (deviceStatus.DevicesPerTable == 1 || (settings.Mode == Mode.Scorer && deviceStatus.Scoring))
             {
-                TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
+                // Only one device per table, or a scoring device in Scorer Mode, so need to show all moves at the table
                 if (settings.IsIndividual)
                 {
                     if (tableStatus.RoundData.ContestantNumberNorth != 0)
@@ -223,24 +225,28 @@ namespace TabScore2.BusinessLogic
                         showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberEast, Direction.East));
                     }
                 }
+                showBoards = true;
             }
-            else  // TabletDevicesPerTable > 1, so only need move for single player/pair.  Could be at phantom table, so use deviceStatus info
+            else
             {
+                // Personal Mode or a non-scoring device in Scoring Mode, so only need to show need move for single player/pair.
+                // Could be at phantom table, so use deviceStatus info
                 showMoveModel.Add(GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction));
+
+                // Show boards move only to North (or North/South) unless missing, in which case only show to East (or East/West)
+                showBoards = deviceStatus.Direction == Direction.North || ((tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair) && deviceStatus.Direction == Direction.East);
             }
 
-            showMoveModel.BoardsNewTable = -999;  // Default is not to show boards move
-            if (deviceStatus.TableNumber != 0)    // If at a phantom table, there are no boards to worry about
+            if (showBoards && deviceStatus.TableNumber > 0)  // If at a phantom table, there are no boards to worry about
             {
-                // Show boards move only to North (or North/South) unless missing, in which case only show to East (or East/West)
-                TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                 showMoveModel.LowBoard = tableStatus.RoundData.LowBoard;
                 showMoveModel.HighBoard = tableStatus.RoundData.HighBoard;
-                if (showMoveModel.Direction == Direction.North || (tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair) && showMoveModel.Direction == Direction.East)
-                {
-                    showMoveModel.BoardsNewTable = GetBoardsNewTableNumber(roundsList, tableStatus.TableNumber, tableStatus.RoundData.LowBoard);
-                    showMoveModel.BoardsStay = showMoveModel.BoardsNewTable == tableStatus.TableNumber;
-                }
+                showMoveModel.BoardsNewTable = GetBoardsNewTableNumber(roundsList, tableStatus.TableNumber, tableStatus.RoundData.LowBoard);
+                showMoveModel.BoardsStay = showMoveModel.BoardsNewTable == tableStatus.TableNumber;
+            }
+            else
+            {
+                showMoveModel.BoardsNewTable = -999;  // Indicates not to show boards
             }
             return showMoveModel;
         }

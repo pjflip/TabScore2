@@ -4,7 +4,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using TabScore2.BusinessLogic;
-using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
@@ -12,10 +11,9 @@ using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class SelectContestantNumberController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
+    public class SelectContestantNumberController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
-        private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
@@ -25,6 +23,8 @@ namespace TabScore2.Controllers
             // To get here, we must be in Scorer or Personal Mode
             
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+
             SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, confirmContestantNumber);
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
@@ -43,7 +43,7 @@ namespace TabScore2.Controllers
         public ActionResult OKButtonClick(int contestantNumber, bool confirm)
         {
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            DeviceStatus deviceStatus;
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
 
             int deviceNumber = appData.GetDeviceNumberByContestant(sectionId, contestantNumber);  // Returns -1 if not found
             if (deviceNumber != -1 && confirm)
@@ -71,19 +71,14 @@ namespace TabScore2.Controllers
 
             // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application
             HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
-            deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            if (deviceStatus.ReadyForNextRound)
+            if (settings.Mode == Mode.Scorer)
             {
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
-            }
-            else if (deviceStatus.RoundNumber == 1 || settings.NumberEntryEachRound)
-            {
-                return RedirectToAction("Index", "ShowPlayerIds");
+                return RedirectToAction("Index", "SelectScorer");
             }
             else
             {
-                return RedirectToAction("Index", "ShowRoundInfo");
+                return RedirectToAction("Index", "ShowPlayerIds");
             }
         }
     }

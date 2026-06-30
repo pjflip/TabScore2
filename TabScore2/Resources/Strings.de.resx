@@ -522,9 +522,6 @@
   <data name="Confirm" xml:space="preserve">
     <value>Bestätigen</value>
   </data>
-  <data name="SelectContestantNumber" xml:space="preserve">
-    <value>Wählen Sie die Paar-/Spieler-/Teamnummer für Norden</value>
-  </data>
   <data name="ShowTableStatus" xml:space="preserve">
     <value>Status der Tabellen</value>
   </data>
@@ -564,5 +561,8 @@
   <data name="ErrorContestantRegistered3" xml:space="preserve">
     <value>ist bereits registriert.  Klicken Sie nicht auf „Registrieren“, es sei denn, Sie beabsichtigen, ein neues Konto zu registrieren 
 Tablet-Gerät</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Wählen Sie Paar- oder Spielernummer</value>
   </data>
 </root>

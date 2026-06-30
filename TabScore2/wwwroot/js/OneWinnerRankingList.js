@@ -22,7 +22,7 @@ function pollRankingListener() {
         var cellScore = row.insertCell(2);
         cellRank.innerHTML = rankingList[i].rank;
         cellPairNumber.innerHTML = rankingList[i].contestantNumber;
-        cellScore.innerHTML = rankingList[i].score + "%";
+        cellScore.innerHTML = rankingList[i].score;
     }
     var old_tbody = document.getElementById("tableBody");
     old_tbody.parentNode.replaceChild(new_tbody, old_tbody);

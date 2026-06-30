@@ -502,9 +502,6 @@
   <data name="Confirm" xml:space="preserve">
     <value>Confirmar</value>
   </data>
-  <data name="SelectContestantNumber" xml:space="preserve">
-    <value>Seleccione el número de pareja/jugador/equipo para Norte</value>
-  </data>
   <data name="ShowTableStatus" xml:space="preserve">
     <value>Estado de las tablas</value>
   </data>
@@ -544,5 +541,8 @@
   <data name="ErrorContestantRegistered3" xml:space="preserve">
     <value>ya está registrado.  No presione Registrar a menos que desee registrar un nuevo 
 dispositivo tableta</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Seleccione número de pareja o jugador</value>
   </data>
 </root>

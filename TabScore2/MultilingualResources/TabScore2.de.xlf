@@ -423,8 +423,8 @@ tablet device at your current location</source>
           <target state="new">Abschnitt</target>
         </trans-unit>
         <trans-unit id="SelectContestantNumber" translate="yes" xml:space="preserve">
-          <source>Select pair/player/team number for North</source>
-          <target state="new">Wählen Sie die Paar-/Spieler-/Teamnummer für Norden</target>
+          <source>Select pair or player number</source>
+          <target state="new">Wählen Sie Paar- oder Spielernummer</target>
         </trans-unit>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>

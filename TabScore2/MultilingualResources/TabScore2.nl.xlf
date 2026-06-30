@@ -423,8 +423,8 @@ tablet device at your current location</source>
           <target state="new">Lijn</target>
         </trans-unit>
         <trans-unit id="SelectContestantNumber" translate="yes" xml:space="preserve">
-          <source>Select pair/player/team number for North</source>
-          <target state="new">Selecteer paar/speler/teamnummer voor Noord</target>
+          <source>Select pair or player number</source>
+          <target state="new">Selecteer paar- of spelernummer</target>
         </trans-unit>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>

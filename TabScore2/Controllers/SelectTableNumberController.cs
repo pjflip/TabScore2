@@ -23,6 +23,8 @@ namespace TabScore2.Controllers
         public ActionResult Index(int confirmTableNumber = 0) 
         {
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+
             SelectTableNumberModel model = busLogic.CreateSelectTableNumberModel(sectionId, confirmTableNumber);
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
@@ -41,6 +43,7 @@ namespace TabScore2.Controllers
         public ActionResult OKButtonClick(int tableNumber, bool confirm)
         {
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
 
             if (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1)
             {

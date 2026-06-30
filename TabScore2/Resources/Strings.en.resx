@@ -525,9 +525,6 @@
   <data name="Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
-  <data name="SelectContestantNumber" xml:space="preserve">
-    <value>Select pair/player/team number for North</value>
-  </data>
   <data name="ShowTableStatus" xml:space="preserve">
     <value>Status of tables</value>
   </data>
@@ -564,5 +561,8 @@
   <data name="ErrorContestantRegistered3" xml:space="preserve">
     <value>is already registered.  Do not press Register unless you intend to register a new 
 tablet device</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Select pair or player number</value>
   </data>
 </root>

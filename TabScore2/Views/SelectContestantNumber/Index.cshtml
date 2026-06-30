@@ -51,7 +51,7 @@
 
 <div class="row">
     <div class="col-12 text-center p-0">
-        @for (int i = 1; i <= Model.NumContestants && i < 6; i++)
+        @for (int i = 0; i < Model.NumContestants && i < 5; i++)
         {
             <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                 @Model.ContestantNumbers[i]
@@ -64,7 +64,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 6; i <= Model.NumContestants && i < 11; i++)
+            @for (int i = 5; i < Model.NumContestants && i < 10; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -78,7 +78,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 11; i <= Model.NumContestants && i < 16; i++)
+            @for (int i = 10; i < Model.NumContestants && i < 15; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -92,7 +92,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 16; i <= Model.NumContestants && i < 21; i++)
+            @for (int i = 15; i < Model.NumContestants && i < 20; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -105,7 +105,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 21; i <= Model.NumContestants && i < 26; i++)
+            @for (int i = 20; i < Model.NumContestants && i < 25; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -119,7 +119,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 26; i <= Model.NumContestants && i < 31; i++)
+            @for (int i = 25; i < Model.NumContestants && i < 30; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -133,7 +133,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 31; i <= Model.NumContestants && i < 36; i++)
+            @for (int i = 30; i < Model.NumContestants && i < 35; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -147,7 +147,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 36; i <= Model.NumContestants && i < 41; i++)
+            @for (int i = 35; i < Model.NumContestants && i < 40; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -161,7 +161,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 41; i <= Model.NumContestants && i < 46; i++)
+            @for (int i = 40; i < Model.NumContestants && i < 45; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -175,7 +175,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 46; i <= Model.NumContestants && i < 51; i++)
+            @for (int i = 45; i < Model.NumContestants && i < 50; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -189,7 +189,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 51; i <= Model.NumContestants && i < 56; i++)
+            @for (int i = 50; i < Model.NumContestants && i < 55; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]
@@ -203,7 +203,7 @@
 {
     <div class="row">
         <div class="col-12 text-center p-0">
-            @for (int i = 56; i <= Model.NumContestants && i < 61; i++)
+            @for (int i = 55; i < Model.NumContestants && i < 60; i++)
             {
                 <button id="tn@(Model.ContestantNumbers[i])" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectContestantNumber('@Model.ContestantNumbers[i]')" onclick="if (!touchAvailable) selectContestantNumber('@Model.ContestantNumbers[i]')">
                     @Model.ContestantNumbers[i]

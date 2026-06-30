@@ -522,9 +522,6 @@
   <data name="Confirm" xml:space="preserve">
     <value>Bevestigen</value>
   </data>
-  <data name="SelectContestantNumber" xml:space="preserve">
-    <value>Selecteer paar/speler/teamnummer voor Noord</value>
-  </data>
   <data name="ShowTableStatus" xml:space="preserve">
     <value>Status van tabellen</value>
   </data>
@@ -564,5 +561,8 @@
   <data name="ErrorContestantRegistered3" xml:space="preserve">
     <value>is al geregistreerd.  Druk niet op Registreren tenzij u van plan bent een nieuwe te registreren 
 tablet-apparaat</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Selecteer paar- of spelernummer</value>
   </data>
 </root>

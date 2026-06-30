@@ -18,7 +18,7 @@
                 <tr>
                     <th>@localizer["Rank"]</th>
                     <th>@localizer["Pair"]</th>
-                    <th>@localizer["Percentage"]</th>
+                    <th>@localizer["Score"]</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
@@ -29,7 +29,7 @@
                         <tr class="table-success">
                             <td>@Rank.Rank</td>
                             <td>@Rank.ContestantNumber</td>
-                            <td>@Rank.Score%</td>
+                            <td>@Rank.Score</td>
                         </tr>
                     }
                     else if (Model.ContestantNumberEast == Rank.ContestantNumber)
@@ -37,7 +37,7 @@
                         <tr class="table-warning">
                             <td>@Rank.Rank</td>
                             <td>@Rank.ContestantNumber</td>
-                            <td>@Rank.Score%</td>
+                            <td>@Rank.Score</td>
                         </tr>
                     }
                     else
@@ -45,7 +45,7 @@
                         <tr>
                             <td>@Rank.Rank</td>
                             <td>@Rank.ContestantNumber</td>
-                            <td>@Rank.Score%</td>
+                            <td>@Rank.Score</td>
                         </tr>
                     }
                 }

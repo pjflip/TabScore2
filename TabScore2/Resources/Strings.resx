@@ -559,7 +559,7 @@ tablet device at your current location</value>
     <value>Confirm</value>
   </data>
   <data name="SelectContestantNumber" xml:space="preserve">
-    <value>Select pair/player/team number for North</value>
+    <value>Select pair or player number</value>
   </data>
   <data name="ShowTableStatus" xml:space="preserve">
     <value>Status of tables</value>

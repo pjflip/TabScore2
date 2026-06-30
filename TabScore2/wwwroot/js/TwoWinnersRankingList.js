@@ -33,7 +33,7 @@ function pollRankingListener() {
         var cellScore = row.insertCell(2);
         cellRank.innerHTML = rankingList[i].rank;
         cellPairNumber.innerHTML = rankingList[i].contestantNumber;
-        cellScore.innerHTML = rankingList[i].score + "%";
+        cellScore.innerHTML = rankingList[i].score;
     }
     var old_tbodyNS = document.getElementById("tableBodyNS");
     old_tbodyNS.parentNode.replaceChild(new_tbodyNS, old_tbodyNS);
