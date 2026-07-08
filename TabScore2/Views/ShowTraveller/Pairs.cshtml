@@ -1,7 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-     @model ShowTravellerModel
+@model ShowTravellerModel
 
 <div class="row mt-4">
     @if (Model.HandRecord)
@@ -78,7 +78,7 @@
             <tbody>
                 @foreach (var result in Model)
                 {
-                   if (result.Highlight)
+                    if (result.Highlight)
                     {
                         <tr class="table-success">
                             <td>@result.NumberNorth</td>
@@ -134,4 +134,3 @@
         }
     }
 </script>
-

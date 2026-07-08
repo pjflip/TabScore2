@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using TabScore2.BusinessLogic;
+using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
@@ -71,15 +72,12 @@ namespace TabScore2.Controllers
 
             // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application
             HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            if (settings.Mode == Mode.Scorer)
-            {
-                return RedirectToAction("Index", "SelectScorer");
-            }
-            else
-            {
-                return RedirectToAction("Index", "ShowPlayerIds");
-            }
+            // Work out where to go next
+            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer");
+            return RedirectToAction("Index", "ShowPlayerIds");
         }
     }
 }

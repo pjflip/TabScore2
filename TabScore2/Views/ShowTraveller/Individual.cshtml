@@ -1,7 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
      
-     @model ShowTravellerModel
+@model ShowTravellerModel
 
 <div class="row mt-4">
     @if (Model.HandRecord)
@@ -63,7 +63,7 @@
 
 <div class="row">
     <div class="col-12 p-0">
-        <table class="table-sm table-bordered text-center" style="margin:auto; width:80%">
+        <table class="table table-sm table-bordered text-center" style="margin:auto; width:80%">
             <thead class="thead-dark">
                 <tr>
                     <th>@localizer["N"]@localizer["S"]</th>
@@ -76,30 +76,30 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var Result in Model)
+                @foreach (var result in Model)
                 {
-                     if (Result.Highlight)
+                    if (result.Highlight)
                     {
                         <tr class="table-success">
-                            <td>@Result.NumberNorth+@Result.NumberSouth</td>
-                            <td>@Result.NumberEast+@Result.NumberWest</td>
-                            <td style="white-space: nowrap">@Html.Raw(Result.DisplayContract)</td>
-                            <td>@Result.DisplayDeclarerNSEW</td>
-                            <td>@Html.Raw(Result.DisplayLeadCard)</td>
-                            <td>@Html.Raw(Result.ScoreNS)</td>
-                            <td>@Html.Raw(Result.ScoreEW)</td>
+                            <td>@result.NumberNorth+@result.NumberSouth</td>
+                            <td>@result.NumberEast+@result.NumberWest</td>
+                            <td style="white-space: nowrap">@Html.Raw(result.DisplayContract)</td>
+                            <td>@result.DisplayDeclarerNSEW</td>
+                            <td>@Html.Raw(result.DisplayLeadCard)</td>
+                            <td>@Html.Raw(result.ScoreNS)</td>
+                            <td>@Html.Raw(result.ScoreEW)</td>
                         </tr>
                     }
                     else
                     {
                         <tr>
-                            <td>@Result.NumberNorth+@Result.NumberSouth</td>
-                            <td>@Result.NumberEast+@Result.NumberWest</td>
-                            <td style="white-space: nowrap">@Html.Raw(Result.DisplayContract)</td>
-                            <td>@Result.DisplayDeclarerNSEW</td>
-                            <td>@Html.Raw(Result.DisplayLeadCard)</td>
-                            <td>@Html.Raw(@Result.ScoreNS)</td>
-                            <td>@Html.Raw(@Result.ScoreEW)</td>
+                            <td>@result.NumberNorth+@result.NumberSouth</td>
+                            <td>@result.NumberEast+@result.NumberWest</td>
+                            <td style="white-space: nowrap">@Html.Raw(result.DisplayContract)</td>
+                            <td>@result.DisplayDeclarerNSEW</td>
+                            <td>@Html.Raw(result.DisplayLeadCard)</td>
+                            <td>@Html.Raw(@result.ScoreNS)</td>
+                            <td>@Html.Raw(@result.ScoreEW)</td>
                         </tr>
                     }
                 }

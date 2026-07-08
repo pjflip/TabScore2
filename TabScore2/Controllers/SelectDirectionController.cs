@@ -76,15 +76,12 @@ namespace TabScore2.Controllers
 
             // DeviceNumber is the key for identifying this particular tablet device and is used throughout the rest of the application
             HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            if (settings.Mode == Mode.Scorer)
-            {
-                return RedirectToAction("Index", "SelectScorer");
-            }
-            else
-            {
-                return RedirectToAction("Index", "ShowPlayerIds");
-            }
+            // Work out where to go next
+            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer");
+            return RedirectToAction("Index", "ShowPlayerIds");
         }
     }
 }

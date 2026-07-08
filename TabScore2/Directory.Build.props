@@ -1,7 +1,7 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
   <PropertyGroup>
-    <AssemblyVersion>1.1.0.1</AssemblyVersion>
-    <AssemblyFileVersion>1.1.0.1</AssemblyFileVersion>
+    <AssemblyVersion>1.1.0.2</AssemblyVersion>
+    <AssemblyFileVersion>1.1.0.2</AssemblyFileVersion>
   </PropertyGroup>
 </Project>

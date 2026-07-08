@@ -36,15 +36,8 @@ namespace TabScore2.Controllers
                 }
             }
 
-            if (deviceStatus.TableNumber != 0)  // Not at phantom table, so update table status
-            {
-                TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-                if (tableStatus.RoundNumber < newRoundNumber)
-                {
-                    // No device has yet advanced this table to the next round, so show that this one is ready to do so
-                    deviceStatus.ReadyForNextRound = true;
-                }
-            }
+            // The current round is complete, so set this device to show that it is ready for the next round
+            deviceStatus.ReadyForNextRound = true;
 
             ShowMoveModel showMoveModel = busLogic.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
 
@@ -62,20 +55,23 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            if (deviceStatus.DevicesPerTable == 1)  // Devices not moving, so no need to check if new table is ready
+            if (deviceStatus.DevicesPerTable == 1)  
             {
+                // Devices not moving, so no need to check if new table is ready.  Can just update the device and table statuses and go straight to ShowPlayerIds
                 deviceStatus.RoundNumber = newRoundNumber;
+                deviceStatus.ReadyForNextRound = false;
                 appData.UpdateTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber, newRoundNumber);
                 database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);  // Refresh settings for the start of the round.  Only done once per round.
                 return RedirectToAction("Index", "ShowPlayerIds");
             }
 
-            // Devices aremoving, so get the move for this device
+            // Devices are moving, so get the move for this device
             List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
             Move move = busLogic.GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction);
 
-            if (move.NewTableNumber == 0)  // Move is to phantom table, so update and go straight to RoundInfo
+            if (move.NewTableNumber == 0) 
             {
+                // Move is to phantom table, so no need to check PlayerIds.  Update and go straight to ShowRoundInfo
                 appData.UpdateDeviceStatus(deviceStatus, 0, newRoundNumber, Direction.Sitout);
                 HttpContext.Session.SetInt32("TableNumber", 0);
                 HttpContext.Session.SetString("Direction", Direction.Sitout.ToString());
@@ -88,13 +84,13 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowMove", new { newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
             }
 
-            // Reset tablet device and table statuses for new round, and update session state
+            // New table is ready.  Reset device and table statuses for the new round, and update session state
             appData.UpdateDeviceStatus(deviceStatus, move.NewTableNumber, newRoundNumber, move.NewDirection);
             appData.UpdateTableStatus(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber);
             HttpContext.Session.SetInt32("TableNumber", move.NewTableNumber);
             HttpContext.Session.SetString("Direction", move.NewDirection.ToString());
 
-            // Refresh settings for the start of the round.  Only done once per round.
+            // Refresh settings for the start of the round.  Only done once per round by the first device to get to ShowMove for the round
             database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);
                 
             if (settings.Mode == Mode.Scorer)

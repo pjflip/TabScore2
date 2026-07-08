@@ -84,18 +84,9 @@ namespace TabScore2.Controllers
                 HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
                 DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-                if (deviceStatus.ReadyForNextRound)
-                {
-                    return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
-                }
-                else if (deviceStatus.RoundNumber == 1 || settings.NumberEntryEachRound)
-                {
-                    return RedirectToAction("Index", "ShowPlayerIds");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "ShowRoundInfo");
-                }
+                // Work out where to go next
+                if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowPlayerIds");
             }
         }
     }
