@@ -202,8 +202,8 @@ dispositivo tableta</target>
           <target state="new">Asegúrese de haber ingresado una identificación o "Desconocido" para todos los jugadores en la mesa antes de presionar Aceptar</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorPermanentDB" translate="yes" xml:space="preserve">
-          <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScoreStarter.exe</source>
-          <target state="new">Error permanente de conexión de base de datos. Verifique el formato y los permisos de acceso para el archivo de la base de datos de puntajes y reinicie TabScoreStarter.exe</target>
+          <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScore2</source>
+          <target state="new">Error permanente de conexión de base de datos. Verifique el formato y los permisos de acceso para el archivo de la base de datos de puntajes y reinicie TabScore2</target>
         </trans-unit>
         <trans-unit id="ErrorReestablishConnection" translate="yes" xml:space="preserve">
           <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet</source>

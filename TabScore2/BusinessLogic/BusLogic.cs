@@ -558,7 +558,7 @@ namespace TabScore2.BusinessLogic
 
         // OTHER PUBLIC UTLITY CLASSES
 
-        public void UpdateNamesForRound(TableStatus tableStatus)
+        public void GetDatabaseNamesForRound(TableStatus tableStatus)
         {
             NamesForRound names = database.GetNamesForTableRound(tableStatus.SectionId, tableStatus.RoundNumber, tableStatus.RoundData.ContestantNumberNorth, tableStatus.RoundData.ContestantNumberEast, tableStatus.RoundData.ContestantNumberSouth, tableStatus.RoundData.ContestantNumberWest);
             tableStatus.RoundData.NameNorth = names.NameNorth;

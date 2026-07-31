@@ -24,15 +24,15 @@ namespace TabScore2.Controllers
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
 
             // Update names from database if not done very recently
-            if (deviceStatus.NamesUpdateRequired) busLogic.UpdateNamesForRound(tableStatus);
+            if (deviceStatus.DatabaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
 
             if (tableStatus.RoundData.GotAllNames && !settings.NumberEntryEachRound)
             {
                 // Player numbers not needed if all names have already been entered and names are not being updated each round
-                deviceStatus.NamesUpdateRequired = false;  // No round update required in RoundInfo as it's just been done
+                deviceStatus.DatabaseNamesRequired = false;  // No names update required in RoundInfo as it's just been done
                 return RedirectToAction("Index", "ShowRoundInfo", new { deviceNumber });
             }
-            deviceStatus.NamesUpdateRequired = true;  // We'll now need to update when we get to RoundInfo in case names change in the mean time
+            deviceStatus.DatabaseNamesRequired = true;  // We'll now need to update when we get to RoundInfo in case names change in the mean time
 
             ShowPlayerIdsModel showplayerIdsModel = busLogic.CreateShowPlayerIdsModel(deviceStatus);
 
@@ -57,8 +57,8 @@ namespace TabScore2.Controllers
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             
-            busLogic.UpdateNamesForRound(tableStatus);
-            appData.GetDeviceStatus(deviceNumber).NamesUpdateRequired = false;  // No names update required on next screen as it's only just been done
+            busLogic.GetDatabaseNamesForRound(tableStatus);
+            appData.GetDeviceStatus(deviceNumber).DatabaseNamesRequired = false;  // No names update required on next screen as it's only just been done
 
             // Check if all required names have been entered, and if not go back and wait
             if (tableStatus.RoundData.GotAllNames)

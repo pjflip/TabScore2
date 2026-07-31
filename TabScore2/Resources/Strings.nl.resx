@@ -238,7 +238,7 @@
     <value>Bestand TabScoreDB.txt bestaat niet. Herstart TabScoreStarter.exe.</value>
   </data>
   <data name="ErrorPermanentDB" xml:space="preserve">
-    <value>Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScoreStarter.exe</value>
+    <value>Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScore2</value>
   </data>
   <data name="ErrorScreen" xml:space="preserve">
     <value>Schermfout</value>

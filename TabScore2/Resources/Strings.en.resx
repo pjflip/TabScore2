@@ -205,7 +205,7 @@
     <value>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</value>
   </data>
   <data name="ErrorPermanentDB" xml:space="preserve">
-    <value>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScoreStarter.exe</value>
+    <value>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScore2</value>
   </data>
   <data name="ErrorScreen" xml:space="preserve">
     <value>Error screen</value>

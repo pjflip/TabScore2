@@ -202,8 +202,8 @@ tablet-apparaat</target>
           <target state="new">Zorg ervoor dat een ID of 'Onbekend' is ingevoerd voor alle spelers aan de tafel voordat u op OK drukt</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorPermanentDB" translate="yes" xml:space="preserve">
-          <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScoreStarter.exe</source>
-          <target state="new">Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScoreStarter.exe</target>
+          <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScore2</source>
+          <target state="new">Permanente database connectiefout.  Controleer bestandsformaat en toestemming voor de scoring database document en herstart TabScore2</target>
         </trans-unit>
         <trans-unit id="ErrorReestablishConnection" translate="yes" xml:space="preserve">
           <source>Please click OK to try to re-establish the connection.  If successful, please re-register this tablet</source>

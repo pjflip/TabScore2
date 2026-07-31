@@ -35,7 +35,7 @@ namespace GrpcSharedContracts
     [DataContract]
     public class PlayerRequest
     {
-        [DataMember(Order = 1)] public string PlayerId { get; set; } = string.Empty;
+        [DataMember(Order = 1)] public int PlayerId { get; set; }
     }
 
     [DataContract]
@@ -101,7 +101,7 @@ namespace GrpcSharedContracts
         [DataMember(Order = 3)] public int RoundNumber { get; set; }
         [DataMember(Order = 4)] public string DirectionLetter { get; set; } = string.Empty;
         [DataMember(Order = 5)] public int ContestantNumber { get; set; }
-        [DataMember(Order = 6)] public string PlayerId { get; set; } = string.Empty;
+        [DataMember(Order = 6)] public int PlayerId { get; set; }
         [DataMember(Order = 7)] public string PlayerName { get; set; } = string.Empty;
     }
 

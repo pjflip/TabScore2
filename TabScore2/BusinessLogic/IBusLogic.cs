@@ -24,7 +24,7 @@ namespace TabScore2.BusinessLogic
         ShowHandRecordModel? CreateShowHandRecordModel(DeviceStatus deviceStatus, int boardNumber);
         ShowRankingListModel CreateRankingListModel(DeviceStatus deviceStatus);
 
-        void UpdateNamesForRound(TableStatus tableStatus);
+        void GetDatabaseNamesForRound(TableStatus tableStatus);
         Move GetMove(List<Round> roundsList, int tableNumber, int pairNumber, Direction direction);
         int GetBoardsFromTableNumber(TableStatus tableStatus);
         List<Ranking> GetRankings(int sectionId);

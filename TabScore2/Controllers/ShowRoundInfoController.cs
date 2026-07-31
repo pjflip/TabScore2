@@ -35,8 +35,8 @@ namespace TabScore2.Controllers
 
             // Update player names if not just immediately done in ShowPlayerIds
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (deviceStatus.NamesUpdateRequired) busLogic.UpdateNamesForRound(tableStatus);
-            deviceStatus.NamesUpdateRequired = true;
+            if (deviceStatus.DatabaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
+            deviceStatus.DatabaseNamesRequired = true;
 
             ShowRoundInfoModel model = busLogic.CreateShowRoundInfoModel(deviceStatus);
             if (deviceStatus.RoundNumber > 1)

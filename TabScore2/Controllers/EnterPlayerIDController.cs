@@ -31,18 +31,18 @@ namespace TabScore2.Controllers
             return View(enterPlayerIdModel);
         }
 
-        public ActionResult OKButtonClick(Direction direction, string playerId)
+        public ActionResult OKButtonClick(Direction direction, int playerId)
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             string playerName = string.Empty;
-            if (playerId == "0")
+            if (playerId == 0)
             {
                 playerName = "Unknown";
             }
-            else
+            else  // playerId must be a positive integer
             {
                 switch (settings.NameSource)
                 {

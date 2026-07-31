@@ -173,14 +173,14 @@ namespace TabScore2.DataServices
         }
 
         // PLAYERNAMES
-        public string GetInternalPlayerName(string PlayerId)
+        public string GetInternalPlayerName(int playerId)
         {
-            PlayerNameResponse response = client.GetInternalPlayerName(new PlayerRequest() { PlayerId = PlayerId });
+            PlayerNameResponse response = client.GetInternalPlayerName(new PlayerRequest() { PlayerId = playerId });
             if (response.ErrorMessage != string.Empty) throw new Exception(response.ErrorMessage);
             string name = response.PlayerName;
             if (name == "Unknown")
             {
-                return "#" + PlayerId;
+                return "#" + playerId;
             }
             else
             {
@@ -203,7 +203,7 @@ namespace TabScore2.DataServices
             };
         }
 
-        public void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, string playerId, string playerName)
+        public void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, int playerId, string playerName)
         {
             client.UpdatePlayer(new UpdatePlayerRequest() { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, DirectionLetter = directionLetter, ContestantNumber = pairNumber, PlayerId = playerId, PlayerName = playerName });
         }

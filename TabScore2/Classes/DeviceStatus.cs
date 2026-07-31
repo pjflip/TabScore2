@@ -17,7 +17,7 @@ namespace TabScore2.Classes
         public required string Location { get; set; }
         public required int RoundNumber { get; set; }
         public bool ReadyForNextRound { get; set; } = false;
-        public bool NamesUpdateRequired { get; set; } = true;
+        public bool DatabaseNamesRequired { get; set; } = true;
         public bool AtSitoutTable { get; set; } = false;
         public bool Scoring { get; set; } = false;
         public Result ResultData { get; set; } = new() { BoardNumber = 0, ContractLevel = -999, TricksTaken = -1 };

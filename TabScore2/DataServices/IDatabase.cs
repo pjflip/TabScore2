@@ -37,10 +37,10 @@ namespace TabScore2.DataServices
         List<Result> GetResultsList(int sectionId = 0, int lowBoard = 0, int highBoard = 0, int tableNumber = 0, int roundNumber = 0);
 
         // PLAYERNAMES
-        string GetInternalPlayerName(string playerId);
+        string GetInternalPlayerName(int playerId);
 
         // PLAYERNUMBERS
-        void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, string playerId, string playerName);
+        void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, int playerId, string playerName);
         NamesForRound GetNamesForTableRound(int sectionId, int roundNumber, int numberNorth, int numberEast, int numberSouth, int numberWest);
 
         // HANDRECORD

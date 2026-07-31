@@ -1010,20 +1010,17 @@ namespace GrpcBwsDatabaseServer.GrpcServices
                 using OdbcConnection connection = new(connectionString);
                 connection.Open();
 
-                if (int.TryParse(request.PlayerId, out int intID))
+                string SQLString = $"SELECT Name FROM PlayerNames WHERE ID={request.PlayerId}";
+                object? queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
+                if (queryResult != null)
                 {
-                    string SQLString = $"SELECT Name FROM PlayerNames WHERE ID={intID}";
-                    object? queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
-                    if (queryResult != null)
-                    {
-                        string? tempName = queryResult.ToString();
-                        if (tempName != null && tempName != string.Empty) name = tempName;
-                    }
+                    string? tempName = queryResult.ToString();
+                    if (tempName != null && tempName != string.Empty) name = tempName;
                 }
                 if (name == "Unknown")
                 {
-                    string SQLString = $"SELECT Name FROM PlayerNames WHERE RIGHT(strID,{request.PlayerId.Length})='{request.PlayerId}'";
-                    object? queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
+                    SQLString = $"SELECT Name FROM PlayerNames WHERE RIGHT(strID,{request.PlayerId.ToString().Length})='{request.PlayerId}'";
+                    queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
                     if (queryResult != null)
                     {
                         string? tempName = queryResult.ToString();
@@ -1181,14 +1178,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
                     catch { } // Record found, but format cannot be parsed
                 });
             }
-            if (name == string.Empty && number != string.Empty && number != "0")
-            {
-                return "#" + number;
-            }
-            else
-            {
-                return name;
-            }
+            return FormatName(name, number);
         }
 
         private static string GetNameFromPlayerNumbersTableIndividual(OdbcConnection conn, int sectionId, int roundNumber, int playerNo)
@@ -1222,14 +1212,15 @@ namespace GrpcBwsDatabaseServer.GrpcServices
                 }
                 catch { } // Record found, but format cannot be parsed
             });
-            if (name == string.Empty && number != string.Empty && number != "0")
-            {
-                return "#" + number;
-            }
-            else
-            {
-                return name;
-            }
+            return FormatName(name, number);
+        }
+
+        private static string FormatName(string name, string number)
+        {
+            if (name != string.Empty) return name;
+            if (number == "0") return "Unknown";
+            if (number != string.Empty) return "#" + number;
+            return string.Empty;
         }
 
         public ErrorResponse UpdatePlayer(UpdatePlayerRequest request)
