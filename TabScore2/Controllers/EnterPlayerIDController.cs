@@ -89,7 +89,7 @@ namespace TabScore2.Controllers
             }
             database.UpdatePlayer(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, directionLetter, pairNumber, playerId, playerName);
 
-            return RedirectToAction("Index", "ShowPlayerIds");
+            return RedirectToAction("Index", "ShowPlayerIds", new { fromEnterPlayerID = true });
         }
     }
 }

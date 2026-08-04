@@ -16,7 +16,7 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index()
+        public ActionResult Index(bool fromEnterPlayerID = false, bool databaseNamesRequired = true)
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
@@ -24,15 +24,14 @@ namespace TabScore2.Controllers
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
 
             // Update names from database if not done very recently
-            if (deviceStatus.DatabaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
+            if (databaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
 
-            if (tableStatus.RoundData.GotAllNames && !settings.NumberEntryEachRound)
+            if (!fromEnterPlayerID && tableStatus.RoundData.GotAllNames && !settings.NumberEntryEachRound)
             {
-                // Player numbers not needed if all names have already been entered and names are not being updated each round
-                deviceStatus.DatabaseNamesRequired = false;  // No names update required in RoundInfo as it's just been done
-                return RedirectToAction("Index", "ShowRoundInfo", new { deviceNumber });
+                // Player numbers not needed if all names have already been entered and names are not being updated each round.  But always show if an ID has just been entered.
+                // No names update required in RoundInfo as it's just been done
+                return RedirectToAction("Index", "ShowRoundInfo", new { databaseNamesRequired = false });
             }
-            deviceStatus.DatabaseNamesRequired = true;  // We'll now need to update when we get to RoundInfo in case names change in the mean time
 
             ShowPlayerIdsModel showplayerIdsModel = busLogic.CreateShowPlayerIdsModel(deviceStatus);
 
@@ -58,17 +57,16 @@ namespace TabScore2.Controllers
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             
             busLogic.GetDatabaseNamesForRound(tableStatus);
-            appData.GetDeviceStatus(deviceNumber).DatabaseNamesRequired = false;  // No names update required on next screen as it's only just been done
 
-            // Check if all required names have been entered, and if not go back and wait
+            // Check if all required names have been entered, and if not go back and wait.  No names update required on next screen as it's only just been done
             if (tableStatus.RoundData.GotAllNames)
             {
-                return RedirectToAction("Index", "ShowRoundInfo");
+                return RedirectToAction("Index", "ShowRoundInfo", new { databaseNamesRequired = false });
             }
             else
             {
                 TempData["ShowWarning"] = "ErrorNotAllNames";
-                return RedirectToAction("Index", "ShowPlayerIds");
+                return RedirectToAction("Index", "ShowPlayerIds", new { databaseNamesRequired = false });
             }
         }
     }

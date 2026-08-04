@@ -17,7 +17,7 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(bool databaseNamesRequired = true)
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
@@ -35,8 +35,7 @@ namespace TabScore2.Controllers
 
             // Update player names if not just immediately done in ShowPlayerIds
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (deviceStatus.DatabaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
-            deviceStatus.DatabaseNamesRequired = true;
+            if (databaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
 
             ShowRoundInfoModel model = busLogic.CreateShowRoundInfoModel(deviceStatus);
             if (deviceStatus.RoundNumber > 1)

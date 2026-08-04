@@ -1109,16 +1109,16 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             }
         }
 
-        private static string GetNameFromPlayerNumbersTable(OdbcConnection conn, int sectionId, int roundNumber, int pairNo, string direction)
+        private static string GetNameFromPlayerNumbersTable(OdbcConnection conn, int sectionId, int roundNumber, int contestantNumber, string direction)
         {
-            if (pairNo == 0) return string.Empty;
+            if (contestantNumber == 0) return string.Empty;
             string number = string.Empty;
             string name = string.Empty;
             DateTime latestTimeLog = new(2010, 1, 1);
 
-            // First look for entries in the same direction
-            string SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={pairNo} AND Direction='{direction}'";
-            OdbcHelper.ExecuteReaderOnce(conn, SQLString, reader =>
+            // First look for entries in the same direction.  Need to check that we the most recent entry up to including the current round
+            string SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={contestantNumber} AND Direction='{direction}'";
+            OdbcHelper.ExecuteReader(conn, SQLString, reader =>
             {
                 try
                 {
@@ -1153,8 +1153,8 @@ namespace GrpcBwsDatabaseServer.GrpcServices
                     "W" => "S",
                     _ => string.Empty,
                 };
-                SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={pairNo} AND Direction='{otherDir}'";
-                OdbcHelper.ExecuteReaderOnce(conn, SQLString, reader =>
+                SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={contestantNumber} AND Direction='{otherDir}'";
+                OdbcHelper.ExecuteReader(conn, SQLString, reader =>
                 {
                     try
                     {
@@ -1181,15 +1181,15 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             return FormatName(name, number);
         }
 
-        private static string GetNameFromPlayerNumbersTableIndividual(OdbcConnection conn, int sectionId, int roundNumber, int playerNo)
+        private static string GetNameFromPlayerNumbersTableIndividual(OdbcConnection conn, int sectionId, int roundNumber, int contestantNumber)
         {
-            if (playerNo == 0) return string.Empty;
+            if (contestantNumber == 0) return string.Empty;
             string number = string.Empty;
             string name = string.Empty;
             DateTime latestTimeLog = new(2010, 1, 1);
 
-            string SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={playerNo}";
-            OdbcHelper.ExecuteReaderOnce(conn, SQLString, reader =>
+            string SQLString = $"SELECT Number, Name, Round, TimeLog FROM PlayerNumbers WHERE Section={sectionId} AND TabScorePairNo={contestantNumber}";
+            OdbcHelper.ExecuteReader(conn, SQLString, reader =>
             {
                 try
                 {
