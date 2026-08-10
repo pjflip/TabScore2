@@ -205,7 +205,8 @@ namespace TabScore2.DataServices
 
         public void UpdatePlayer(int sectionId, int tableNumber, int roundNumber, string directionLetter, int pairNumber, int playerId, string playerName)
         {
-            client.UpdatePlayer(new UpdatePlayerRequest() { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, DirectionLetter = directionLetter, ContestantNumber = pairNumber, PlayerId = playerId, PlayerName = playerName });
+            ErrorResponse errorResponse = client.UpdatePlayer(new UpdatePlayerRequest() { SectionId = sectionId, TableNumber = tableNumber, RoundNumber = roundNumber, DirectionLetter = directionLetter, ContestantNumber = pairNumber, PlayerId = playerId, PlayerName = playerName });
+            if (errorResponse.ErrorMessage != string.Empty) throw new Exception(errorResponse.ErrorMessage);
         }
 
         // HANDRECORD
