@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="$this.Text" xml:space="preserve">
-    <value>TabScore Opties</value>
-  </data>
   <data name="AdditionalMinutesPerRoundLabel.Text" xml:space="preserve">
     <value>Extra minuten per ronde</value>
   </data>
@@ -251,5 +248,8 @@
   </data>
   <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
     <value>Registreer u op paar-/spelernummer in plaats van op tafelnummer</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>TabScore2 - Instellingen</value>
   </data>
 </root>

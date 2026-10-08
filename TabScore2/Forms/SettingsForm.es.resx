@@ -207,9 +207,6 @@
   <data name="DoubleDummyCheckbox.Text" xml:space="preserve">
     <value>Realizar análisis double dummy</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>TabScore2 - Editar resultado</value>
-  </data>
   <data name="FromPerspectiveOfCombobox.Items2" xml:space="preserve">
     <value>Este</value>
   </data>
@@ -251,5 +248,8 @@
   </data>
   <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
     <value>Regístrese por pareja/número de jugador en lugar de por número de mesa</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>TabScore2 - Ajustes</value>
   </data>
 </root>

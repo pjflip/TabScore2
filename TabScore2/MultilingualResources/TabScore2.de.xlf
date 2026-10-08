@@ -610,7 +610,7 @@ tablet device at your current location</source>
       <group id="TABSCORE2/FORMS/SETTINGSFORM.RESX" datatype="resx">
         <trans-unit id="$this.Text" translate="yes" xml:space="preserve">
           <source>TabScore2 - Settings</source>
-          <target state="new">TabScore2 - Ergebnis bearbeiten</target>
+          <target state="new">TabScore2 - Einstellungen</target>
         </trans-unit>
         <trans-unit id="AdditionalMinutesPerRoundLabel.Text" translate="yes" xml:space="preserve">
           <source>Additional minutes per round</source>

@@ -208,7 +208,7 @@
     <value>Perform double dummy analysis</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>TabScore2 - Edit result</value>
+    <value>TabScore2 - Settings</value>
   </data>
   <data name="SuppressRankingListLastXLabel.Text" xml:space="preserve">
     <value>Don't show ranking list for last x rounds</value>

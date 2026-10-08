@@ -207,9 +207,6 @@
   <data name="DoubleDummyCheckbox.Text" xml:space="preserve">
     <value>Double-Dummy-Analyse durchführen</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>TabScore2 - Ergebnis bearbeiten</value>
-  </data>
   <data name="FromPerspectiveOfCombobox.Items" xml:space="preserve">
     <value>Nord</value>
   </data>
@@ -251,5 +248,8 @@
   </data>
   <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
     <value>Registrieren Sie sich anhand der Paar-/Spielernummer und nicht anhand der Tischnummer</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>TabScore2 - Einstellungen</value>
   </data>
 </root>
