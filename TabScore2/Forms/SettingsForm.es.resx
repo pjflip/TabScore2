@@ -195,6 +195,12 @@
   <data name="ShowTravellerCheckbox.Text" xml:space="preserve">
     <value>Mostrar viajero</value>
   </data>
+  <data name="TabletModePersonalRadioButton.Text" xml:space="preserve">
+    <value>Personal - las tabletas se mueven con los jugadores</value>
+  </data>
+  <data name="TabletModeTraditionalRadioButton.Text" xml:space="preserve">
+    <value>Tradicional - 1 tableta por mesa</value>
+  </data>
   <data name="TabletMovesGroupBox.Text" xml:space="preserve">
     <value>Modo de dispositivo de mesa</value>
   </data>
@@ -206,6 +212,9 @@
   </data>
   <data name="DoubleDummyCheckbox.Text" xml:space="preserve">
     <value>Realizar análisis double dummy</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>TabScore2 - Ajustes</value>
   </data>
   <data name="FromPerspectiveOfCombobox.Items2" xml:space="preserve">
     <value>Este</value>
@@ -234,22 +243,7 @@
   <data name="SplashScreenCheckbox.Text" xml:space="preserve">
     <value>Mostrar pantalla de presentación al inicio</value>
   </data>
-  <data name="ModePersonalRadioButton.Text" xml:space="preserve">
-    <value>Personal - los dispositivos se mueven con los jugadores</value>
-  </data>
-  <data name="ModeTraditionalRadioButton.Text" xml:space="preserve">
-    <value>Tradicional - 1 dispositivo por mesa</value>
-  </data>
-  <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
-    <value>Utilice la mesa 1 como mesa maestra para el cronómetro redondo</value>
-  </data>
-  <data name="ModeScorerRadioButton.Text" xml:space="preserve">
-    <value>Anotador - seleccione el anotador en cada ronda</value>
-  </data>
-  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
-    <value>Regístrese por pareja/número de jugador en lugar de por número de mesa</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>TabScore2 - Ajustes</value>
+  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
+    <value>Utilice la Mesa 1 como maestra para iniciar el cronómetro de ronda</value>
   </data>
 </root>

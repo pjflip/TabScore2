@@ -195,6 +195,12 @@
   <data name="ShowTravellerCheckbox.Text" xml:space="preserve">
     <value>Boardzettel anzeigen</value>
   </data>
+  <data name="TabletModePersonalRadioButton.Text" xml:space="preserve">
+    <value>Persönlich - Tablets bewegen sich mit den Spielern</value>
+  </data>
+  <data name="TabletModeTraditionalRadioButton.Text" xml:space="preserve">
+    <value>Traditionell - 1 Tablet pro Tisch</value>
+  </data>
   <data name="TabletMovesGroupBox.Text" xml:space="preserve">
     <value>Tischgerätemodus</value>
   </data>
@@ -206,6 +212,9 @@
   </data>
   <data name="DoubleDummyCheckbox.Text" xml:space="preserve">
     <value>Double-Dummy-Analyse durchführen</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>TabScore2 - Einstellungen</value>
   </data>
   <data name="FromPerspectiveOfCombobox.Items" xml:space="preserve">
     <value>Nord</value>
@@ -234,22 +243,7 @@
   <data name="SplashScreenGroupBox.Text" xml:space="preserve">
     <value>Begrüßungsbildschirm</value>
   </data>
-  <data name="ModePersonalRadioButton.Text" xml:space="preserve">
-    <value>Persönlich – Geräte bewegen sich mit den Spielern</value>
-  </data>
-  <data name="ModeTraditionalRadioButton.Text" xml:space="preserve">
-    <value>Traditionell – 1 Gerät pro Tisch</value>
-  </data>
-  <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
-    <value>Verwenden Sie Tabelle 1 als Mastertabelle für den Rundentimer</value>
-  </data>
-  <data name="ModeScorerRadioButton.Text" xml:space="preserve">
-    <value>Punktezähler - Wählen Sie für jede Runde den Punktezähler aus</value>
-  </data>
-  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
-    <value>Registrieren Sie sich anhand der Paar-/Spielernummer und nicht anhand der Tischnummer</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>TabScore2 - Einstellungen</value>
+  <data name="TimerMasterCheckbox.Text" xml:space="preserve">
+    <value>Verwenden Sie Tisch 1 als Master, um den Rundentimer zu starten</value>
   </data>
 </root>
