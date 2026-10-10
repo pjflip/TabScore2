@@ -310,5 +310,17 @@ namespace TabScore2.Properties {
                 this["RegisterByContestantNumber"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string DefaultPlayerIDEntryMethod {
+            get {
+                return ((string)(this["DefaultPlayerIDEntryMethod"]));
+            }
+            set {
+                this["DefaultPlayerIDEntryMethod"] = value;
+            }
+        }
     }
 }
