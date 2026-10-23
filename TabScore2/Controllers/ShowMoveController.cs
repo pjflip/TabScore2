@@ -78,7 +78,7 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowRoundInfo");
             }
 
-            if (!appData.IsTableReadyForNextRound(deviceStatus.SectionId, move.NewTableNumber, deviceStatus.RoundNumber))
+            if (!appData.IsTableReadyForNextRound(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber))
             {
                 // If new table not ready, go back and wait
                 return RedirectToAction("Index", "ShowMove", new { newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
