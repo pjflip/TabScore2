@@ -7,5 +7,6 @@ namespace TabScore2.Models
 {
     public class ShowPlayerIdsModel : List<PlayerEntry>
     {
+        public string EventGuid { get; set; } = string.Empty;
     }
 }

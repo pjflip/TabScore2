@@ -94,7 +94,7 @@
         else {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "ShowPlayerIds")';
+                location.href = '@Url.Action("OKButtonClick", "ShowPlayerIds", new { eventGuid = Model.EventGuid })';
             }
         }
     }
@@ -102,7 +102,7 @@
     function EnterPlayerId(direction) {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("Index", "EnterPlayerId")?direction=' + direction;
+                location.href = '@Url.Action("Index", "EnterPlayerId", new { eventGuid = Model.EventGuid })?direction=' + direction;
             }
     }
 </script>

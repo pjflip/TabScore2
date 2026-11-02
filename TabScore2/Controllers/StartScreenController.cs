@@ -10,10 +10,11 @@ using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class StartScreenController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, ISettings iSettings) : Controller
+    public class StartScreenController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IDatabase database = iDatabase;
+        private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
 
         public ActionResult Index()
@@ -34,10 +35,15 @@ namespace TabScore2.Controllers
             }
             if (!settings.SessionStarted) 
             {
-                database.WebappInitialize();    // Only runs once at the start of the session
+                // Only runs once at the start of the session
+                appData.ClearAppData();
+                database.WebappInitialize();
                 settings.SessionStarted = true;
             }
-            return RedirectToAction("Index", "SelectSection");
+            
+            // Get the eventGuid in settings that was created on database initialization.  This is passed from screen to screen in the URL and checked against settings.
+            // Thus, if TabScore2 is closed and restarted, the setting value will change and any orphaned windows will no longer work.  
+            return RedirectToAction("Index", "SelectSection", new { eventGuid = settings.EventGuid });
         }
     }
 }

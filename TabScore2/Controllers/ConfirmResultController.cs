@@ -1,26 +1,29 @@
 ﻿// TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
+using GrpcSharedContracts.SharedClasses;
 using Microsoft.AspNetCore.Mvc;
-using TabScore2.Models;
+using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
-using GrpcSharedContracts.SharedClasses;
-using TabScore2.BusinessLogic;
+using TabScore2.Models;
 
 namespace TabScore2.Controllers
 {
-    public class ConfirmResultController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic) : Controller
+    public class ConfirmResultController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly IBusLogic busLogic = iBusLogic;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
@@ -28,38 +31,43 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowBoards", new { deviceNumber });
             }
 
-            EnterContractModel enterContractModel = busLogic.CreateEnterContractModel(deviceStatus.ResultData, true);
+            EnterContractModel model = busLogic.CreateEnterContractModel(deviceStatus.ResultData, true);
+            model.EventGuid = eventGuid;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("ConfirmResult", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabledAndBack;
-            return View(enterContractModel);
+            return View(model);
         }
 
-        public ActionResult OKButtonClick()
+        public ActionResult OKButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             database.SetResult(result);
-            return RedirectToAction("Index", "EnterHandRecord", new { boardNumber = result.BoardNumber });
+            return RedirectToAction("Index", "EnterHandRecord", new { eventGuid, boardNumber = result.BoardNumber });
         }
 
-        public ActionResult BackButtonClick()
+        public ActionResult BackButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             if (result.ContractLevel == 0)  // This was passed out, so Back goes all the way to Enter Contract screen
             {
-                return RedirectToAction("Index", "EnterContract", new { boardNumber = result.BoardNumber });
+                return RedirectToAction("Index", "EnterContract", new { eventGuid, boardNumber = result.BoardNumber });
             }
             else
             {
-                return RedirectToAction("Index", "EnterTricksTaken");
+                return RedirectToAction("Index", "EnterTricksTaken", new { eventGuid });
             }
         }
     }

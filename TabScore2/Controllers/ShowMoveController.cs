@@ -18,41 +18,45 @@ namespace TabScore2.Controllers
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(int newRoundNumber, int tableNotReadyNumber = -1)
+        public ActionResult Index(string eventGuid, int newRoundNumber, int tableNotReadyNumber = -1)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             if (newRoundNumber > database.GetNumberOfRoundsInSection(deviceStatus.SectionId))  // Session complete
             {
                 if (settings.ShowRanking == 2)
                 {
-                    return RedirectToAction("Final", "ShowRankingList");
+                    return RedirectToAction("Final", "ShowRankingList", new { eventGuid });
                 }
                 else
                 {
-                    return RedirectToAction("Index", "EndScreen");
+                    return RedirectToAction("Index", "EndScreen", new { eventGuid });
                 }
             }
 
             // The current round is complete, so set this device to show that it is ready for the next round
             deviceStatus.ReadyForNextRound = true;
 
-            ShowMoveModel showMoveModel = busLogic.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
+            ShowMoveModel model = busLogic.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
+            model.EventGuid = eventGuid;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("ShowMove", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
 
-            return View(showMoveModel);
+            return View(model);
         }
 
-        public ActionResult OKButtonClick(int newRoundNumber)
+        public ActionResult OKButtonClick(string eventGuid, int newRoundNumber)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             if (deviceStatus.DevicesPerTable == 1)  
@@ -62,7 +66,7 @@ namespace TabScore2.Controllers
                 deviceStatus.ReadyForNextRound = false;
                 appData.UpdateTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber, newRoundNumber);
                 database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);  // Refresh settings for the start of the round.  Only done once per round.
-                return RedirectToAction("Index", "ShowPlayerIds");
+                return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
             }
 
             // Devices are moving, so get the move for this device
@@ -75,13 +79,13 @@ namespace TabScore2.Controllers
                 appData.UpdateDeviceStatus(deviceStatus, 0, newRoundNumber, Direction.Sitout);
                 HttpContext.Session.SetInt32("TableNumber", 0);
                 HttpContext.Session.SetString("Direction", Direction.Sitout.ToString());
-                return RedirectToAction("Index", "ShowRoundInfo");
+                return RedirectToAction("Index", "ShowRoundInfo", new { eventGuid });
             }
 
             if (!appData.IsTableReadyForNextRound(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber))
             {
                 // If new table not ready, go back and wait
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
             }
 
             // New table is ready.  Reset device and table statuses for the new round, and update session state
@@ -95,11 +99,11 @@ namespace TabScore2.Controllers
                 
             if (settings.Mode == Mode.Scorer)
             {
-                return RedirectToAction("Index", "SelectScorer");
+                return RedirectToAction("Index", "SelectScorer", new { eventGuid });
             }
             else
             {
-                return RedirectToAction("Index", "ShowPlayerIds");
+                return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
             }
         }
     }

@@ -103,7 +103,7 @@
 <script>
     var tricksTaken = @Model.TricksTaken;
     var contractLevel = @Model.ContractLevel;
-    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterTricksTaken")';
-    var urlBackButtonClick = '@Url.Action("BackButtonClick", "EnterTricksTaken")';
+    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterTricksTaken", new { eventGuid = Model.EventGuid })';
+    var urlBackButtonClick = '@Url.Action("BackButtonClick", "EnterTricksTaken", new { eventGuid = Model.EventGuid })';
 </script>
 <script src="~/js/TricksPlusMinus.js"></script>

@@ -122,18 +122,6 @@ namespace TabScore2.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DatabaseReady {
-            get {
-                return ((bool)(this["DatabaseReady"]));
-            }
-            set {
-                this["DatabaseReady"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsIndividual {
             get {
                 return ((bool)(this["IsIndividual"]));
@@ -320,6 +308,30 @@ namespace TabScore2.Properties {
             }
             set {
                 this["DefaultPlayerIDEntryMethod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DatabaseReady {
+            get {
+                return ((bool)(this["DatabaseReady"]));
+            }
+            set {
+                this["DatabaseReady"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string eventGuid {
+            get {
+                return ((string)(this["eventGuid"]));
+            }
+            set {
+                this["eventGuid"] = value;
             }
         }
     }

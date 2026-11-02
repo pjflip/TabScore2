@@ -42,5 +42,6 @@ namespace TabScore2.DataServices
         bool DatabaseReady { get; set; }
         bool IsIndividual { get; set; }
         bool SessionStarted { get; set; }
+        string EventGuid { get; set; }
     }
 }

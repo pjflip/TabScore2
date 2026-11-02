@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
@@ -16,10 +17,12 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(bool fromEnterPlayerID = false, bool databaseNamesRequired = true)
+        public ActionResult Index(string eventGuid, bool fromEnterPlayerID = false, bool databaseNamesRequired = true)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
 
@@ -30,10 +33,11 @@ namespace TabScore2.Controllers
             {
                 // Player numbers not needed if all names have already been entered and names are not being updated each round.  But always show if an ID has just been entered.
                 // No names update required in RoundInfo as it's just been done
-                return RedirectToAction("Index", "ShowRoundInfo", new { databaseNamesRequired = false });
+                return RedirectToAction("Index", "ShowRoundInfo", new { eventGuid, databaseNamesRequired = false });
             }
 
-            ShowPlayerIdsModel showplayerIdsModel = busLogic.CreateShowPlayerIdsModel(deviceStatus);
+            ShowPlayerIdsModel model = busLogic.CreateShowPlayerIdsModel(deviceStatus);
+            model.EventGuid = eventGuid;
 
             ViewData["Title"] = busLogic.Title("ShowPlayerIds", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
@@ -41,18 +45,20 @@ namespace TabScore2.Controllers
 
             if (settings.IsIndividual)
             {
-                return View("Individual", showplayerIdsModel);
+                return View("Individual", model);
             }
             else
             {
-                return View("Pair", showplayerIdsModel);
+                return View("Pair", model);
             }
         }
 
-        public ActionResult OKButtonClick()
+        public ActionResult OKButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             
@@ -61,12 +67,12 @@ namespace TabScore2.Controllers
             // Check if all required names have been entered, and if not go back and wait.  No names update required on next screen as it's only just been done
             if (tableStatus.RoundData.GotAllNames)
             {
-                return RedirectToAction("Index", "ShowRoundInfo", new { databaseNamesRequired = false });
+                return RedirectToAction("Index", "ShowRoundInfo", new { eventGuid, databaseNamesRequired = false });
             }
             else
             {
                 TempData["ShowWarning"] = "ErrorNotAllNames";
-                return RedirectToAction("Index", "ShowPlayerIds", new { databaseNamesRequired = false });
+                return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid, databaseNamesRequired = false });
             }
         }
     }

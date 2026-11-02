@@ -18,10 +18,11 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             
@@ -30,15 +31,17 @@ namespace TabScore2.Controllers
                || deviceStatus.RoundNumber <= settings.SuppressRankingListForFirstXRounds
                || deviceStatus.RoundNumber > database.GetNumberOfRoundsInSection(deviceStatus.SectionId) - settings.SuppressRankingListForLastXRounds)
             {
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
             }
 
-            ShowRankingListModel showRankingListModel = busLogic.CreateRankingListModel(deviceStatus);
+            ShowRankingListModel model = busLogic.CreateRankingListModel(deviceStatus);
+
             // Only show the ranking list if it contains something meaningful
-            if (showRankingListModel.Count <= 1 || showRankingListModel[0].ScoreDecimal == 0.0)
+            if (model.Count <= 1 || model[0].ScoreDecimal == 0.0)
             {
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
             }
+            model.EventGuid = eventGuid;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("ShowRankingList", deviceStatus);
@@ -55,46 +58,48 @@ namespace TabScore2.Controllers
 
             if (settings.IsIndividual)
             {
-                return View("Individual", showRankingListModel);
+                return View("Individual", model);
             }
-            else if (showRankingListModel.Exists(x => x.Orientation == "E"))
+            else if (model.Exists(x => x.Orientation == "E"))
             {
-                return View("TwoWinners", showRankingListModel);
+                return View("TwoWinners", model);
             }
             else
             {
-                return View("OneWinner", showRankingListModel);
+                return View("OneWinner", model);
             }
     }
 
-        public ActionResult Final()
+        public ActionResult Final(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
-            ShowRankingListModel showRankingListModel = busLogic.CreateRankingListModel(appData.GetDeviceStatus(deviceNumber));
-            if (showRankingListModel.Count <= 1 && showRankingListModel[0].ScoreDecimal == 0.0)
+            ShowRankingListModel model = busLogic.CreateRankingListModel(appData.GetDeviceStatus(deviceNumber));
+            if (model.Count <= 1 && model[0].ScoreDecimal == 0.0)
             {
-                return RedirectToAction("Index", "EndScreen", new { deviceNumber });
+                return RedirectToAction("Index", "EndScreen", new { eventGuid, deviceNumber });
 
             }
+            model.EventGuid = eventGuid;
+            model.FinalRankingList = true;
 
-            showRankingListModel.FinalRankingList = true;
             ViewData["Title"] = busLogic.Title("ShowFinalRankingList", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             if (settings.IsIndividual)
             {
-                return View("Individual", showRankingListModel);
+                return View("Individual", model);
             }
-            else if (showRankingListModel.Exists(x => x.Orientation == "E"))
+            else if (model.Exists(x => x.Orientation == "E"))
             {
-                return View("TwoWinners", showRankingListModel);
+                return View("TwoWinners", model);
             }
             else
             {
-                return View("OneWinner", showRankingListModel);
+                return View("OneWinner", model);
             }
         }
 

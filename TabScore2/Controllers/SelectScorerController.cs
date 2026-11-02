@@ -9,16 +9,19 @@ using TabScore2.Globals;
 
 namespace TabScore2.Controllers
 {
-    public class SelectScorerController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic) : Controller
+    public class SelectScorerController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly IBusLogic busLogic = iBusLogic;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             // Check if sitout table.  If so nobody is scoring and can go straight to ShowRoundInfo
@@ -31,38 +34,41 @@ namespace TabScore2.Controllers
             ViewData["Title"] = busLogic.Title("SelectScorer", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
+            TempData["eventGuid"] = eventGuid;
             return View();
         }
 
-        public ActionResult ScoreThisRoundButtonClick()
+        public ActionResult ScoreThisRoundButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (appData.SetDeviceAsScorer(deviceNumber))
             {
-                return RedirectToAction("Index", "ShowPlayerIds");
+                return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
             }
             else
             {
                 TempData["Message"] = "ErrorScorerAlreadyExists";
-                return RedirectToAction("Index", "SelectScorer");
+                return RedirectToAction("Index", "SelectScorer", new { eventGuid });
             }
         }
 
-        public ActionResult ViewOnlyButtonClick()
+        public ActionResult ViewOnlyButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (appData.SetDeviceAsViewer(deviceNumber))
             {
-                return RedirectToAction("Index", "ShowBoards");
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
             else
             {
                 TempData["Message"] = "ErrorNoScorer";
-                return RedirectToAction("Index", "SelectScorer");
+                return RedirectToAction("Index", "SelectScorer", new { eventGuid });
             }
         }
     }

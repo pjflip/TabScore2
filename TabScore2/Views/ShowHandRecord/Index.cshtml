@@ -199,7 +199,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowTraveller")?boardNumber=@Model.BoardNumber&fromView=@Model.FromView.ToString().ToLower()';
+            location.href = '@Url.Action("Index", "ShowTraveller", new { eventGuid = Model.EventGuid, boardNumber = Model.BoardNumber, fromView = Model.FromView.ToString().ToLower() })';
         }
     }
 </script>

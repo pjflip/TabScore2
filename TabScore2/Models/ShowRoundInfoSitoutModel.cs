@@ -5,6 +5,7 @@ namespace TabScore2.Models
 {
     public class ShowRoundInfoSitoutModel(int contestantNumber, int roundNumber, int tabletDevicesPerTable)
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int ContestantNumber { get; private set; } = contestantNumber;
         public int RoundNumber { get; private set; } = roundNumber;
         public int TabletDevicesPerTable { get; private set; } = tabletDevicesPerTable;

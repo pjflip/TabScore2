@@ -154,9 +154,9 @@
     var suit = '@Model.ContractSuit';
     var double = '@Model.ContractX';
     var NSEW = '@Model.DeclarerNSEW';
-    var urlOKButtonPass = '@Url.Action("OKButtonPass", "EnterContract")';
-    var urlOKButtonSkip = '@Url.Action("OKButtonSkip", "EnterContract")';
-    var urlOKButtonContract = '@Url.Action("OKButtonContract", "EnterContract")';
-    var urlShowBoards = '@Url.Action("Index", "ShowBoards")';
+    var urlOKButtonPass = '@Url.Action("OKButtonPass", "EnterContract", new { eventGuid = Model.EventGuid })';
+    var urlOKButtonSkip = '@Url.Action("OKButtonSkip", "EnterContract", new { eventGuid = Model.EventGuid })';
+    var urlOKButtonContract = '@Url.Action("OKButtonContract", "EnterContract", new { eventGuid = Model.EventGuid })';
+    var urlShowBoards = '@Url.Action("Index", "ShowBoards", new { eventGuid = Model.EventGuid })';
 </script>
 <script src="~/js/EnterContract.js"></script>

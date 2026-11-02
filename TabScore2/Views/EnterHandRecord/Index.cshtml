@@ -349,9 +349,9 @@
 </div>
 
 <script>
-    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterHandRecord")';
-    var urlBackButtonClick = '@Url.Action("Index", "ConfirmResult")';
-    var urlSkipButtonClick = '@Url.Action("Index", "ShowTraveller")?boardNumber=@Model.BoardNumber';
+    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterHandRecord", new { eventGuid = Model.EventGuid })';
+    var urlBackButtonClick = '@Url.Action("Index", "ConfirmResult", new { eventGuid = Model.EventGuid })';
+    var urlSkipButtonClick = '@Url.Action("Index", "ShowTraveller", new { eventGuid = Model.EventGuid, boardNumber = Model.BoardNumber })';
     const cardString = ['@localizer["A"]', '@localizer["K"]', '@localizer["Q"]', '@localizer["J"]', '@localizer["TenShorthand"]', '9', '8', '7', '6', '5', '4', '3', '2'];
 </script>
 <script src="~/js/EnterHandRecord.js"></script>

@@ -35,7 +35,7 @@
         function modalLogOn() {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "selectContestantNumber")?contestantNumber=@Model.ConfirmContestantNumber&confirm=true';
+                location.href = '@Url.Action("OKButtonClick", "selectContestantNumber", new { eventGuid = Model.EventGuid })' + '&contestantNumber=' + contestantNumber + '&confirm=true';
             }
         }
     </script>
@@ -230,7 +230,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "SelectContestantNumber")?contestantNumber=' + contestantNumber + '&confirm=false';
+            location.href = '@Url.Action("OKButtonClick", "SelectContestantNumber", new { eventGuid = Model.EventGuid })' + '&contestantNumber=' + contestantNumber + '&confirm=false';
         }
     }
 </script>

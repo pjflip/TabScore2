@@ -1,7 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model List<Section>
+@model SelectSectionModel
 
 <div class="row mt-4">
     <div class="col-12 text-center">
@@ -39,7 +39,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "SelectSection")?sectionId=' + section;
+            location.href = '@Url.Action("OKButtonClick", "SelectSection", new { eventGuid = Model.EventGuid })' + '&sectionId=' + section;
         }
     }
 </script>

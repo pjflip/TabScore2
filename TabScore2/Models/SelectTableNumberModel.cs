@@ -5,6 +5,7 @@ namespace TabScore2.Models
 {
     public class SelectTableNumberModel
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int SectionId { get; set; }
         public string SectionLetter { get; set; } = "A";
         public int NumTables { get; set; }

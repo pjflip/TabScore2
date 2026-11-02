@@ -18,23 +18,27 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(Direction direction)
+        public ActionResult Index(string eventGuid, Direction direction)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             ViewData["Title"] = busLogic.Title("EnterPlayerIds", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
-            EnterPlayerIdModel enterPlayerIdModel = busLogic.CreateEnterPlayerIdModel(direction);
-            return View(enterPlayerIdModel);
+            EnterPlayerIdModel model = busLogic.CreateEnterPlayerIdModel(direction);
+            model.EventGuid = eventGuid;
+            return View(model);
         }
 
-        public ActionResult OKButtonClick(Direction direction, int playerId)
+        public ActionResult OKButtonClick(string eventGuid, Direction direction, int playerId)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             string playerName = string.Empty;
@@ -89,7 +93,7 @@ namespace TabScore2.Controllers
             }
             database.UpdatePlayer(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, directionLetter, pairNumber, playerId, playerName);
 
-            return RedirectToAction("Index", "ShowPlayerIds", new { fromEnterPlayerID = true });
+            return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid, fromEnterPlayerID = true });
         }
     }
 }

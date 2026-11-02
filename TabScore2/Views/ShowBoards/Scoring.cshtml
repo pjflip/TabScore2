@@ -81,7 +81,7 @@
         if (!isSubmitted) {
             isSubmitted = true;
             if (@Model.GotAllResults.ToString().ToLower()) {
-                location.href = '@Url.Action("Index", "ShowRankingList")';
+                location.href = '@Url.Action("Index", "ShowRankingList", new { eventGuid = Model.EventGuid })';
             }
             else {
                 var notAllResultsModal = new bootstrap.Modal(document.getElementById("notAllResultsModal"), { backdrop: 'static' });
@@ -94,14 +94,14 @@
     function EnterEdit(n) {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "EnterContract")?boardNumber=' + n;
+            location.href = '@Url.Action("Index", "EnterContract", new { eventGuid = Model.EventGuid })&boardNumber=' + n;
         }
     }
 
     function View(n) {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowTraveller")?boardNumber=' + n + '&fromView=true';
+            location.href = '@Url.Action("Index", "ShowTraveller", new { eventGuid = Model.EventGuid })&boardNumber=' + n + '&fromView=true';
         }
     }
 </script>

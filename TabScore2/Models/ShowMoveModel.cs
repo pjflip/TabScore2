@@ -8,6 +8,7 @@ namespace TabScore2.Models
 {
     public class ShowMoveModel : List<Move>
     {
+        public string EventGuid { get; set; } = string.Empty;
         public Direction Direction { get; set; }
         public int NewRoundNumber { get; set; }
         public int LowBoard { get; set; }

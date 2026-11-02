@@ -9,39 +9,45 @@ using TabScore2.Globals;
 
 namespace TabScore2.Controllers
 {
-    public class EndScreenController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic) : Controller
+    public class EndScreenController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly IBusLogic busLogic = iBusLogic;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
             ViewData["Title"] = busLogic.Title("EndScreen", deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
+            TempData["eventGuid"] = eventGuid;
             return View();
         }
 
-        public ActionResult OKButtonClick()
+        public ActionResult OKButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             // Check if new round has been added; can't apply to individuals
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (deviceStatus.RoundNumber == database.GetNumberOfRoundsInSection(deviceStatus.SectionId, true))   // Force database read
             {
                 // Final round, so no new rounds added
-                return RedirectToAction("Index", "EndScreen");
+                return RedirectToAction("Index", "EndScreen", new { eventGuid });
             }
             else
             {
-                return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
             }
         }
     }

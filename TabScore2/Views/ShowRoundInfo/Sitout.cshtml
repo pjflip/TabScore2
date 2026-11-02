@@ -59,7 +59,7 @@ else
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowRankingList")';
+            location.href = '@Url.Action("Index", "ShowRankingList", new { eventGuid = Model.EventGuid })';
         }
     }
 
@@ -67,7 +67,7 @@ else
         if (document.getElementById("BackButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("BackButtonClick", "ShowRoundInfo")';
+            location.href = '@Url.Action("BackButtonClick", "ShowRoundInfo", new { eventGuid = Model.EventGuid })';
         }
     }
 </script>

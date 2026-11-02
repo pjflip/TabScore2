@@ -154,7 +154,7 @@ function OKButtonClick() {
     else {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = urlOKButtonContract + '?contractLevel=' + level.toString() + '&contractSuit=' + suit + '&contractX=' + double + '&declarerNSEW=' + NSEW;
+            location.href = urlOKButtonContract + '&contractLevel=' + level.toString() + '&contractSuit=' + suit + '&contractX=' + double + '&declarerNSEW=' + NSEW;
         }
     }
 }

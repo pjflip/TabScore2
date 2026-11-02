@@ -19,14 +19,16 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(int confirmContestantNumber = 0) 
+        public ActionResult Index(string eventGuid, int confirmContestantNumber = 0) 
         {
             // To get here, we must be in Scorer or Personal Mode
-            
+
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, confirmContestantNumber);
+            model.EventGuid = eventGuid;
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
             if (settings.Mode == Mode.Scorer)
@@ -41,10 +43,11 @@ namespace TabScore2.Controllers
             return View(model);   
         }
 
-        public ActionResult OKButtonClick(int contestantNumber, bool confirm)
+        public ActionResult OKButtonClick(string eventGuid, int contestantNumber, bool confirm)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             int deviceNumber = appData.GetDeviceNumberByContestant(sectionId, contestantNumber);  // Returns -1 if not found
             if (deviceNumber != -1 && confirm)
@@ -59,7 +62,7 @@ namespace TabScore2.Controllers
                 // Check if contestant number matches session state - if not go back to confirm
                 if (contestantNumber != HttpContext.Session.GetInt32("ContestantNumber"))
                 {
-                    return RedirectToAction("Index", "SelectContestantNumber", new { confirmContestantNumber = contestantNumber });
+                    return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, confirmContestantNumber = contestantNumber });
                 }
                 // else => session state matches, so this is a re-registration and nothing more to do
             }
@@ -75,9 +78,9 @@ namespace TabScore2.Controllers
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             // Work out where to go next
-            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
-            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer");
-            return RedirectToAction("Index", "ShowPlayerIds");
+            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer", new { eventGuid });
+            return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
         }
     }
 }

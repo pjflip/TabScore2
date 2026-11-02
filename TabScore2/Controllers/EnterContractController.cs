@@ -11,18 +11,20 @@ using TabScore2.Models;
 
 namespace TabScore2.Controllers
 {
-    public class EnterContractController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic) : Controller
+    public class EnterContractController(IDatabase iDatabase, IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly IBusLogic busLogic = iBusLogic;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(int boardNumber)
+        public ActionResult Index(string eventGuid, int boardNumber)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-
             TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             Result result = deviceStatus.ResultData;
             if (result.BoardNumber != boardNumber)
@@ -36,19 +38,22 @@ namespace TabScore2.Controllers
                 deviceStatus.ResultData = result;
             }
 
-            EnterContractModel enterContractModel = busLogic.CreateEnterContractModel(result);
+            EnterContractModel model = busLogic.CreateEnterContractModel(result);
+            model.EventGuid = eventGuid;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("EnterContract", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
-            return View(enterContractModel);
+            return View(model);
         }
 
-        public ActionResult OKButtonContract(int contractLevel, string contractSuit, string contractX, string declarerNSEW)
+        public ActionResult OKButtonContract(string eventGuid, int contractLevel, string contractSuit, string contractX, string declarerNSEW)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             contractX ??= string.Empty;
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = contractLevel;
@@ -56,13 +61,15 @@ namespace TabScore2.Controllers
             result.ContractX = contractX;
             result.DeclarerNSEW = declarerNSEW;
             result.Remarks = string.Empty;
-            return RedirectToAction("Index", "EnterLead");
+            return RedirectToAction("Index", "EnterLead", new { eventGuid });
         }
 
-        public ActionResult OKButtonPass()
+        public ActionResult OKButtonPass(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = 0;
             result.ContractSuit = string.Empty;
@@ -71,13 +78,15 @@ namespace TabScore2.Controllers
             result.LeadCard = string.Empty;
             result.TricksTaken = -1;
             result.Remarks = string.Empty;
-            return RedirectToAction("Index", "ConfirmResult");
+            return RedirectToAction("Index", "ConfirmResult", new { eventGuid });
         }
         
-        public ActionResult OKButtonSkip()
+        public ActionResult OKButtonSkip(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.ContractLevel = -1;
             result.ContractSuit = string.Empty;
@@ -87,7 +96,7 @@ namespace TabScore2.Controllers
             result.TricksTaken = -1;
             result.Remarks = "Not played";
             database.SetResult(result);
-            return RedirectToAction("Index", "ShowBoards");
+            return RedirectToAction("Index", "ShowBoards", new { eventGuid });
         }
     }
 }

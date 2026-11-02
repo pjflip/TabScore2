@@ -17,9 +17,12 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             SelectSectionModel model = busLogic.CreateSelectSectionModel();
+            model.EventGuid = eventGuid;
             if (model.Count == 1)  // Check if only one section - if so use it
             {
                 HttpContext.Session.SetInt32("SectionId", model[0].SectionId);
@@ -41,16 +44,18 @@ namespace TabScore2.Controllers
             }
         }
 
-        public ActionResult OKButtonClick(int sectionId)
+        public ActionResult OKButtonClick(string eventGuid, int sectionId)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
             HttpContext.Session.SetInt32("SectionId", sectionId);
             if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
             {
-                return RedirectToAction("Index", "SelectContestantNumber");
+                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid });
             }
             else
             {
-                return RedirectToAction("Index", "SelectTableNumber");
+                return RedirectToAction("Index", "SelectTableNumber", new { eventGuid });
             }
         }
     }

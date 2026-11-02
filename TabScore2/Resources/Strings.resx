@@ -595,4 +595,10 @@ tablet device at your current location</value>
     <value>is already registered.  Do not press Register unless you intend to register a new 
 tablet device</value>
   </data>
+  <data name="ErrorWrongEvent" xml:space="preserve">
+    <value>You are trying to access an event that is no longer available.  Please close your browser window and restart</value>
+  </data>
+  <data name="WrongEventScreen" xml:space="preserve">
+    <value>WrongEventScreen</value>
+  </data>
 </root>

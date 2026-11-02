@@ -119,7 +119,7 @@
 }
 
 <script>
-    var urlOKButtonClick = '@Url.Action("OKButtonClick", "ShowRoundInfo")';
-    var urlBackButtonClick = '@Url.Action("BackButtonClick", "ShowRoundInfo")';
+    var urlOKButtonClick = '@Url.Action("OKButtonClick", "ShowRoundInfo, new { eventGuid = Model.EventGuid }")';
+    var urlBackButtonClick = '@Url.Action("BackButtonClick", "ShowRoundInfo, new { eventGuid = Model.EventGuid }")';
 </script>
 <script src="~/js/ShowRoundInfo.js"></script>

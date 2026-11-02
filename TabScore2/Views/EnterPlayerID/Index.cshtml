@@ -89,7 +89,7 @@
 </div>
 
 <script>
-    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterPlayerId")?direction=@Model.Direction';
+    var urlOKButtonClick = '@Url.Action("OKButtonClick", "EnterPlayerId", new { eventGuid = Model.EventGuid, direction = Model.Direction })';
     var stringUnknown = '@localizer["Unknown"]';
 </script>
 <script src="~/js/EnterPlayerId.js"></script>

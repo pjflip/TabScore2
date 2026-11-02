@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class ShowHandRecordModel(int boardNumber, string dealer)
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int BoardNumber { get; set; } = boardNumber;
         public string Dealer { get; set; } = dealer;
         public bool FromView { get; set; } = false;

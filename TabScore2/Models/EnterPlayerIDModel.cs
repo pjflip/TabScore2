@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class EnterPlayerIdModel
     {
+        public string EventGuid { get; set; } = string.Empty;
         public Direction Direction { get; set; } = Direction.Null;
         public string DisplayDirection { get; set; } = string.Empty;
     }

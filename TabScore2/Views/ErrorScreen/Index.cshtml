@@ -30,7 +30,7 @@ Licensed under the Apache License, Version 2.0; you may not use this file except
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "ErrorScreen")';
+            location.href = '@Url.Action("OKButtonClick", "ErrorScreen", new { eventGuid = Model.EventGuid })';
         }
     }
 </script>

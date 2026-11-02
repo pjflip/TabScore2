@@ -5,6 +5,7 @@ namespace TabScore2.Models
 {
     public class ShowRoundInfoModel
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int RoundNumber { get; set; }
         public int ContestantNumberNorth { get; set; }  // Applies to NS pair in pairs and teams
         public int ContestantNumberEast { get; set; }  // Applies to EW pair in pairs and teams

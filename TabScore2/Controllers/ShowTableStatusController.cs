@@ -3,26 +3,30 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
+using TabScore2.Models;
 using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class ShowTableStatusController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData) : Controller
+    public class ShowTableStatusController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData, ISettings iSettings) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IAppData appData = iAppData;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
-            IEnumerable<TableStatusDisplay> tableStatusList = appData.GetAllTableStatuses();
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
+
+            ShowTableStatusModel model = new() { EventGuid = eventGuid };
+            model.AddRange(appData.GetAllTableStatuses());
 
             ViewData["Title"] = localizer["ShowTableStatus"];
             ViewData["Header"] = localizer["ShowTableStatus"];
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
-            return View(tableStatusList);
+            return View(model);
         }
     }
 }

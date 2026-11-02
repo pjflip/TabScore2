@@ -17,18 +17,20 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
-                return RedirectToAction("Index", "ShowBoards");
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
-            EnterContractModel enterContractModel = busLogic.CreateEnterContractModel(deviceStatus.ResultData);
+            EnterContractModel model = busLogic.CreateEnterContractModel(deviceStatus.ResultData);
+            model.EventGuid = eventGuid;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("EnterTricksTaken", deviceStatus);
@@ -36,18 +38,19 @@ namespace TabScore2.Controllers
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             if (settings.EnterResultsMethod == 1)
             {
-                return View("TotalTricks", enterContractModel);
+                return View("TotalTricks", model);
             }
             else
             {
-                return View("TricksPlusMinus", enterContractModel);
+                return View("TricksPlusMinus", model);
             }
         }
 
-        public ActionResult OKButtonClick(int tricksTaken)
+        public ActionResult OKButtonClick(string eventGuid, int tricksTaken)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen"); 
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
             result.TricksTaken = tricksTaken;
@@ -68,21 +71,22 @@ namespace TabScore2.Controllers
                 }
             }
             busLogic.CalculateScore(result);
-            return RedirectToAction("Index", "ConfirmResult");
+            return RedirectToAction("Index", "ConfirmResult", new { eventGuid });
         }
 
-        public ActionResult BackButtonClick()
+        public ActionResult BackButtonClick(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (settings.EnterLeadCard)
             {
-                return RedirectToAction("Index", "EnterLead", new { leadValidated = true }); // Going back, so the lead has already been validated (if it needed to be)
+                return RedirectToAction("Index", "EnterLead", new { eventGuid, leadValidated = true }); // Going back, so the lead has already been validated (if it needed to be)
             }
             else
             {
-                return RedirectToAction("Index", "EnterContract", new { boardNumber = appData.GetDeviceStatus(deviceNumber).ResultData.BoardNumber });
+                return RedirectToAction("Index", "EnterContract", new { eventGuid, boardNumber = appData.GetDeviceStatus(deviceNumber).ResultData.BoardNumber });
             }
         }
     }

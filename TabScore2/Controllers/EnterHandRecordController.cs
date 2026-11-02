@@ -18,35 +18,37 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(int boardNumber)
+        public ActionResult Index(string eventGuid, int boardNumber)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (!settings.ManualHandRecordEntry)
             {
-                return RedirectToAction("Index", "ShowTraveller", new { boardNumber });
+                return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
             }
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (database.GetHand(deviceStatus.SectionId, boardNumber).NorthSpades != "###")
             {
                 // Hand record already exists, so no need to enter it
-                return RedirectToAction("Index", "ShowTraveller", new { boardNumber });
+                return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
             }
-            EnterHandRecordModel enterHandRecordModel = new(boardNumber);
+            EnterHandRecordModel model = new(eventGuid, boardNumber);
             
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("EnterHandRecord", deviceStatus);
             ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
-            return View(enterHandRecordModel);
+            return View(model);
         }
 
-        public ActionResult OKButtonClick(string NS, string NH, string ND, string NC, string SS, string SH, string SD, string SC, string ES, string EH, string ED, string EC, string WS, string WH, string WD, string WC)
+        public ActionResult OKButtonClick(string eventGuid, string NS, string NH, string ND, string NC, string SS, string SH, string SD, string SC, string ES, string EH, string ED, string EC, string WS, string WH, string WD, string WC)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
             int boardNumber = deviceStatus.ResultData.BoardNumber;
@@ -73,7 +75,7 @@ namespace TabScore2.Controllers
             };
             database.AddHand(hand);
             if (settings.DoubleDummy) appData.AddHandEvaluation(hand);
-            return RedirectToAction("Index", "ShowTraveller", new { boardNumber });
+            return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
         }
     }
 }

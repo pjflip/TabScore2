@@ -16,22 +16,25 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(bool leadValidated = false, bool showValidateLeadWarning = false)
+        public ActionResult Index(string eventGuid, bool leadValidated = false, bool showValidateLeadWarning = false)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+
             if (!settings.EnterLeadCard)
             {
-                return RedirectToAction("Index", "EnterTricksTaken");
+                return RedirectToAction("Index", "EnterTricksTaken", new { eventGuid });
             }
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
-                return RedirectToAction("Index", "ShowBoards");
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
             EnterContractModel model = busLogic.CreateEnterContractModel(deviceStatus.ResultData, false);
+            model.EventGuid = eventGuid;
             if (!leadValidated && settings.ValidateLeadCard)
             {
                 model.ValidateLead = !showValidateLeadWarning;  // If showing the warning, then the lead has already been validated
@@ -45,20 +48,21 @@ namespace TabScore2.Controllers
             return View(model);
         }
 
-        public ActionResult OKButtonClick(bool validateLead, string card)
+        public ActionResult OKButtonClick(string eventGuid, bool validateLead, string card)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             if (validateLead && !busLogic.ValidateLead(deviceStatus.ResultData, card))
             {
-                return RedirectToAction("Index", "EnterLead", new { showValidateLeadWarning = true });
+                return RedirectToAction("Index", "EnterLead", new { eventGuid, showValidateLeadWarning = true });
             }
             else
             {
                 deviceStatus.ResultData.LeadCard = card;
-                return RedirectToAction("Index", "EnterTricksTaken");
+                return RedirectToAction("Index", "EnterTricksTaken", new { eventGuid });
             }
         }
     }

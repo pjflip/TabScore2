@@ -257,6 +257,10 @@ tablet device at your current location</source>
           <source></source>
           <target state="new">Please wait until there are results entered for every board</target>
         </trans-unit>
+        <trans-unit id="ErrorWrongEvent" translate="yes" xml:space="preserve">
+          <source>You are trying to access an event that is no longer available.  Please close your browser window and restart</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="FileNoHandRecords" translate="yes" xml:space="preserve">
           <source>File contains no hand records</source>
           <target state="new">File contains no hand records</target>
@@ -612,6 +616,10 @@ tablet device at your current location</source>
         <trans-unit id="West" translate="yes" xml:space="preserve">
           <source>West</source>
           <target state="new">West</target>
+        </trans-unit>
+        <trans-unit id="WrongEventScreen" translate="yes" xml:space="preserve">
+          <source>WrongEventScreen</source>
+          <target state="new"></target>
         </trans-unit>
         <trans-unit id="Yes" translate="yes" xml:space="preserve">
           <source>Yes</source>

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
@@ -10,21 +11,25 @@ using TabScore2.Models;
 
 namespace TabScore2.Controllers
 {
-    public class ShowBoardsController(IAppData iAppData, IBusLogic iBusLogic) : Controller
+    public class ShowBoardsController(IAppData iAppData, IBusLogic iBusLogic, ISettings iSettings) : Controller
     {
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly IAppData appData = iAppData;
+        private readonly ISettings settings = iSettings;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
             
             // Clear result data as we'll be selecting a new board
             deviceStatus.ResultData = new();
 
-            ShowBoardsModel showBoardsModel = busLogic.CreateShowBoardsModel(deviceStatus);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            model.EventGuid = eventGuid;
             
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
@@ -33,67 +38,71 @@ namespace TabScore2.Controllers
 
             if (deviceStatus.Scoring)
             {
-                return View("Scoring", showBoardsModel);
+                return View("Scoring", model);
             }
             else
             {
-                return View("ViewOnly", showBoardsModel);
+                return View("ViewOnly", model);
             }
         }
 
-        public ActionResult ViewResult(int boardNumber)
+        public ActionResult ViewResult(string eventGuid, int boardNumber)
         {
             // Only used by ViewOnly view, for device that is not being used for scoring, to check if result has been entered for this board
 
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            ShowBoardsModel showBoardsModel = busLogic.CreateShowBoardsModel(deviceStatus);
+            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            model.EventGuid += eventGuid;
                         
-            if (showBoardsModel.First(x => x.BoardNumber == boardNumber).ContractLevel < 0)
+            if (model.First(x => x.BoardNumber == boardNumber).ContractLevel < 0)
             {
                 TempData["Message"] = "ErrorWaitResult";
                 ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
                 ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
                 ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
-                return View("ViewOnly", showBoardsModel);
+                return View("ViewOnly", model);
             }
             else
             {
-                return RedirectToAction("Index", "ShowTraveller", new { boardNumber, fromView = true });
+                return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber, fromView = true });
             }
         }
 
-        public ActionResult OKButtonClick()
+        public ActionResult OKButtonClick(string eventGuid)
         {
             // Only used by ViewOnly view, for device that is not being used for scoring, to check if all results have been entered
-            
+
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
+            
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            model.EventGuid = eventGuid;
 
-            ShowBoardsModel showBoardsModel = busLogic.CreateShowBoardsModel(deviceStatus);
-
-            if (!showBoardsModel.GotAllResults)
+            if (!model.GotAllResults)
             {
                 TempData["Message"] = "ErrorWaitAllResults";
                 ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
                 ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
                 ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
-                return View("ViewOnly", showBoardsModel);
+                return View("ViewOnly", model);
             }
             else
             {
-                return RedirectToAction("Index", "ShowRankingList");
+                return RedirectToAction("Index", "ShowRankingList", new { eventGuid });
             }
         }
 
-        public ActionResult BackButtonClick()
+        public ActionResult BackButtonClick(string eventGuid)
         {
-            return RedirectToAction("Index", "ShowRoundInfo");
+            return RedirectToAction("Index", "ShowRoundInfo", new { eventGuid });
         }
     }
 }

@@ -54,7 +54,7 @@ function OKButtonClick() {
     if (document.getElementById("OKButton").disabled) return;
     if (!isSubmitted) {
         isSubmitted = true;
-        location.href = urlOKButtonClick + '?tricksTaken=' + tricksTaken;
+        location.href = urlOKButtonClick + '&tricksTaken=' + tricksTaken;
     }
 }
 

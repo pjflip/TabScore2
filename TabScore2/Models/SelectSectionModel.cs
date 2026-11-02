@@ -7,5 +7,6 @@ namespace TabScore2.Models
 {
     public class SelectSectionModel : List <Section> 
     {
+        public string EventGuid { get; set; } = string.Empty;
     }
 }

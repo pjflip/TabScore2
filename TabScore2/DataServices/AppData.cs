@@ -78,7 +78,8 @@ namespace TabScore2.DataServices
                 RoundNumber = tableStatus.RoundNumber,
                 Devices = deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == tableStatus.SectionId && deviceStatus.TableNumber == tableStatus.TableNumber
                   && deviceStatus.RoundNumber == tableStatus.RoundNumber),
-                ReadyForNextRound = IsTableReadyForNextRound(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber),
+                ReadyForNextRound = !deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == tableStatus.SectionId && deviceStatus.TableNumber == tableStatus.TableNumber
+                  && deviceStatus.RoundNumber == tableStatus.RoundNumber && !deviceStatus.ReadyForNextRound),
             }).OrderBy(tableStatus => tableStatus.SectionLetter).ThenBy(tableStatus => tableStatus.TableNumber);
         }
 
@@ -92,9 +93,14 @@ namespace TabScore2.DataServices
         // DEVICESTATUS
         private static readonly List<DeviceStatus> deviceStatusList = [];
 
-        public int GetDeviceNumberByTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North)
+        public int GetDeviceNumberByTableNumber(int sectionId, int tableNumber)
         {
-            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
+            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.TableNumber == tableNumber);
+        }
+
+        public IEnumerable<DeviceStatus> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
+        {
+            return deviceStatusList.Where(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
         }
 
         public int GetDeviceNumberByContestant(int sectionId, int contestantNumber)

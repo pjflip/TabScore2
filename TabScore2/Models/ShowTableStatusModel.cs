@@ -5,8 +5,8 @@ using TabScore2.Classes;
 
 namespace TabScore2.Models
 {
-    public class ShowTableStatusModel
+    public class ShowTableStatusModel : List<TableStatusDisplay>
     {
-        public List<TableStatus> TableStatuses = [];
+        public string EventGuid { get; set; } = string.Empty;
     }
 }

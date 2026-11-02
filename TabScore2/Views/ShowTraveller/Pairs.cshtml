@@ -115,7 +115,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowBoards")';
+            location.href = '@Url.Action("Index", "ShowBoards", new { eventGuid = Model.EventGuid })';
         }
     }
 
@@ -123,14 +123,14 @@
         if (document.getElementById("BackButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ConfirmResult")';
+            location.href = '@Url.Action("Index", "ConfirmResult", new { eventGuid = Model.EventGuid })';
         }
     }
 
     function handRecordClick() {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowHandRecord")?boardNumber=@Model.BoardNumber&fromView=@Model.FromView.ToString().ToLower()';
+            location.href = '@Url.Action("Index", "ShowHandRecord", new { eventGuid = Model.EventGuid, boardNumber = Model.BoardNumber, fromView = Model.FromView.ToString().ToLower() })';
         }
     }
 </script>

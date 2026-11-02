@@ -105,6 +105,7 @@ namespace TabScore2
                 options.IdleTimeout = TimeSpan.FromHours(6);
                 options.Cookie.IsEssential = true;
             });
+            webAppBuilder.Services.AddHttpContextAccessor();
             webAppBuilder.WebHost.ConfigureKestrel((context, serverOptions) => { serverOptions.Listen(IPAddress.Any, 5213); });
 
             WebApplication webApp = webAppBuilder.Build();

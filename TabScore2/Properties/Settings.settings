@@ -26,9 +26,6 @@
     <Setting Name="SuppressRankingListForFirstXRounds" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="DatabaseReady" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="IsIndividual" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -76,6 +73,12 @@
     </Setting>
     <Setting Name="DefaultPlayerIDEntryMethod" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DatabaseReady" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="eventGuid" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

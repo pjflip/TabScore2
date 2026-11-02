@@ -20,12 +20,14 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(int confirmTableNumber = 0) 
+        public ActionResult Index(string eventGuid, int confirmTableNumber = 0) 
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             SelectTableNumberModel model = busLogic.CreateSelectTableNumberModel(sectionId, confirmTableNumber);
+            model.EventGuid = eventGuid;
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
             if (settings.Mode == Mode.Scorer)
@@ -40,26 +42,27 @@ namespace TabScore2.Controllers
             return View(model);   
         }
 
-        public ActionResult OKButtonClick(int tableNumber, bool confirm)
+        public ActionResult OKButtonClick(string eventGuid, int tableNumber, bool confirm)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen");
+            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1)
             {
                 // Devices are moving so we also need direction
                 HttpContext.Session.SetInt32("TableNumber", tableNumber);
-                return RedirectToAction("Index", "SelectDirection");
+                return RedirectToAction("Index", "SelectDirection", new { eventGuid });
             }
             else
             {
                 // Traditional Mode, or Personal/Scorer Mode with 2 winners : only one non-moving device per table
-                // Try to avoid multiple registrations for the same location (unless a replacement device), so check if device is already registered
+                // We only want one device per location, so check if device is already registered
                 // Use session state to keep track of any previous location for the current device
-                int deviceNumber = appData.GetDeviceNumberByTableDirection(sectionId, tableNumber);  // Returns -1 if not found
+                int deviceNumber = appData.GetDeviceNumberByTableNumber(sectionId, tableNumber);  // Returns -1 if not found
                 if (deviceNumber != -1 && confirm)
                 {
-                    // A device record exists for this section/table and it's ok to change to this device, so just reset session state
+                    // A device record exists for this section/table and it's ok to change to this device, so just reset session state and use the deviceNumber
                     HttpContext.Session.SetInt32("TableNumber", tableNumber);
                 }
                 else if (deviceNumber != -1)
@@ -69,7 +72,7 @@ namespace TabScore2.Controllers
                     // If, at this stage, the user has got the section wrong, then they'd need to restart
                     if (tableNumber != HttpContext.Session.GetInt32("TableNumber"))
                     {
-                        return RedirectToAction("Index", "SelectTableNumber", new { confirmTableNumber = tableNumber });
+                        return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, confirmTableNumber = tableNumber });
                     }
                     // else => session state matches, so this is a re-registration and nothing more to do
                 }
@@ -85,8 +88,8 @@ namespace TabScore2.Controllers
                 DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
 
                 // Work out where to go next
-                if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { newRoundNumber = deviceStatus.RoundNumber + 1 });
-                return RedirectToAction("Index", "ShowPlayerIds");
+                if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
             }
         }
     }

@@ -5,6 +5,7 @@ namespace TabScore2.Models
 {
     public class EnterContractModel
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int BoardNumber { get; set; } = 0;
         public string DeclarerNSEW { get; set; } = string.Empty;
         public string DeclarerNSEWDisplay { get; set; } = string.Empty;

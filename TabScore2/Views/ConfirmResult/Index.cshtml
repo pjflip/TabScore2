@@ -68,7 +68,7 @@ else
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "ConfirmResult")';
+            location.href = '@Url.Action("OKButtonClick", "ConfirmResult", new { eventGuid = Model.EventGuid })';
         }
     }
 
@@ -76,7 +76,7 @@ else
         if (document.getElementById("BackButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("BackButtonClick", "ConfirmResult")';
+            location.href = '@Url.Action("BackButtonClick", "ConfirmResult", new { eventGuid = Model.EventGuid })';
         }
     }
 </script>

@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class SelectDirectionModel
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int SectionId { get; set; }
         public string SectionLetter { get; set; } = "A";
         public int TableNumber { get; set; }

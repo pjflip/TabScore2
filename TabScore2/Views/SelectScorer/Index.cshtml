@@ -75,10 +75,10 @@
         if (!isSubmitted) {
             isSubmitted = true;
             if (scoring) {
-                location.href = '@Url.Action("ScoreThisRoundButtonClick", "SelectScorer")';
+                location.href = '@Url.Action("ScoreThisRoundButtonClick", "SelectScorer", new { eventGuid = Model.EventGuid })';
             }
             else {
-                location.href = '@Url.Action("ViewOnlyButtonClick", "SelectScorer")';
+                location.href = '@Url.Action("ViewOnlyButtonClick", "SelectScorer", new { eventGuid = Model.EventGuid })';
             }
         }
     }

@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class ShowRankingListModel : List<Ranking>
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int RoundNumber { get; set; }
         public int ContestantNumberNorth { get; set; } = 0;
         public int ContestantNumberEast { get; set; } = 0;

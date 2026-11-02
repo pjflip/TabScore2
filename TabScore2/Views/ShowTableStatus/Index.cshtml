@@ -1,7 +1,7 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model IEnumerable<TableStatusDisplay>
+@model ShowTableStatusModel
 
 <div class="row mt-2">
     <div class="col-12 p-0">
@@ -51,7 +51,7 @@
     function OKButtonClick() {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "SelectSection")';
+            location.href = '@Url.Action("Index", "SelectSection", new { eventGuid = Model.EventGuid })';
         }
     }
 </script>

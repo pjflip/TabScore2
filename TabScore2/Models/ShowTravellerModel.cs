@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class ShowTravellerModel(int boardNumber) : List<TravellerResult>
     {
+        public string EventGuid { get; set; } = string.Empty;
         public int BoardNumber { get; private set; } = boardNumber;
         public bool HandRecord { get; set; } = false;
         public string PercentageNS { get; set; } = string.Empty;

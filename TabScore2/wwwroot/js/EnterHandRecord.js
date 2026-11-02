@@ -593,7 +593,7 @@ function remainder() {
 }
 
 function makeReturnString() {
-    var returnString = '?NS=';
+    var returnString = '&NS=';
     for (var index = 0; index < NSABC.length; index++) {
         returnString += dBString(NSABC[index]);
     }

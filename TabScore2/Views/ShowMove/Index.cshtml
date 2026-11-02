@@ -155,7 +155,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "ShowMove")?newRoundNumber=@Model.NewRoundNumber';
+            location.href = '@Url.Action("OKButtonClick", "ShowMove", new { eventGuid = Model.EventGuid, newRoundNumber = Model.NewRoundNumber })';
         }
     }
 </script>

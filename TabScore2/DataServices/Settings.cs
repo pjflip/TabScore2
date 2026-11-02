@@ -149,5 +149,10 @@ namespace TabScore2.DataServices
             get { return Properties.Settings.Default.SessionStarted; }
             set { Properties.Settings.Default.SessionStarted = value; Properties.Settings.Default.Save(); }
         }
+        public string EventGuid
+        {
+            get { return Properties.Settings.Default.eventGuid; }
+            set { Properties.Settings.Default.eventGuid = value; Properties.Settings.Default.Save(); }
+        }
     }
 }

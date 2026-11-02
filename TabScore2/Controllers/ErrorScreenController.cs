@@ -15,7 +15,7 @@ namespace TabScore2.Controllers
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IDatabase database = iDatabase;
 
-        public ActionResult Index()
+        public ActionResult Index(string eventGuid)
         {
             IExceptionHandlerFeature? exceptionFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
             if (exceptionFeature != null)
@@ -35,14 +35,15 @@ namespace TabScore2.Controllers
             ViewData["Title"] = localizer["ErrorScreen"];
             ViewData["Header"] = string.Empty;
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
+            TempData["eventGuid"] = eventGuid;
             return View();
         }
 
-        public ActionResult OKButtonClick()
+        public ActionResult OKButtonClick(string eventGuid)
         {
             if (database.IsDatabaseConnectionOK())  // Successful database read/write, so must have been a temporary glitch
             {
-                return RedirectToAction("Index", "SelectSection");  // Need to re-establish Section/TableNumber/Direction for this tablet device
+                return RedirectToAction("Index", "SelectSection", new { eventGuid });  // Need to re-establish Section/TableNumber/Direction for this tablet device
             }
             else  // Can't read/write to database after the error, so pass error to StartScreen and await database update 
             {

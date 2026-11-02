@@ -3,8 +3,9 @@
 
 namespace TabScore2.Models
 {
-    public class EnterHandRecordModel(int boardNumber)
+    public class EnterHandRecordModel(string eventGuid, int boardNumber)
     {
+        public string EventGuid { get; set; } = eventGuid; 
         public int BoardNumber { get; private set; } = boardNumber;
     }
 }

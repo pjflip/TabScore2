@@ -7,6 +7,7 @@ namespace TabScore2.Models
 {
     public class ShowBoardsModel(bool showViewButton) : List<ShowBoardsResult>
     {
+        public string EventGuid { get; set; } = string.Empty;
         public bool GotAllResults { get; set; } = true;
         public bool ShowViewButton { get; private set; } = showViewButton;
     }

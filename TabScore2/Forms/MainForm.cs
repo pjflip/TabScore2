@@ -190,6 +190,9 @@ namespace TabScore2.Forms
                 buttonResultsViewer.Enabled = true;
                 labelSessionStatus.Text = localizer["SessionRunning"];
                 labelSessionStatus.ForeColor = Color.Green;
+
+                // Create an EventGuid that will be used to validate the webApp screens
+                settings.EventGuid = new Guid().ToString();
                 settings.DatabaseReady = true;
             }
         }

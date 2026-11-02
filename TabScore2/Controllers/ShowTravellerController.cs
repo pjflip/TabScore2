@@ -17,14 +17,15 @@ namespace TabScore2.Controllers
         private readonly IBusLogic busLogic = iBusLogic;
         private readonly ISettings settings = iSettings;
 
-        public ActionResult Index(int boardNumber, bool fromView = false)
+        public ActionResult Index(string eventGuid, int boardNumber, bool fromView = false)
         {
+            if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
-            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen");
+            if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             if (!settings.ShowTraveller)
             {
-                return RedirectToAction("Index", "ShowBoards");
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
             DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
@@ -35,8 +36,9 @@ namespace TabScore2.Controllers
                 deviceStatus.ResultData = database.GetResult(deviceStatus.SectionId, deviceStatus.TableNumber, deviceStatus.RoundNumber, boardNumber);
             }
            
-            ShowTravellerModel showTravellerModel = busLogic.CreateShowTravellerModel(deviceStatus);
-            showTravellerModel.FromView = fromView;
+            ShowTravellerModel model = busLogic.CreateShowTravellerModel(deviceStatus);
+            model.EventGuid = eventGuid;
+            model.FromView = fromView;
 
             ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
             ViewData["Title"] = busLogic.Title("ShowTraveller", deviceStatus);
@@ -52,11 +54,11 @@ namespace TabScore2.Controllers
 
             if (settings.IsIndividual)
             {
-                return View("Individual", showTravellerModel);
+                return View("Individual", model);
             }
             else
             {
-                return View("Pairs", showTravellerModel);
+                return View("Pairs", model);
             }
         }
     }
