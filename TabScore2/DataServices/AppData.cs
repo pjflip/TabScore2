@@ -18,222 +18,198 @@ namespace TabScore2.DataServices
         private readonly IDatabase database = iDatabase;
         private readonly ISettings settings = iSettings;
 
-        public void ClearAppData()
+        private static readonly List<Device> deviceList = [];
+        private static readonly List<TableStatus> tableStatuses = [];
+
+        public void WebappInitialize()
         {
-            tableStatusList.Clear();
-            deviceStatusList.Clear();
+            database.WebappInitialize();
+            deviceList.Clear();
             roundTimerList.Clear();
         }
 
-        // TABLESTATUS
-        private static readonly List<TableStatus> tableStatusList = [];
-
-        public TableStatus GetTableStatus(int sectionId, int tableNumber)
-        {
-            TableStatus? tableStatus = tableStatusList.Find(x => x.SectionId == sectionId && x.TableNumber == tableNumber);
-            if (tableStatus == null)
-            {
-                int roundNumber = database.GetLastRoundWithResultsForTable(sectionId, tableNumber);
-                tableStatus = new TableStatus {
-                    SectionId = sectionId,
-                    TableNumber = tableNumber,
-                    RoundNumber = roundNumber,
-                    RoundData = database.GetRound(sectionId, tableNumber, roundNumber),
-                };
-                tableStatusList.Add(tableStatus);
-            }
-            return tableStatus;
-        }
-
+        // TABLE
         public bool IsTableReadyForNextRound(int sectionId, int newTableNumber, int newRoundNumber)
         {
-            // Check if the new table (the one we're trying to move to) is ready
-            TableStatus tableStatus = GetTableStatus(sectionId, newTableNumber);
-            if (tableStatus.RoundNumber >= newRoundNumber)
-            {
-                // New table has already advanced to the next round, so it's clearly ready for the move
-                return true;
-            }
-            else if (tableStatus.RoundNumber < newRoundNumber - 1)
-            {
-                // New table hasn't yet reached the previous round (unlikely but possible)
-                return false;
-            }
-            else
-            {
-                // New table is on the current round.  It is then ready for the next round if all devices at the new table have either advanced to the next round
-                // or are ready for the next round.  This means that if there are no devices at the new table, then the table is automatically ready for the next round
-                return !deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == sectionId && deviceStatus.TableNumber == newTableNumber
-                  && deviceStatus.RoundNumber < newRoundNumber && !deviceStatus.ReadyForNextRound);
-            }
+            IEnumerable<Device> newTableDevices = deviceList.Where(device => device.SectionId == sectionId && device.TableNumber == newTableNumber);
+
+            // Check if the new table has already advanced to the next round - ie there is a device there on the new round
+            if (newTableDevices.Where(device => device.RoundNumber == newRoundNumber).Any()) return true;
+
+            // Check if the new table has any devices that have not yet got to the previous round (unlikely but possible)
+            if (newTableDevices.Where(device => device.RoundNumber < newRoundNumber - 1).Any()) return false;
+
+            // Check if the new table is ready - ie there are no devices from the previous round that are not ready to move 
+            if (newTableDevices.Where(device => device.RoundNumber == (newRoundNumber - 1) && !device.ReadyForNextRound).Any()) return false;
+
+            // Table should be ready to move to
+            return true;
         }
 
-        public IEnumerable<TableStatusDisplay> GetAllTableStatuses()
+        public IEnumerable<TableStatus> GetAllTableStatuses()
         {
             List<Section> sections = database.GetSectionsList();
-            return tableStatusList.Select(tableStatus => new TableStatusDisplay
+            if (tableStatuses.Count == 0)
             {
-                SectionLetter = sections.Single(section => section.SectionId == tableStatus.SectionId).SectionLetter,
-                TableNumber = tableStatus.TableNumber,
-                RoundNumber = tableStatus.RoundNumber,
-                Devices = deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == tableStatus.SectionId && deviceStatus.TableNumber == tableStatus.TableNumber
-                  && deviceStatus.RoundNumber == tableStatus.RoundNumber),
-                ReadyForNextRound = !deviceStatusList.Any(deviceStatus => deviceStatus.SectionId == tableStatus.SectionId && deviceStatus.TableNumber == tableStatus.TableNumber
-                  && deviceStatus.RoundNumber == tableStatus.RoundNumber && !deviceStatus.ReadyForNextRound),
-            }).OrderBy(tableStatus => tableStatus.SectionLetter).ThenBy(tableStatus => tableStatus.TableNumber);
+                // Create the initial list of tables from the movement
+                List<(int, string, Round)> roundsList = [];
+                foreach (Section section in sections)
+                {
+                    foreach (Round round in database.GetRoundsListForSection(section.SectionId))
+                    {
+                        roundsList.Add((section.SectionId, section.SectionLetter, round));
+                    }
+                }
+                HashSet<(int, string, int)> tables = [];
+                foreach ((int, string, Round) round in roundsList)
+                {
+                    tables.Add((round.Item1, round.Item2, round.Item3.TableNumber));
+                }
+                foreach ((int, string, int) table in tables)
+                {
+                    tableStatuses.Add(new() { SectionId = table.Item1, SectionLetter = table.Item2, TableNumber = table.Item3, RoundNumber = 1 });
+                }
+            }
+
+            // Update the list of table statuses before returning it
+            foreach (Section section in sections)
+            {
+                int currentRoundNumber = deviceList.Where(device => device.SectionId == section.SectionId).Max(device => device.RoundNumber);
+                foreach (TableStatus tableStatus in tableStatuses.Where(tableStatus => tableStatus.SectionId == section.SectionId))
+                {
+                    IEnumerable<Device> tableDevices = deviceList.Where(device => device.SectionId == tableStatus.SectionId && device.TableNumber == tableStatus.TableNumber);
+                    tableStatus.RoundNumber = tableDevices.Max(device => device.RoundNumber);
+                    if (tableStatus.RoundNumber == currentRoundNumber)
+                    {
+                        tableStatus.Devices = true;
+                        tableStatus.ReadyForNextRound = !tableDevices.Any(device => device.RoundNumber == tableStatus.RoundNumber && !device.ReadyForNextRound);
+                    }
+                    else if (tableStatus.RoundNumber == currentRoundNumber - 1)
+                    {
+                        tableStatus.Devices = true;
+                        tableStatus.ReadyForNextRound = !tableDevices.Any(device => device.RoundNumber == tableStatus.RoundNumber && !device.ReadyForNextRound);
+                    }
+                    else
+                    {
+                        tableStatus.Devices = false;
+                        tableStatus.ReadyForNextRound = false;
+                    }
+                }
+            }
+            return tableStatuses.OrderBy(tableStatus => tableStatus.SectionLetter).ThenBy(tableStatus => tableStatus.TableNumber);
         }
 
-        public void UpdateTableStatus(int sectionId, int tableNumber, int roundNumber)
+        // DEVICE
+        public Device? GetDeviceByLocation(int sectionId, int tableNumber, Direction direction)
         {
-            TableStatus tableStatus = GetTableStatus(sectionId, tableNumber)!;
-            tableStatus.RoundNumber = roundNumber;
-            tableStatus.RoundData = database.GetRound(sectionId, tableNumber, roundNumber);
+            return deviceList.SingleOrDefault(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
         }
 
-        // DEVICESTATUS
-        private static readonly List<DeviceStatus> deviceStatusList = [];
-
-        public int GetDeviceNumberByTableNumber(int sectionId, int tableNumber)
+        public Device CreateDeviceByLocation(int sectionId, int tableNumber, int roundNumber, Direction direction = Direction.North)
         {
-            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.TableNumber == tableNumber);
-        }
-
-        public IEnumerable<DeviceStatus> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
-        {
-            return deviceStatusList.Where(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
-        }
-
-        public int GetDeviceNumberByContestant(int sectionId, int contestantNumber)
-        {
-            return deviceStatusList.FindLastIndex(device => device.SectionId == sectionId && device.ContestantNumber == contestantNumber);
-        }
-
-        public DeviceStatus GetDeviceStatus(int deviceNumber)
-        {
-            return deviceStatusList[deviceNumber];
-        }
-
-        public int AddDeviceStatusForTable(int sectionId, int tableNumber)
-        {
-            // One device per table
-
-            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
-            database.RegisterTable(sectionId, tableNumber);
-
-            // Get the table status, creating new if required
-            TableStatus tableStatus = GetTableStatus(sectionId, tableNumber);
             string sectionLetter = database.GetSection(sectionId).SectionLetter;
-
-            deviceStatusList.Add(new()
+            Round round = database.GetRound(sectionId, tableNumber, roundNumber);
+            int contestantNumber = direction switch
             {
+                Direction.North => round.ContestantNumberNorth,
+                Direction.East => round.ContestantNumberEast,
+                Direction.South => round.ContestantNumberSouth,
+                _ => round.ContestantNumberWest,
+            };
+
+            Device device = new()
+            {
+                DeviceNumber = deviceList.Count,  // We add one to the end of the zero-based list, so this is its number,
                 SectionId = sectionId,
                 SectionLetter = sectionLetter,
                 Location = sectionLetter + tableNumber.ToString(),
                 TableNumber = tableNumber,
-                ContestantNumber = tableStatus.RoundData.ContestantNumberNorth,
-                RoundNumber = tableStatus.RoundNumber,
-                Direction = Direction.North,
+                ContestantNumber = contestantNumber,
+                RoundNumber = roundNumber,
+                RoundData = round,
+                Direction = direction,
                 DevicesPerTable = 1,
                 Scoring = true,
-            });
-            return deviceStatusList.Count - 1;  // Return the index of the new device status
-        }
-
-        public int AddDeviceStatusForTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North)
-        {
-            // More than one device per table.  Registering by section/table/direction 
-            
-            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
-            database.RegisterTable(sectionId, tableNumber);
-
-            // Get the table status, creating new if required
-            TableStatus tableStatus = GetTableStatus(sectionId, tableNumber);
-            string sectionLetter = database.GetSection(sectionId).SectionLetter;
-            
-            int contestantNumber = direction switch
-            {
-                Direction.North => tableStatus.RoundData.ContestantNumberNorth,
-                Direction.East => tableStatus.RoundData.ContestantNumberEast,
-                Direction.South => tableStatus.RoundData.ContestantNumberSouth,
-                Direction.West => tableStatus.RoundData.ContestantNumberWest,
-                _ => 0
             };
-
-            // Number of devices per table depends on whether it's an individual event.  Stored in the deviceStatus (not settings) as can vary by section
-            int devicesPerTable = settings.IsIndividual ? 4 : 2;
-
-            // In Traditional/Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
-            bool scoring = settings.Mode == Mode.Traditional || (settings.Mode == Mode.Personal && direction == Direction.North);
-
-            deviceStatusList.Add(new()
-            {
-                SectionId = sectionId,
-                SectionLetter = sectionLetter,
-                Location = GetDeviceStatusLocation(sectionLetter, tableNumber, direction, devicesPerTable),
-                TableNumber = tableNumber,
-                ContestantNumber = contestantNumber,
-                RoundNumber = tableStatus.RoundNumber,
-                Direction = direction,
-                DevicesPerTable = devicesPerTable,
-                Scoring = scoring,
-            });
-            return deviceStatusList.Count - 1;  // Return the index of the new device status
+            deviceList.Add(device);
+            return device;
         }
 
-        public int AddDeviceStatusForContestant(int sectionId, int contestantNumber)
+        public IEnumerable<Device> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
         {
-            // More than one device per table.  Registering by contestant number
+            return deviceList.Where(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
+        }
 
-            // Need to find a location for this contestant.  If there are already results, use the location of the last result
-            Location location = database.GetLastLocationWithResultsForContestant(sectionId, contestantNumber);
-            if (location.TableNumber == 0)
+        public Device? GetDeviceByContestant(int sectionId, int contestantNumber)
+        {
+            return deviceList.SingleOrDefault(device => device.SectionId == sectionId && device.ContestantNumber == contestantNumber);
+        }
+
+        public Device CreateDeviceByContestant(int sectionId, int contestantNumber, int roundNumber)
+        {
+            string sectionLetter = database.GetSection(sectionId).SectionLetter;
+
+            // Need to find a location for this contestant.  Not teams, so contestant can only be playing at one table
+            List<Round> roundsList = database.GetRoundsListForSectionRound(sectionId, roundNumber);
+            Round? round = roundsList.SingleOrDefault(round => round.ContestantNumberNorth == contestantNumber || round.ContestantNumberEast == contestantNumber
+              || round.ContestantNumberSouth == contestantNumber || round.ContestantNumberWest == contestantNumber);
+            int tableNumber = 0;
+            Direction direction = Direction.Sitout;
+            if (round != null)
             {
-                // No results yet, so use the contestant's starting location from the movement
-                location = database.GetStartLocationForContestant(sectionId, contestantNumber);
+                // Contestant not sitting out this round
+                tableNumber = round.TableNumber;
+                if (round.ContestantNumberNorth == contestantNumber) direction = Direction.North;
+                else if (round.ContestantNumberEast == contestantNumber) direction = Direction.East;
+                else if (round.ContestantNumberNorth == contestantNumber) direction = Direction.South;
+                else direction = Direction.West;
             }
 
-            // Register table in database.  Not really needed, but conforms to Bridgemate DevGuide
-            database.RegisterTable(sectionId, location.TableNumber);
-
-            // Create a new table status if required
-            GetTableStatus(sectionId, location.TableNumber);
-            string sectionLetter = database.GetSection(sectionId).SectionLetter;
-
-            // Number of devices per table depends on whether it's an individual event.  Stored in the deviceStatus (not settings) as can vary by section
+            // Number of devices per table depends on whether it's an individual event.  Stored in the device (not settings) as can vary by section
             int devicesPerTable = settings.IsIndividual ? 4 : 2;
 
             // In Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
-            bool scoring = settings.Mode == Mode.Personal && location.Direction == Direction.North;
+            bool scoring = settings.Mode == Mode.Personal && direction == Direction.North;
 
-            deviceStatusList.Add(new()
+            int deviceNumber = deviceList.Count;  // We add one to the end of the zero-based list, so this is its number
+            Device device = new()
             {
+                DeviceNumber = deviceNumber,
                 SectionId = sectionId,
                 SectionLetter = sectionLetter,
-                Location = GetDeviceStatusLocation(sectionLetter, location.TableNumber, location.Direction, devicesPerTable),
-                TableNumber = location.TableNumber,
+                Location = GetdeviceLocation(sectionLetter, tableNumber, direction, devicesPerTable),
+                TableNumber = tableNumber,
                 ContestantNumber = contestantNumber,
-                RoundNumber = location.RoundNumber,
-                Direction = location.Direction,
+                RoundNumber = roundNumber,
+                RoundData = round,
+                Direction = direction,
                 DevicesPerTable = devicesPerTable,
                 Scoring = scoring,
-            });
-            return deviceStatusList.Count - 1;  // Return the index of the new device status
+            };
+            deviceList.Add(device);
+            return device;  
         }
 
-        public void UpdateDeviceStatus(DeviceStatus deviceStatus, int tableNumber, int roundNumber, Direction direction)
+        public Device GetDevice(int deviceNumber)
+        {
+            return deviceList[deviceNumber];
+        }
+
+        public void UpdateDevice(Device device, int tableNumber, int roundNumber, Direction direction)
         {
             // In Traditional/Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
             bool scoring = settings.Mode == Mode.Traditional || (settings.Mode == Mode.Personal && direction == Direction.North);
 
-            deviceStatus.TableNumber = tableNumber;
-            deviceStatus.Direction = direction;
-            deviceStatus.RoundNumber = roundNumber;
-            deviceStatus.Scoring = scoring;
-            deviceStatus.ReadyForNextRound = false;
-            deviceStatus.Location = GetDeviceStatusLocation(deviceStatus.SectionLetter, deviceStatus.TableNumber, deviceStatus.Direction, deviceStatus.DevicesPerTable);
+            device.TableNumber = tableNumber;
+            device.Direction = direction;
+            device.RoundNumber = roundNumber;
+            device.RoundData = database.GetRound(device.SectionId, tableNumber, roundNumber);
+            device.Scoring = scoring;
+            device.ReadyForNextRound = false;
+            device.Location = GetdeviceLocation(device.SectionLetter, device.TableNumber, device.Direction, device.DevicesPerTable);
         }
 
-        private string GetDeviceStatusLocation(string sectionLetter, int tableNumber, Direction direction, int devicesPerTable)
+        private string GetdeviceLocation(string sectionLetter, int tableNumber, Direction direction, int devicesPerTable)
         {
             string location = sectionLetter + tableNumber.ToString();
             if (devicesPerTable == 4)
@@ -275,40 +251,39 @@ namespace TabScore2.DataServices
 
         public bool SetDeviceAsScorer(int deviceNumber)
         {
-            DeviceStatus deviceStatus = GetDeviceStatus(deviceNumber);
-            bool scorerAtTable = deviceStatusList.Any(device => device.SectionId == deviceStatus.SectionId && device.TableNumber == deviceStatus.TableNumber
-              && device.RoundNumber == deviceStatus.RoundNumber && device.Direction != deviceStatus.Direction && device.Scoring);
+            Device device = GetDevice(deviceNumber);
+            bool scorerAtTable = deviceList.Any(device => device.SectionId == device.SectionId && device.TableNumber == device.TableNumber
+              && device.RoundNumber == device.RoundNumber && device.Direction != device.Direction && device.Scoring);
             if (scorerAtTable) return false;  // Another device is already set as Scoring at this table, so can't set this device as Scoring
-            deviceStatus.Scoring = true;
+            device.Scoring = true;
             return true;
         }
 
         public bool SetDeviceAsViewer(int deviceNumber)
         {
-            DeviceStatus deviceStatus = GetDeviceStatus(deviceNumber);
-            bool scorerAtTable = deviceStatusList.Any(device => device.SectionId == deviceStatus.SectionId && device.TableNumber == deviceStatus.TableNumber
-              && device.RoundNumber == deviceStatus.RoundNumber && device.Direction != deviceStatus.Direction && device.Scoring);
+            Device device = GetDevice(deviceNumber);
+            bool scorerAtTable = deviceList.Any(device => device.SectionId == device.SectionId && device.TableNumber == device.TableNumber
+              && device.RoundNumber == device.RoundNumber && device.Direction != device.Direction && device.Scoring);
             if (!scorerAtTable) return false;  // No other device is set as Scoring at this table, so can't set this device as Viewer
             return true;
         }
 
         // ROUNDTIMER
         private static readonly List<RoundTimer> roundTimerList = [];
-        public int GetTimerSeconds(DeviceStatus deviceStatus)
+        public int GetTimerSeconds(Device device)
         {
             if (!settings.ShowTimer) return -1;  // Don't show timer
-            RoundTimer? roundTimer = roundTimerList.Find(x => x.SectionId == deviceStatus.SectionId && x.RoundNumber == deviceStatus.RoundNumber);
+            RoundTimer? roundTimer = roundTimerList.Find(x => x.SectionId == device.SectionId && x.RoundNumber == device.RoundNumber);
             if (roundTimer == null)  // Round not yet started, so create initial timer data for this section and round 
             {
                 // If phantom table or not at master table, then can't create initial timer data
-                if (deviceStatus.TableNumber == 0 || (settings.MasterTableForTimer && deviceStatus.TableNumber != 1)) return -1; 
+                if (device.TableNumber == 0 || (settings.MasterTableForTimer && device.TableNumber != 1)) return -1; 
                 DateTime startTime = DateTime.Now;
-                TableStatus tableStatus = GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-                int secondsPerRound = (tableStatus.RoundData.HighBoard - tableStatus.RoundData.LowBoard + 1) * settings.SecondsPerBoard + settings.AdditionalSecondsPerRound;
+                int secondsPerRound = (device.RoundData!.HighBoard - device.RoundData.LowBoard + 1) * settings.SecondsPerBoard + settings.AdditionalSecondsPerRound;
                 roundTimerList.Add(new RoundTimer
                 {
-                    SectionId = deviceStatus.SectionId,
-                    RoundNumber = deviceStatus.RoundNumber,
+                    SectionId = device.SectionId,
+                    RoundNumber = device.RoundNumber,
                     StartTime = startTime,
                     SecondsPerRound = secondsPerRound
                 });

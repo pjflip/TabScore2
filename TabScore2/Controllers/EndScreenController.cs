@@ -22,10 +22,10 @@ namespace TabScore2.Controllers
 
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
-            ViewData["Title"] = busLogic.Title("EndScreen", deviceStatus);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
+            ViewData["Title"] = busLogic.Title("EndScreen", device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             TempData["eventGuid"] = eventGuid;
             return View();
@@ -39,15 +39,15 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             // Check if new round has been added; can't apply to individuals
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            if (deviceStatus.RoundNumber == database.GetNumberOfRoundsInSection(deviceStatus.SectionId, true))   // Force database read
+            Device device = appData.GetDevice(deviceNumber);
+            if (device.RoundNumber == database.GetNumberOfRoundsInSection(device.SectionId, true))   // Force database read
             {
                 // Final round, so no new rounds added
                 return RedirectToAction("Index", "EndScreen", new { eventGuid });
             }
             else
             {
-                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             }
         }
     }

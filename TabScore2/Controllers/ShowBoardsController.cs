@@ -23,20 +23,20 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
             
             // Clear result data as we'll be selecting a new board
-            deviceStatus.ResultData = new();
+            device.ResultData = new();
 
-            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(device);
             model.EventGuid = eventGuid;
             
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("ShowBoards", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
 
-            if (deviceStatus.Scoring)
+            if (device.Scoring)
             {
                 return View("Scoring", model);
             }
@@ -54,16 +54,16 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            Device device = appData.GetDevice(deviceNumber);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(device);
             model.EventGuid += eventGuid;
                         
             if (model.First(x => x.BoardNumber == boardNumber).ContractLevel < 0)
             {
                 TempData["Message"] = "ErrorWaitResult";
-                ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-                ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
-                ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
+                ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+                ViewData["Title"] = busLogic.Title("ShowBoards", device);
+                ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, device);
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
                 return View("ViewOnly", model);
             }
@@ -81,16 +81,16 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            ShowBoardsModel model = busLogic.CreateShowBoardsModel(deviceStatus);
+            Device device = appData.GetDevice(deviceNumber);
+            ShowBoardsModel model = busLogic.CreateShowBoardsModel(device);
             model.EventGuid = eventGuid;
 
             if (!model.GotAllResults)
             {
                 TempData["Message"] = "ErrorWaitAllResults";
-                ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-                ViewData["Title"] = busLogic.Title("ShowBoards", deviceStatus);
-                ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, deviceStatus);
+                ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+                ViewData["Title"] = busLogic.Title("ShowBoards", device);
+                ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, device);
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
                 return View("ViewOnly", model);
             }

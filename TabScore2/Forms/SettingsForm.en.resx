@@ -246,4 +246,19 @@
   <data name="TimerMasterCheckbox.Text" xml:space="preserve">
     <value>Use Table 1 as master to start round timer</value>
   </data>
+  <data name="RegisterByContestantNumberCheckbox.Text" xml:space="preserve">
+    <value>Register by pair/player number rather than table number</value>
+  </data>
+  <data name="ModeScorerRadioButton.Text" xml:space="preserve">
+    <value>Scorer - select scorer each round</value>
+  </data>
+  <data name="ModePersonalRadioButton.Text" xml:space="preserve">
+    <value>Personal - devices move with players</value>
+  </data>
+  <data name="ModeTraditionalRadioButton.Text" xml:space="preserve">
+    <value>Traditional - 1 device per table</value>
+  </data>
+  <data name="MasterTableForTimerCheckbox.Text" xml:space="preserve">
+    <value>Use table 1 as master table for round timer</value>
+  </data>
 </root>

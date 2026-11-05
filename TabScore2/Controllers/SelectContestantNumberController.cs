@@ -19,23 +19,17 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(string eventGuid, int confirmContestantNumber = 0) 
+        public ActionResult Index(string eventGuid, int sectionId, int confirmContestantNumber = 0) 
         {
             // To get here, we must be in Scorer or Personal Mode
 
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
-            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
             SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, confirmContestantNumber);
             model.EventGuid = eventGuid;
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
-            if (settings.Mode == Mode.Scorer)
-            {
-                int newRoundNumber = HttpContext.Session.GetInt32("NewRoundNumber") ?? 1;
-                if (newRoundNumber > 1) model.ShowTableStatusButton = true;
-            }
+            if (settings.Mode == Mode.Scorer) model.ShowTableStatusButton = true;
 
             ViewData["Title"] = $"{localizer["Section"]} {model.SectionLetter}: {localizer["SelectContestantNumber"]}";
             ViewData["Header"] = $"{localizer["Section"]} {model.SectionLetter}";
@@ -43,44 +37,62 @@ namespace TabScore2.Controllers
             return View(model);   
         }
 
-        public ActionResult OKButtonClick(string eventGuid, int contestantNumber, bool confirm)
+        public ActionResult OKButtonClick(string eventGuid, int sectionId, int contestantNumber, bool confirm)
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
-            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            if (sectionId == 0) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            int deviceNumber = appData.GetDeviceNumberByContestant(sectionId, contestantNumber);  // Returns -1 if not found
-            if (deviceNumber != -1 && confirm)
+            Device? device = appData.GetDeviceByContestant(sectionId, contestantNumber);
+            if (device == null)
             {
-                // A device record exists for this contestant and it's ok to change to this device
-                HttpContext.Session.SetInt32("ContestantNumber", contestantNumber);
-                HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
-            }
-            else if (deviceNumber != -1)
-            {
-                // A device record exists for this contestant
-                // Check if contestant number matches session state - if not go back to confirm
-                if (contestantNumber != HttpContext.Session.GetInt32("ContestantNumber"))
+                // No device record exists.  Check if there are cookies for this section/contestant, and if so recreate the device record from them
+                if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
+                      && Int32.TryParse(HttpContext.Request.Cookies["ContestantNumber"], out int cookieContestantNumber) && cookieContestantNumber == contestantNumber)
                 {
-                    return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, confirmContestantNumber = contestantNumber });
+                    if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
+                    device = appData.CreateDeviceByContestant(sectionId, contestantNumber, cookieRoundNumber);
                 }
-                // else => session state matches, so this is a re-registration and nothing more to do
+                else
+                {
+                    // No valid cookies either, so create an initial device record and cookies
+                    device = appData.CreateDeviceByContestant(sectionId, contestantNumber, 1);
+                    UpdateCookies(sectionId, contestantNumber, 1);
+                }
+            }
+            else if (confirm)
+            {
+                // A device record exists that we wish to use but it doesn't match cookies, so update cookies
+                UpdateCookies(sectionId, contestantNumber, device.RoundNumber);
             }
             else
             {
-                // No device record exists, so we need to add it.  Assume the round is 1 and find the contestant
-                deviceNumber = appData.AddDeviceStatusForContestant(sectionId, contestantNumber);
-                HttpContext.Session.SetInt32("ContestantNumber", contestantNumber);
+                // A device record already exists for this section/contestant
+                if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
+                      || !Int32.TryParse(HttpContext.Request.Cookies["ContestantNumber"], out int cookieContestantNumber) || cookieContestantNumber != contestantNumber)
+                {
+                    // Cookies exist but don't match this section/contestant. So go back and confirm
+                    return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId, confirmContestantNumber = contestantNumber });
+                }
             }
+            // else => device matches cookies so this is a re-registration and nothing more to do
 
-            // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application
-            HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application.  Store it in the sessionState
+            HttpContext.Session.SetInt32("DeviceNumber", device!.DeviceNumber);
 
-            // Work out where to go next
-            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
-            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer", new { eventGuid });
-            return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
+            // If ready to move then go to ShowMove; otherwise go to start of round via ShowPlayerIDs
+            if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
+            return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
+        }
+
+        private void UpdateCookies(int sectionId, int contestantNumber, int roundNumber)
+        {
+            HttpContext.Response.Cookies.Delete("SectionId");
+            HttpContext.Response.Cookies.Delete("TableNumber");
+            HttpContext.Response.Cookies.Delete("RoundNumber");
+            HttpContext.Response.Cookies.Delete("Direction");
+            HttpContext.Response.Cookies.Delete("ContestantNumber");
+            HttpContext.Response.Cookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("ContestantNumber", contestantNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

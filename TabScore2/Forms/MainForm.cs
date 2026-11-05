@@ -192,7 +192,8 @@ namespace TabScore2.Forms
                 labelSessionStatus.ForeColor = Color.Green;
 
                 // Create an EventGuid that will be used to validate the webApp screens
-                settings.EventGuid = new Guid().ToString();
+                Guid guid = Guid.NewGuid();
+                settings.EventGuid = guid.ToString();
                 settings.DatabaseReady = true;
             }
         }

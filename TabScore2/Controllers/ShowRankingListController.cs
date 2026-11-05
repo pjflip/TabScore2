@@ -24,29 +24,29 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
             
             // Only show ranking list when settings criteria are met
             if (settings.ShowRanking != 1  
-               || deviceStatus.RoundNumber <= settings.SuppressRankingListForFirstXRounds
-               || deviceStatus.RoundNumber > database.GetNumberOfRoundsInSection(deviceStatus.SectionId) - settings.SuppressRankingListForLastXRounds)
+               || device.RoundNumber <= settings.SuppressRankingListForFirstXRounds
+               || device.RoundNumber > database.GetNumberOfRoundsInSection(device.SectionId) - settings.SuppressRankingListForLastXRounds)
             {
-                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             }
 
-            ShowRankingListModel model = busLogic.CreateRankingListModel(deviceStatus);
+            ShowRankingListModel model = busLogic.CreateRankingListModel(device);
 
             // Only show the ranking list if it contains something meaningful
             if (model.Count <= 1 || model[0].ScoreDecimal == 0.0)
             {
-                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+                return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             }
             model.EventGuid = eventGuid;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("ShowRankingList", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
-            if (deviceStatus.AtSitoutTable)
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("ShowRankingList", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Round, device);
+            if (device.AtSitoutTable)
             {
                 // Can't go back to ShowBoards if it's a sitout and there are no boards to play, so no 'Back' button
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
@@ -75,9 +75,9 @@ namespace TabScore2.Controllers
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            ShowRankingListModel model = busLogic.CreateRankingListModel(appData.GetDeviceStatus(deviceNumber));
+            ShowRankingListModel model = busLogic.CreateRankingListModel(appData.GetDevice(deviceNumber));
             if (model.Count <= 1 && model[0].ScoreDecimal == 0.0)
             {
                 return RedirectToAction("Index", "EndScreen", new { eventGuid, deviceNumber });
@@ -86,8 +86,8 @@ namespace TabScore2.Controllers
             model.EventGuid = eventGuid;
             model.FinalRankingList = true;
 
-            ViewData["Title"] = busLogic.Title("ShowFinalRankingList", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
+            ViewData["Title"] = busLogic.Title("ShowFinalRankingList", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Round, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             if (settings.IsIndividual)
             {
@@ -107,7 +107,7 @@ namespace TabScore2.Controllers
         {
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? 0;
 
-            int sectionId = appData.GetDeviceStatus(deviceNumber).SectionId;
+            int sectionId = appData.GetDevice(deviceNumber).SectionId;
             List<Ranking> rankingList = busLogic.GetRankings(sectionId);
             return Json(rankingList);
         }

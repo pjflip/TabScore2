@@ -599,6 +599,24 @@ tablet device</value>
     <value>You are trying to access an event that is no longer available.  Please close your browser window and restart</value>
   </data>
   <data name="WrongEventScreen" xml:space="preserve">
-    <value>WrongEventScreen</value>
+    <value>Wrong event screen</value>
+  </data>
+  <data name="SelectRoundNumber" xml:space="preserve">
+    <value>Select round number</value>
+  </data>
+  <data name="ErrorNotAllIDs" xml:space="preserve">
+    <value>Please select an ID or 'Unknown' for all players</value>
+  </data>
+  <data name="ErrorWaitAllIDs" xml:space="preserve">
+    <value>Please wait until all the player IDs for this table have been entered</value>
+  </data>
+  <data name="ErrorWaitResults" xml:space="preserve">
+    <value>Please wait until there are results entered for every board</value>
+  </data>
+  <data name="NeedAllIDs" xml:space="preserve">
+    <value>Please enter all the player IDs before pressing OK</value>
+  </data>
+  <data name="PlayerNumber" xml:space="preserve">
+    <value>Player ID</value>
   </data>
 </root>

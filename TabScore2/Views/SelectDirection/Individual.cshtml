@@ -101,7 +101,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid, sectionId = Model.SectionId, tableNumber = Model.TableNumber})' + '&direction=' + direction + '&roundNumber=@Model.RoundNumber&confirm=false';
+            location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid, sectionId = Model.SectionId, tableNumber = Model.TableNumber})&direction=' + direction + '&roundNumber=@Model.RoundNumber&confirm=false';
         }
     }
 </script>

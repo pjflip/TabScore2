@@ -10,24 +10,21 @@ namespace TabScore2.DataServices
     // IAppdata provides the interface to the service for accessing global web application data that does not reside in the scoring database
     public interface IAppData
     {
-        void ClearAppData();
+        void WebappInitialize();
 
-        TableStatus GetTableStatus(int sectionId, int tableNumber);
         bool IsTableReadyForNextRound(int sectionId, int tableNumber, int roundNumber);
-        IEnumerable<TableStatusDisplay> GetAllTableStatuses();
-        void UpdateTableStatus(int sectionId, int tableNumber, int roundNumber);
-        int GetDeviceNumberByTableNumber(int sectionId, int tableNumber);
-        IEnumerable<DeviceStatus> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
-        int GetDeviceNumberByContestant(int sectionId, int contestantNumber);
-        DeviceStatus GetDeviceStatus(int deviceNumber);
-        int AddDeviceStatusForTable(int sectionId, int tableNumber);
-        int AddDeviceStatusForTableDirection(int sectionId, int tableNumber, Direction direction = Direction.North);
-        int AddDeviceStatusForContestant(int sectionId, int contestant);
-        void UpdateDeviceStatus(DeviceStatus deviceStatus, int tableNumber, int roundNumber, Direction direction);
+        IEnumerable<TableStatus> GetAllTableStatuses();
+        Device? GetDeviceByLocation(int sectionId, int tableNumber, Direction direction = Direction.North);
+        Device CreateDeviceByLocation(int sectionId, int tableNumber, int roundNumber, Direction direction = Direction.North);
+        IEnumerable<Device> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
+        Device? GetDeviceByContestant(int sectionId, int contestantNumber);
+        Device CreateDeviceByContestant(int sectionId, int contestantNumber, int roundNumber);
+        Device GetDevice(int deviceNumber);
+        void UpdateDevice(Device device, int tableNumber, int roundNumber, Direction direction);
         bool SetDeviceAsScorer(int deviceNumber);
         bool SetDeviceAsViewer(int deviceNumber);
 
-        int GetTimerSeconds(DeviceStatus deviceStatus);
+        int GetTimerSeconds(Device device);
 
         public void ClearHandEvaluations();
         public HandEvaluation? GetHandEvaluation(int sectionId, int boardNumber);

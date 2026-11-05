@@ -508,4 +508,65 @@
   <data name="BoardsStay" xml:space="preserve">
     <value>Déjelo en esta mesa</value>
   </data>
+  <data name="ErrorWaitAllResults" xml:space="preserve">
+    <value>Espere hasta que haya resultados introducidos ​​​​para cada tablilla</value>
+  </data>
+  <data name="ErrorNotAllNames" xml:space="preserve">
+    <value>Asegúrese de que se haya introducido un ID o «Desconocido» para todos los jugadores de la mesa antes de pulsar Aceptar.</value>
+  </data>
+  <data name="WarningTableSelect1" xml:space="preserve">
+    <value>Está intentando registrar este dispositivo en la mesa</value>
+  </data>
+  <data name="WarningTableSelect2" xml:space="preserve">
+    <value>. Por favor confirma que es correcto</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="SelectContestantNumber" xml:space="preserve">
+    <value>Selecciona el par o el número de jugador</value>
+  </data>
+  <data name="ShowTableStatus" xml:space="preserve">
+    <value>Estado de las tablas</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Preparados</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ScoreThisRound" xml:space="preserve">
+    <value>Haz la puntuación esta ronda</value>
+  </data>
+  <data name="ViewOnly" xml:space="preserve">
+    <value>Solo vea las puntuaciones</value>
+  </data>
+  <data name="ErrorScorerAlreadyExists" xml:space="preserve">
+    <value>Ya se ha seleccionado un anotador para esta ronda</value>
+  </data>
+  <data name="ErrorNoScorer" xml:space="preserve">
+    <value>No puede elegir solo ver las puntuaciones hasta que se haya seleccionado un anotador</value>
+  </data>
+  <data name="SelectScorer" xml:space="preserve">
+    <value>Selecciona el anotador</value>
+  </data>
+  <data name="ErrorContestantRegistered1" xml:space="preserve">
+    <value>Pareja o jugador</value>
+  </data>
+  <data name="ErrorContestantRegistered3" xml:space="preserve">
+    <value>ya está registrado.  No presione Registrar a menos que tenga la intención de registrar un nuevo 
+dispositivo de tableta</value>
+  </data>
+  <data name="ErrorWrongEvent" xml:space="preserve">
+    <value>Está intentando acceder a un evento que ya no está disponible.  Cierra la ventana de tu navegador y reinícialo</value>
+  </data>
+  <data name="SelectRoundNumber" xml:space="preserve">
+    <value>Selecciona un número redondo</value>
+  </data>
+  <data name="WrongEventScreen" xml:space="preserve">
+    <value>Pantalla de evento incorrecta</value>
+  </data>
 </root>

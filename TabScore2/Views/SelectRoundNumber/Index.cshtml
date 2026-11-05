@@ -1,0 +1,45 @@
+﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
+     Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
+
+@model SelectRoundNumberModel
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <h2>
+            @localizer["SelectRoundNumber"]
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center p-0">
+        @foreach (int iRoundNumber in Model.RoundNumbers)
+        {
+            <button id="rn@(iRoundNumber)" class="btn btn-primary btn-lg m-1 px-0" style="width:2.5em" ontouchstart="touchAvailable = true; selectRoundNumber('@iRoundNumber')" onclick="if (!touchAvailable) selectTableNumber('@iRoundNumber')">
+                @iRoundNumber
+            </button>
+        }
+    </div>
+</div>
+
+<script>
+    var roundNumber = "";
+    var isSubmitted = false;
+
+    function selectRoundNumber(n) {
+        if (tableNumber != "") {
+           document.getElementById("rn" + roundNumber).className = "btn btn-primary btn-lg m-1 px-0";
+        }
+        document.getElementById("rn" + n).className = "btn btn-warning btn-lg m-1 px-0";
+        roundNumber = n;
+        document.getElementById("OKButton").disabled = false;
+    }
+
+    function OKButtonClick() {
+        if (document.getElementById("OKButton").disabled) return;
+        if (!isSubmitted) {
+            isSubmitted = true;
+            location.href = '@Url.Action("OKButtonClick", "SelectRoundNumber", new { eventGuid = Model.EventGuid, sectionId = Model.SectionId, tableNumber = Model.TableNumber, direction = Model.Direction })&roundNumber=' + roundNumber;
+        }
+    }
+</script>

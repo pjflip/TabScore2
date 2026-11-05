@@ -28,21 +28,21 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
             // If ResultData doesn't exist, either from ShowBoards/View or browser 'Back' button, retrieve result
-            if (deviceStatus.ResultData.BoardNumber == 0)
+            if (device.ResultData.BoardNumber == 0)
             {
-                deviceStatus.ResultData = database.GetResult(deviceStatus.SectionId, deviceStatus.TableNumber, deviceStatus.RoundNumber, boardNumber);
+                device.ResultData = database.GetResult(device.SectionId, device.TableNumber, device.RoundNumber, boardNumber);
             }
            
-            ShowTravellerModel model = busLogic.CreateShowTravellerModel(deviceStatus);
+            ShowTravellerModel model = busLogic.CreateShowTravellerModel(device);
             model.EventGuid = eventGuid;
             model.FromView = fromView;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("ShowTraveller", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("ShowTraveller", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             if (fromView)
             {
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;

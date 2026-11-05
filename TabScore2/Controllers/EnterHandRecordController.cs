@@ -29,17 +29,17 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
             }
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            if (database.GetHand(deviceStatus.SectionId, boardNumber).NorthSpades != "###")
+            Device device = appData.GetDevice(deviceNumber);
+            if (database.GetHand(device.SectionId, boardNumber).NorthSpades != "###")
             {
                 // Hand record already exists, so no need to enter it
                 return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
             }
             EnterHandRecordModel model = new(eventGuid, boardNumber);
             
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("EnterHandRecord", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("EnterHandRecord", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             return View(model);
         }
@@ -49,12 +49,12 @@ namespace TabScore2.Controllers
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            int boardNumber = deviceStatus.ResultData.BoardNumber;
+            int boardNumber = device.ResultData.BoardNumber;
             Hand hand = new()
             {
-                SectionId = deviceStatus.SectionId,
+                SectionId = device.SectionId,
                 BoardNumber = boardNumber,
                 NorthSpades = NS ?? "###",
                 NorthHearts = NH ?? string.Empty,

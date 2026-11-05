@@ -10,10 +10,9 @@ using TabScore2.Resources;
 
 namespace TabScore2.Controllers
 {
-    public class StartScreenController(IStringLocalizer<Strings> iLocalizer, IDatabase iDatabase, IAppData iAppData, ISettings iSettings) : Controller
+    public class StartScreenController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData, ISettings iSettings) : Controller
     {
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
-        private readonly IDatabase database = iDatabase;
         private readonly IAppData appData = iAppData;
         private readonly ISettings settings = iSettings;
 
@@ -36,8 +35,7 @@ namespace TabScore2.Controllers
             if (!settings.SessionStarted) 
             {
                 // Only runs once at the start of the session
-                appData.ClearAppData();
-                database.WebappInitialize();
+                appData.WebappInitialize();
                 settings.SessionStarted = true;
             }
             

@@ -24,26 +24,25 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            Result result = deviceStatus.ResultData;
+            Device device = appData.GetDevice(deviceNumber);
+            Result result = device.ResultData;
             if (result.BoardNumber != boardNumber)
             {
                 // No result set for this board yet, so get result (if any) from database and set pair/player numbers
-                result = database.GetResult(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, boardNumber);
-                result.ContestantNumberNorth = tableStatus.RoundData.ContestantNumberNorth;
-                result.ContestantNumberEast = tableStatus.RoundData.ContestantNumberEast;
-                result.ContestantNumberSouth = tableStatus.RoundData.ContestantNumberSouth;
-                result.ContestantNumberWest = tableStatus.RoundData.ContestantNumberWest;
-                deviceStatus.ResultData = result;
+                result = database.GetResult(device.SectionId, device.TableNumber, device.RoundNumber, boardNumber);
+                result.ContestantNumberNorth = device.RoundData!.ContestantNumberNorth;
+                result.ContestantNumberEast = device.RoundData.ContestantNumberEast;
+                result.ContestantNumberSouth = device.RoundData.ContestantNumberSouth;
+                result.ContestantNumberWest = device.RoundData.ContestantNumberWest;
+                device.ResultData = result;
             }
 
             EnterContractModel model = busLogic.CreateEnterContractModel(result);
             model.EventGuid = eventGuid;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("EnterContract", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("EnterContract", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             return View(model);
         }
@@ -55,7 +54,7 @@ namespace TabScore2.Controllers
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
             contractX ??= string.Empty;
-            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
+            Result result = appData.GetDevice(deviceNumber).ResultData;
             result.ContractLevel = contractLevel;
             result.ContractSuit = contractSuit;
             result.ContractX = contractX;
@@ -70,7 +69,7 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
+            Result result = appData.GetDevice(deviceNumber).ResultData;
             result.ContractLevel = 0;
             result.ContractSuit = string.Empty;
             result.ContractX = string.Empty;
@@ -87,7 +86,7 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
+            Result result = appData.GetDevice(deviceNumber).ResultData;
             result.ContractLevel = -1;
             result.ContractSuit = string.Empty;
             result.ContractX = string.Empty;

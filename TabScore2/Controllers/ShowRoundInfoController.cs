@@ -23,51 +23,49 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            ViewData["Title"] = busLogic.Title("ShowRoundInfo", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
-            if (deviceStatus.TableNumber == 0)
+            ViewData["Title"] = busLogic.Title("ShowRoundInfo", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
+            if (device.TableNumber == 0)
             {
-                ShowRoundInfoSitoutModel showRoundInfoSitoutModel = new(deviceStatus.ContestantNumber, deviceStatus.RoundNumber, deviceStatus.DevicesPerTable);
-                showRoundInfoSitoutModel.EventGuid = eventGuid;
-                deviceStatus.AtSitoutTable = true;
+                ShowRoundInfoSitoutModel showRoundInfoSitoutModel = new(device.ContestantNumber, device.RoundNumber, device.DevicesPerTable) { EventGuid = eventGuid };
+                device.AtSitoutTable = true;
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
                 return View("Sitout", showRoundInfoSitoutModel);
             }
 
             // Update player names if not just immediately done in ShowPlayerIds
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            if (databaseNamesRequired) busLogic.GetDatabaseNamesForRound(tableStatus);
+            if (databaseNamesRequired) busLogic.GetDatabaseNamesForRound(device);
 
-            ShowRoundInfoModel model = busLogic.CreateShowRoundInfoModel(deviceStatus);
+            ShowRoundInfoModel model = busLogic.CreateShowRoundInfoModel(device);
             model.EventGuid = eventGuid;
-            if (deviceStatus.RoundNumber > 1)
+            if (device.RoundNumber > 1)
             {
-                model.BoardsFromTable = busLogic.GetBoardsFromTableNumber(tableStatus);
+                model.BoardsFromTable = busLogic.GetBoardsFromTableNumber(device);
             }
 
             // Check if a sitout table.  If so, the device is automatically ready for the next round
-            int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
+            int missingPair = database.GetSection(device.SectionId).MissingPair;
 
-            if (tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair)
+            if (device.RoundData!.ContestantNumberNorth == 0 || device.RoundData.ContestantNumberNorth == missingPair)
             {
-                deviceStatus.ReadyForNextRound = true;
-                deviceStatus.AtSitoutTable = true;
+                device.ReadyForNextRound = true;
+                device.AtSitoutTable = true;
                 model.NSMissing = true;
             }
-            else if (tableStatus.RoundData.ContestantNumberEast == 0 || tableStatus.RoundData.ContestantNumberEast == missingPair)
+            else if (device.RoundData.ContestantNumberEast == 0 || device.RoundData.ContestantNumberEast == missingPair)
             {
-                deviceStatus.ReadyForNextRound = true;
-                deviceStatus.AtSitoutTable = true;
+                device.ReadyForNextRound = true;
+                device.AtSitoutTable = true;
                 model.EWMissing = true;
             }
             else
             {
-                deviceStatus.AtSitoutTable = false;
+                device.AtSitoutTable = false;
             }
 
-            if (deviceStatus.RoundNumber == 1 || deviceStatus.DevicesPerTable > 1)
+            if (device.RoundNumber == 1 || device.DevicesPerTable > 1)
             {
                 ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             }
@@ -92,9 +90,9 @@ namespace TabScore2.Controllers
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            if (deviceStatus.AtSitoutTable)
+            if (device.AtSitoutTable)
             {
                 return RedirectToAction("Index", "ShowRankingList");
             }
@@ -111,12 +109,10 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            int newRoundNumber = deviceStatus.RoundNumber;  // Going back, so new round is current round!
-            deviceStatus.RoundNumber--;
-            tableStatus.RoundNumber--;
-            tableStatus.RoundData = database.GetRound(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber);
+            Device device = appData.GetDevice(deviceNumber);
+            int newRoundNumber = device.RoundNumber;  // Going back, so new round is current round!
+            device.RoundNumber--;
+            device.RoundData = database.GetRound(device.SectionId, device.TableNumber, newRoundNumber);
             return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber});
         }
     }

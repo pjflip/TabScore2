@@ -22,15 +22,15 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            ShowHandRecordModel? model = busLogic.CreateShowHandRecordModel(deviceStatus, boardNumber);
+            Device device = appData.GetDevice(deviceNumber);
+            ShowHandRecordModel? model = busLogic.CreateShowHandRecordModel(device, boardNumber);
             if (model == null) return RedirectToAction("Index", "ShowTraveller", new { eventGuid, boardNumber });
             model.EventGuid = eventGuid;
             model.FromView = fromView;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("ShowHandRecord", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("ShowHandRecord", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
             return View(model);
         }

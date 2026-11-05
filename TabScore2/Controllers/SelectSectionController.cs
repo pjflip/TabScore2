@@ -25,14 +25,14 @@ namespace TabScore2.Controllers
             model.EventGuid = eventGuid;
             if (model.Count == 1)  // Check if only one section - if so use it
             {
-                HttpContext.Session.SetInt32("SectionId", model[0].SectionId);
+                int sectionId = model[0].SectionId;
                 if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
                 {
-                    return RedirectToAction("Index", "SelectContestantNumber");
+                    return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId });
                 }
                 else
                 {
-                    return RedirectToAction("Index", "SelectTableNumber");
+                    return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, sectionId });
                 }
             }
             else  // Get section
@@ -48,14 +48,13 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            HttpContext.Session.SetInt32("SectionId", sectionId);
             if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
             {
-                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid });
+                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId });
             }
             else
             {
-                return RedirectToAction("Index", "SelectTableNumber", new { eventGuid });
+                return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, sectionId });
             }
         }
     }

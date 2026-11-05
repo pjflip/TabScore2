@@ -8,6 +8,7 @@ using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TabScore2.Controllers
 {
@@ -24,9 +25,9 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            if (newRoundNumber > database.GetNumberOfRoundsInSection(deviceStatus.SectionId))  // Session complete
+            if (newRoundNumber > database.GetNumberOfRoundsInSection(device.SectionId))  // Session complete
             {
                 if (settings.ShowRanking == 2)
                 {
@@ -39,14 +40,14 @@ namespace TabScore2.Controllers
             }
 
             // The current round is complete, so set this device to show that it is ready for the next round
-            deviceStatus.ReadyForNextRound = true;
+            device.ReadyForNextRound = true;
 
-            ShowMoveModel model = busLogic.CreateShowMoveModel(deviceStatus, newRoundNumber, tableNotReadyNumber);
+            ShowMoveModel model = busLogic.CreateShowMoveModel(device, newRoundNumber, tableNotReadyNumber);
             model.EventGuid = eventGuid;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("ShowMove", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("ShowMove", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
 
             return View(model);
@@ -57,45 +58,47 @@ namespace TabScore2.Controllers
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            if (deviceStatus.DevicesPerTable == 1)  
+            if (device.DevicesPerTable == 1)  
             {
                 // Devices not moving, so no need to check if new table is ready.  Can just update the device and table statuses and go straight to ShowPlayerIds
-                deviceStatus.RoundNumber = newRoundNumber;
-                deviceStatus.ReadyForNextRound = false;
-                appData.UpdateTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber, newRoundNumber);
-                database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);  // Refresh settings for the start of the round.  Only done once per round.
+                device.RoundNumber = newRoundNumber;
+                device.ReadyForNextRound = false;
+                database.GetDatabaseSettings(device.SectionId, newRoundNumber);  // Refresh settings for the start of the round.  Only done once per round.
                 return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
             }
 
             // Devices are moving, so get the move for this device
-            List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
-            Move move = busLogic.GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction);
+            List<Round> roundsList = database.GetRoundsListForSectionRound(device.SectionId, newRoundNumber);
+            Move move = busLogic.GetMove(roundsList, device.TableNumber, device.ContestantNumber, device.Direction);
 
             if (move.NewTableNumber == 0) 
             {
                 // Move is to phantom table, so no need to check PlayerIds.  Update and go straight to ShowRoundInfo
-                appData.UpdateDeviceStatus(deviceStatus, 0, newRoundNumber, Direction.Sitout);
-                HttpContext.Session.SetInt32("TableNumber", 0);
-                HttpContext.Session.SetString("Direction", Direction.Sitout.ToString());
+                appData.UpdateDevice(device, 0, newRoundNumber, Direction.Sitout);
+                HttpContext.Response.Cookies.Delete("TableNumber");
+                HttpContext.Response.Cookies.Delete("Direction");
+                HttpContext.Response.Cookies.Append("TableNumber", "0", new() { Expires = DateTime.UtcNow.AddHours(1) });
+                HttpContext.Response.Cookies.Append("Direction", Direction.Sitout.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
                 return RedirectToAction("Index", "ShowRoundInfo", new { eventGuid });
             }
 
-            if (!appData.IsTableReadyForNextRound(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber))
+            if (!appData.IsTableReadyForNextRound(device.SectionId, move.NewTableNumber, newRoundNumber))
             {
                 // If new table not ready, go back and wait
                 return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber, tableNotReadyNumber = move.NewTableNumber });
             }
 
-            // New table is ready.  Reset device and table statuses for the new round, and update session state
-            appData.UpdateDeviceStatus(deviceStatus, move.NewTableNumber, newRoundNumber, move.NewDirection);
-            appData.UpdateTableStatus(deviceStatus.SectionId, move.NewTableNumber, newRoundNumber);
-            HttpContext.Session.SetInt32("TableNumber", move.NewTableNumber);
-            HttpContext.Session.SetString("Direction", move.NewDirection.ToString());
+            // New table is ready.  Update device for the new round, and update cookies
+            appData.UpdateDevice(device, move.NewTableNumber, newRoundNumber, move.NewDirection);
+            HttpContext.Response.Cookies.Delete("TableNumber");
+            HttpContext.Response.Cookies.Delete("Direction");
+            HttpContext.Response.Cookies.Append("TableNumber", move.NewTableNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("Direction", move.NewDirection.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
 
             // Refresh settings for the start of the round.  Only done once per round by the first device to get to ShowMove for the round
-            database.GetDatabaseSettings(deviceStatus.SectionId, newRoundNumber);
+            database.GetDatabaseSettings(device.SectionId, newRoundNumber);
                 
             if (settings.Mode == Mode.Scorer)
             {

@@ -61,7 +61,7 @@
         </trans-unit>
         <trans-unit id="Confirm" translate="yes" xml:space="preserve">
           <source>Confirm</source>
-          <target state="new"></target>
+          <target state="new">Confirmar</target>
         </trans-unit>
         <trans-unit id="ConfirmResult" translate="yes" xml:space="preserve">
           <source>Confirm result</source>
@@ -169,12 +169,13 @@
         </trans-unit>
         <trans-unit id="ErrorContestantRegistered1" translate="yes" xml:space="preserve">
           <source>Pair or player</source>
-          <target state="new"></target>
+          <target state="new">Pareja o jugador</target>
         </trans-unit>
         <trans-unit id="ErrorContestantRegistered3" translate="yes" xml:space="preserve">
           <source>is already registered.  Do not press Register unless you intend to register a new 
 tablet device</source>
-          <target state="new"></target>
+          <target state="new">ya está registrado.  No presione Registrar a menos que tenga la intención de registrar un nuevo 
+dispositivo de tableta</target>
         </trans-unit>
         <trans-unit id="ErrorDBConnection" translate="yes" xml:space="preserve">
           <source>An error has occurred whilst connecting to the scoring database</source>
@@ -190,19 +191,19 @@ tablet device</source>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorNoScorer" translate="yes" xml:space="preserve">
           <source>You cannot choose just to view the scores until a scorer has been selected</source>
-          <target state="new"></target>
+          <target state="new">No puede elegir solo ver las puntuaciones hasta que se haya seleccionado un anotador</target>
         </trans-unit>
         <trans-unit id="ErrorNoTabScoreDBtxt" translate="yes" xml:space="preserve">
           <source>File TabScoreDB.txt doesn't exist.  Please re-start TabScoreStarter.exe</source>
           <target state="new">El archivo TabScoreDB.txt no existe. Reinicie TabScoreStarter.exe</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorNotAllIDs" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Please select an ID or 'Unknown' for all players</source>
           <target state="new">Seleccione un ID o ´Desconocido´para cada jugador</target>
         </trans-unit>
         <trans-unit id="ErrorNotAllNames" translate="yes" xml:space="preserve">
           <source>Please ensure that an ID or 'Unknown' has been entered for all players at the table before pressing OK</source>
-          <target state="new"></target>
+          <target state="new">Asegúrese de que se haya introducido un ID o «Desconocido» para todos los jugadores de la mesa antes de pulsar Aceptar.</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorPermanentDB" translate="yes" xml:space="preserve">
           <source>Permanent database connection error.  Please check format and access permissions for Scoring Database file, and re-start TabScore2</source>
@@ -214,7 +215,7 @@ tablet device</source>
         </trans-unit>
         <trans-unit id="ErrorScorerAlreadyExists" translate="yes" xml:space="preserve">
           <source>A scorer has already been selected for this round</source>
-          <target state="new"></target>
+          <target state="new">Ya se ha seleccionado un anotador para esta ronda</target>
         </trans-unit>
         <trans-unit id="ErrorScreen" translate="yes" xml:space="preserve">
           <source>Error screen</source>
@@ -242,24 +243,24 @@ tablet device at your current location</source>
           <target state="new">ya están registradas. No presione Registrar a menos que tenga la intención de volver a registrar una tableta en su ubicación actual</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorWaitAllIDs" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Please wait until all the player IDs for this table have been entered</source>
           <target state="new">Espere hasta que se hayan introducido todos los ID de jugadores en esta mesa</target>
         </trans-unit>
         <trans-unit id="ErrorWaitAllResults" translate="yes" xml:space="preserve">
           <source>Please wait until there are results entered for every board</source>
-          <target state="new"></target>
+          <target state="new">Espere hasta que haya resultados introducidos ​​​​para cada tablilla</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorWaitResult" translate="yes" xml:space="preserve">
           <source>Please wait until there is a result entered for this board</source>
           <target state="new">Espere hasta que haya un resultado introducido para esta tablilla</target>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="ErrorWaitResults" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Please wait until there are results entered for every board</source>
           <target state="new">Espere hasta que haya resultados introducidos ​​​​para cada tablilla</target>
         </trans-unit>
         <trans-unit id="ErrorWrongEvent" translate="yes" xml:space="preserve">
           <source>You are trying to access an event that is no longer available.  Please close your browser window and restart</source>
-          <target state="new"></target>
+          <target state="new">Está intentando acceder a un evento que ya no está disponible.  Cierra la ventana de tu navegador y reinícialo</target>
         </trans-unit>
         <trans-unit id="FileNoHandRecords" translate="yes" xml:space="preserve">
           <source>File contains no hand records</source>
@@ -322,12 +323,12 @@ tablet device at your current location</source>
           <target state="new">ST</target>
         </trans-unit>
         <trans-unit id="NeedAllIDs" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Please enter all the player IDs before pressing OK</source>
           <target state="new">Introduce todas los ID de los jugadores antes de presionar OK</target>
         </trans-unit>
         <trans-unit id="No" translate="yes" xml:space="preserve">
           <source>No</source>
-          <target state="new"></target>
+          <target state="new">No</target>
         </trans-unit>
         <trans-unit id="NoDatabasePath" translate="yes" xml:space="preserve">
           <source>No database path specified</source>
@@ -394,7 +395,7 @@ tablet device at your current location</source>
           <target state="new">Jugador</target>
         </trans-unit>
         <trans-unit id="PlayerNumber" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Player ID</source>
           <target state="new">ID de jugador</target>
         </trans-unit>
         <trans-unit id="Q" translate="yes" xml:space="preserve">
@@ -415,7 +416,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="Ready" translate="yes" xml:space="preserve">
           <source>Ready</source>
-          <target state="new"></target>
+          <target state="new">Preparados</target>
         </trans-unit>
         <trans-unit id="Register" translate="yes" xml:space="preserve">
           <source>Register</source>
@@ -439,7 +440,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="ScoreThisRound" translate="yes" xml:space="preserve">
           <source>Do the scoring this round</source>
-          <target state="new"></target>
+          <target state="new">Haz la puntuación esta ronda</target>
         </trans-unit>
         <trans-unit id="Section" translate="yes" xml:space="preserve">
           <source>Section</source>
@@ -447,15 +448,19 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="SelectContestantNumber" translate="yes" xml:space="preserve">
           <source>Select pair or player number</source>
-          <target state="new"></target>
+          <target state="new">Selecciona el par o el número de jugador</target>
         </trans-unit>
         <trans-unit id="SelectDirection" translate="yes" xml:space="preserve">
           <source>Select direction</source>
           <target state="new">Seleccionar dirección</target>
         </trans-unit>
+        <trans-unit id="SelectRoundNumber" translate="yes" xml:space="preserve">
+          <source>Select round number</source>
+          <target state="new">Selecciona un número redondo</target>
+        </trans-unit>
         <trans-unit id="SelectScorer" translate="yes" xml:space="preserve">
           <source>Select the scorer</source>
-          <target state="new"></target>
+          <target state="new">Selecciona el anotador</target>
         </trans-unit>
         <trans-unit id="SelectSection" translate="yes" xml:space="preserve">
           <source>Select section</source>
@@ -503,7 +508,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="ShowTableStatus" translate="yes" xml:space="preserve">
           <source>Status of tables</source>
-          <target state="new"></target>
+          <target state="new">Estado de las tablas</target>
         </trans-unit>
         <trans-unit id="ShowTraveller" translate="yes" xml:space="preserve">
           <source>Show traveller</source>
@@ -575,7 +580,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="ViewOnly" translate="yes" xml:space="preserve">
           <source>Only view the scores</source>
-          <target state="new"></target>
+          <target state="new">Solo vea las puntuaciones</target>
         </trans-unit>
         <trans-unit id="W" translate="yes" xml:space="preserve">
           <source>W</source>
@@ -603,11 +608,11 @@ tablet device at your current location</source>
           <note from="MultilingualBuild">@MutedRule(PunctuationTail)</note></trans-unit>
         <trans-unit id="WarningTableSelect1" translate="yes" xml:space="preserve">
           <source>You are trying to register this device at Table</source>
-          <target state="new"></target>
+          <target state="new">Está intentando registrar este dispositivo en la mesa</target>
         </trans-unit>
         <trans-unit id="WarningTableSelect2" translate="yes" xml:space="preserve">
           <source>. Please confirm that this is correct</source>
-          <target state="new"></target>
+          <target state="new">. Por favor confirma que es correcto</target>
         </trans-unit>
         <trans-unit id="Welcome" translate="yes" xml:space="preserve">
           <source>Welcome</source>
@@ -618,12 +623,12 @@ tablet device at your current location</source>
           <target state="new">Oeste</target>
         </trans-unit>
         <trans-unit id="WrongEventScreen" translate="yes" xml:space="preserve">
-          <source>WrongEventScreen</source>
-          <target state="new"></target>
+          <source>Wrong event screen</source>
+          <target state="new">Pantalla de evento incorrecta</target>
         </trans-unit>
         <trans-unit id="Yes" translate="yes" xml:space="preserve">
           <source>Yes</source>
-          <target state="new"></target>
+          <target state="new">Sí</target>
         </trans-unit>
         <trans-unit id="by" translate="yes" xml:space="preserve">
           <source>by</source>
@@ -701,7 +706,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="MasterTableForTimerCheckbox.Text" translate="yes" xml:space="preserve">
           <source>Use table 1 as master table for round timer</source>
-          <target state="new"></target>
+          <target state="new">¡Utilice la tabla 1 como tabla maestra para el temporizador redondo</target>
         </trans-unit>
         <trans-unit id="MinutesPerBoardLabel.Text" translate="yes" xml:space="preserve">
           <source>Minutes per board</source>
@@ -709,15 +714,15 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="ModePersonalRadioButton.Text" translate="yes" xml:space="preserve">
           <source>Personal - devices move with players</source>
-          <target state="new"></target>
+          <target state="new">Personal: los dispositivos se mueven con los jugadores</target>
         </trans-unit>
         <trans-unit id="ModeScorerRadioButton.Text" translate="yes" xml:space="preserve">
           <source>Scorer - select scorer each round</source>
-          <target state="new"></target>
+          <target state="new">Anotador: selecciona al anotador en cada ronda</target>
         </trans-unit>
         <trans-unit id="ModeTraditionalRadioButton.Text" translate="yes" xml:space="preserve">
           <source>Traditional - 1 device per table</source>
-          <target state="new"></target>
+          <target state="new">Tradicional: 1 dispositivo por mesa</target>
         </trans-unit>
         <trans-unit id="NameSourceCombobox.Items" translate="yes" xml:space="preserve">
           <source>Internal database</source>
@@ -749,7 +754,7 @@ tablet device at your current location</source>
         </trans-unit>
         <trans-unit id="RegisterByContestantNumberCheckbox.Text" translate="yes" xml:space="preserve">
           <source>Register by pair/player number rather than table number</source>
-          <target state="new"></target>
+          <target state="new">Regístrese por número de par/jugador en lugar de número de mesa</target>
         </trans-unit>
         <trans-unit id="RoundTimerGroupBox.Text" translate="yes" xml:space="preserve">
           <source>Round timer</source>
@@ -804,11 +809,11 @@ tablet device at your current location</source>
           <target state="new">No mostrar el listado de clasificación para las x rondas finales</target>
         </trans-unit>
         <trans-unit id="TabletModePersonalRadioButton.Text" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Personal - tablets move with players</source>
           <target state="new">Personal - las tabletas se mueven con los jugadores</target>
         </trans-unit>
         <trans-unit id="TabletModeTraditionalRadioButton.Text" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Traditional - 1 tablet per table</source>
           <target state="new">Tradicional - 1 tableta por mesa</target>
         </trans-unit>
         <trans-unit id="TabletMovesGroupBox.Text" translate="yes" xml:space="preserve">
@@ -816,7 +821,7 @@ tablet device at your current location</source>
           <target state="new">Modo de dispositivo de mesa</target>
         </trans-unit>
         <trans-unit id="TimerMasterCheckbox.Text" translate="yes" xml:space="preserve">
-          <source></source>
+          <source>Use Table 1 as master to start round timer</source>
           <target state="new">Utilice la Mesa 1 como maestra para iniciar el cronómetro de ronda</target>
         </trans-unit>
         <trans-unit id="TravellerGroup.Text" translate="yes" xml:space="preserve">

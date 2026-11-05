@@ -24,10 +24,10 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
-            ViewData["Title"] = busLogic.Title("EnterPlayerIds", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Location, deviceStatus);
+            ViewData["Title"] = busLogic.Title("EnterPlayerIds", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
             EnterPlayerIdModel model = busLogic.CreateEnterPlayerIdModel(direction);
             model.EventGuid = eventGuid;
@@ -39,7 +39,7 @@ namespace TabScore2.Controllers
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
             string playerName = string.Empty;
             if (playerId == 0)
@@ -69,29 +69,28 @@ namespace TabScore2.Controllers
                 }
             }
 
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
             string directionLetter = direction.ToString()[..1];    // Need just N, S, E or W
             int pairNumber = 0;
             switch (direction)
             {
                 case Direction.North:
-                    tableStatus.RoundData.NameNorth = playerName;
-                    pairNumber = tableStatus.RoundData.ContestantNumberNorth;
+                    device.RoundData!.NameNorth = playerName;
+                    pairNumber = device.RoundData!.ContestantNumberNorth;
                     break;
                 case Direction.South:
-                    tableStatus.RoundData.NameSouth = playerName;
-                    pairNumber = tableStatus.RoundData.ContestantNumberSouth;
+                    device.RoundData!.NameSouth = playerName;
+                    pairNumber = device.RoundData!.ContestantNumberSouth;
                     break;
                 case Direction.East:
-                    tableStatus.RoundData.NameEast = playerName;
-                    pairNumber = tableStatus.RoundData.ContestantNumberEast;
+                    device.RoundData!.NameEast = playerName;
+                    pairNumber = device.RoundData!.ContestantNumberEast;
                     break;
                 case Direction.West:
-                    tableStatus.RoundData.NameWest = playerName;
-                    pairNumber = tableStatus.RoundData.ContestantNumberWest;
+                    device.RoundData!.NameWest = playerName;
+                    pairNumber = device.RoundData!.ContestantNumberWest;
                     break;
             }
-            database.UpdatePlayer(tableStatus.SectionId, tableStatus.TableNumber, tableStatus.RoundNumber, directionLetter, pairNumber, playerId, playerName);
+            database.UpdatePlayer(device.SectionId, device.TableNumber, device.RoundNumber, directionLetter, pairNumber, playerId, playerName);
 
             return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid, fromEnterPlayerID = true });
         }

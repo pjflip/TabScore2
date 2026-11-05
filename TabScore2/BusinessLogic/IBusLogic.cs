@@ -5,6 +5,7 @@ using GrpcSharedContracts.SharedClasses;
 using TabScore2.Classes;
 using TabScore2.Globals;
 using TabScore2.Models;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TabScore2.BusinessLogic
 {
@@ -12,25 +13,26 @@ namespace TabScore2.BusinessLogic
     {
         SelectSectionModel CreateSelectSectionModel();
         SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int confirmTableNumber);
+        SelectRoundNumberModel CreateSelectRoundNumberModel(int sectionId, int tableNumber, Direction direction);
         SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber);
         SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection);
-        ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus);
+        ShowPlayerIdsModel CreateShowPlayerIdsModel(Device device);
         EnterPlayerIdModel CreateEnterPlayerIdModel(Direction direction);
-        ShowRoundInfoModel CreateShowRoundInfoModel(DeviceStatus deviceStatus);
-        ShowBoardsModel CreateShowBoardsModel(DeviceStatus deviceStatus);
-        ShowMoveModel CreateShowMoveModel(DeviceStatus deviceStatus, int newRoundNumber, int tableNotReadyNumber);
+        ShowRoundInfoModel CreateShowRoundInfoModel(Device device);
+        ShowBoardsModel CreateShowBoardsModel(Device device);
+        ShowMoveModel CreateShowMoveModel(Device device, int newRoundNumber, int tableNotReadyNumber);
         EnterContractModel CreateEnterContractModel(Result result, bool showTricks = false);
-        ShowTravellerModel CreateShowTravellerModel(DeviceStatus deviceStatus);
-        ShowHandRecordModel? CreateShowHandRecordModel(DeviceStatus deviceStatus, int boardNumber);
-        ShowRankingListModel CreateRankingListModel(DeviceStatus deviceStatus);
+        ShowTravellerModel CreateShowTravellerModel(Device device);
+        ShowHandRecordModel? CreateShowHandRecordModel(Device device, int boardNumber);
+        ShowRankingListModel CreateRankingListModel(Device device);
 
-        void GetDatabaseNamesForRound(TableStatus tableStatus);
+        void GetDatabaseNamesForRound(Device device);
         Move GetMove(List<Round> roundsList, int tableNumber, int pairNumber, Direction direction);
-        int GetBoardsFromTableNumber(TableStatus tableStatus);
+        int GetBoardsFromTableNumber(Device device);
         List<Ranking> GetRankings(int sectionId);
 
-        string Header(HeaderType headerType, DeviceStatus deviceStatus);
-        string Title(string titleString, DeviceStatus deviceStatus);
+        string Header(HeaderType headerType, Device device);
+        string Title(string titleString, Device device);
         bool ValidateLead(Result result, string card);
         public void CalculateScore(Result result);
     }

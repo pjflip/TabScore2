@@ -27,13 +27,13 @@ namespace TabScore2.Controllers
                 return RedirectToAction("Index", "EnterTricksTaken", new { eventGuid });
             }
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
+            Device device = appData.GetDevice(deviceNumber);
+            if (device.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
                 return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
-            EnterContractModel model = busLogic.CreateEnterContractModel(deviceStatus.ResultData, false);
+            EnterContractModel model = busLogic.CreateEnterContractModel(device.ResultData, false);
             model.EventGuid = eventGuid;
             if (!leadValidated && settings.ValidateLeadCard)
             {
@@ -41,9 +41,9 @@ namespace TabScore2.Controllers
                 model.ShowValidateLeadWarning = showValidateLeadWarning;
             }
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("EnterLead", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("EnterLead", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             return View(model);
         }
@@ -54,14 +54,14 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            if (validateLead && !busLogic.ValidateLead(deviceStatus.ResultData, card))
+            Device device = appData.GetDevice(deviceNumber);
+            if (validateLead && !busLogic.ValidateLead(device.ResultData, card))
             {
                 return RedirectToAction("Index", "EnterLead", new { eventGuid, showValidateLeadWarning = true });
             }
             else
             {
-                deviceStatus.ResultData.LeadCard = card;
+                device.ResultData.LeadCard = card;
                 return RedirectToAction("Index", "EnterTricksTaken", new { eventGuid });
             }
         }

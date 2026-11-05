@@ -22,12 +22,9 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(string eventGuid, Direction confirmDirection = Direction.Null)
+        public ActionResult Index(string eventGuid, int sectionId, int tableNumber, Direction confirmDirection = Direction.Null)
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
-
-            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            int tableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
 
             SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, confirmDirection);
             model.EventGuid = eventGuid;
@@ -45,57 +42,76 @@ namespace TabScore2.Controllers
             }
         }
 
-        public ActionResult OKButtonClick(string eventGuid, Direction direction, bool confirm)
+        public ActionResult OKButtonClick(string eventGuid, int sectionId, int tableNumber, Direction direction, bool confirm)
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            int sectionId = HttpContext.Session.GetInt32("SectionId") ?? 0;
-            int tableNumber = HttpContext.Session.GetInt32("TableNumber") ?? 0;
-
             // We only want one device per location and round, so check if any devices are already registered.  If there's only one, we can use it.  
             // Use session state to keep track of any previous location for the current device
-            int deviceNumber;
-            IEnumerable<DeviceStatus> deviceStatuses = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
-            int deviceStatusCount = deviceStatuses.Count();
-            if (deviceStatusCount > 1)
+            Device? device = null;
+            IEnumerable<Device> matchingDevices = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
+            int matchingDeviceCount = matchingDevices.Count();
+            if (matchingDeviceCount == 0)
+            {
+                // No device record exists.  Check if there are cookies for this section/table/direction, and if so recreate the device record from them
+                if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
+                      && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber
+                      && Enum.TryParse(HttpContext.Request.Cookies["Direction"], out Direction cookieDirection) && cookieDirection == direction)
+                {
+                    if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
+                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, cookieRoundNumber, direction);
+                }
+                else
+                {
+                    // No valid cookie either, so create an initial device record and cookies
+                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, 1, direction);
+                    UpdateCookies(sectionId, tableNumber, 1, direction);
+                }
+            }
+            else if (matchingDeviceCount > 1)
             {
                 // There's more than one record, so devices at this location must be on different rounds.  So get the round number too
-                HttpContext.Session.SetString("Direction", direction.ToString());
-                return RedirectToAction("Index", "SelectRoundNumber", new { eventGuid });
-            }
-            if (deviceStatusCount == 1 && confirm)
-            {
-                // A single device record exists for this section/table/direction and it's ok to change to this device, so just reset session state
-                deviceNumber = deviceStatuses.Single().DeviceNumber;
-                HttpContext.Session.SetString("Direction", direction.ToString());
-            }
-            else if (deviceStatusCount == 1)
-            {
-                // A single device record exists for this section/table/direction
-                // Check if direction matches session state - if not go back to confirm
-                // If, at this stage, the user has got the section or table number wrong, then they'd need to restart
-                string savedDirection = HttpContext.Session.GetString("Direction") ?? string.Empty;
-                if (direction.ToString() != savedDirection)
-                {
-                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, confirmDirection = direction });
-                }
-                // else = session state matches, so this is a re-registration and nothing more to do
+                return RedirectToAction("Index", "SelectRoundNumber", new { eventGuid, sectionId, tableNumber, direction });
             }
             else
             {
-                deviceNumber = appData.AddDeviceStatusForTableDirection(sectionId, tableNumber, direction);
-                HttpContext.Session.SetInt32("TableNumber", tableNumber);
-                HttpContext.Session.SetString("Direction", direction.ToString());
+                // A single device record exists for this section/table/direction
+                device = matchingDevices.Single();
+                if (confirm)
+                {
+                    // A device record exists that we wish to use but it doesn't match cookies, so update cookies
+                    UpdateCookies(sectionId, tableNumber, device.RoundNumber, direction);
+                }
+                else if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
+                      || !Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) || cookieTableNumber != tableNumber
+                      || !Enum.TryParse(HttpContext.Request.Cookies["Direction"], out Direction cookieDirection) || cookieDirection != direction)
+                {
+                    // Cookies exist but don't match this section/table/direction. So go back and confirm
+                    // If, at this stage, the user has got the section or table number wrong, then they'd need to restart
+                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber, confirmTableNumber = tableNumber });
+                }
             }
 
             // DeviceNumber is the key for identifying this particular tablet device and is used throughout the rest of the application
-            HttpContext.Session.SetInt32("DeviceNumber", deviceNumber);
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            HttpContext.Session.SetInt32("DeviceNumber", device.DeviceNumber);
 
             // Work out where to go next
-            if (deviceStatus.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = deviceStatus.RoundNumber + 1 });
+            if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer", new { eventGuid });
-            return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
+            return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
+        }
+
+        private void UpdateCookies(int sectionId, int tableNumber, int roundNumber, Direction direction)
+        {
+            HttpContext.Response.Cookies.Delete("SectionId");
+            HttpContext.Response.Cookies.Delete("TableNumber");
+            HttpContext.Response.Cookies.Delete("RoundNumber");
+            HttpContext.Response.Cookies.Delete("Direction");
+            HttpContext.Response.Cookies.Delete("ContestantNumber");
+            HttpContext.Response.Cookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("TableNumber", tableNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
+            HttpContext.Response.Cookies.Append("Direction", direction.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

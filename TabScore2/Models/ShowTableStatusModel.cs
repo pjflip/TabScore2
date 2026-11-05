@@ -5,7 +5,7 @@ using TabScore2.Classes;
 
 namespace TabScore2.Models
 {
-    public class ShowTableStatusModel : List<TableStatusDisplay>
+    public class ShowTableStatusModel : List<TableStatus>
     {
         public string EventGuid { get; set; } = string.Empty;
     }

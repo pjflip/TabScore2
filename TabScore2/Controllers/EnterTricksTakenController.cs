@@ -23,18 +23,18 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
-            if (deviceStatus.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
+            Device device = appData.GetDevice(deviceNumber);
+            if (device.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
                 return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
-            EnterContractModel model = busLogic.CreateEnterContractModel(deviceStatus.ResultData);
+            EnterContractModel model = busLogic.CreateEnterContractModel(device.ResultData);
             model.EventGuid = eventGuid;
 
-            ViewData["TimerSeconds"] = appData.GetTimerSeconds(deviceStatus);
-            ViewData["Title"] = busLogic.Title("EnterTricksTaken", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, deviceStatus);
+            ViewData["TimerSeconds"] = appData.GetTimerSeconds(device);
+            ViewData["Title"] = busLogic.Title("EnterTricksTaken", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullColoured, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabledAndBack;
             if (settings.EnterResultsMethod == 1)
             {
@@ -52,7 +52,7 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
 
-            Result result = appData.GetDeviceStatus(deviceNumber).ResultData;
+            Result result = appData.GetDevice(deviceNumber).ResultData;
             result.TricksTaken = tricksTaken;
             if (tricksTaken == -1)
             {
@@ -86,7 +86,7 @@ namespace TabScore2.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "EnterContract", new { eventGuid, boardNumber = appData.GetDeviceStatus(deviceNumber).ResultData.BoardNumber });
+                return RedirectToAction("Index", "EnterContract", new { eventGuid, boardNumber = appData.GetDevice(deviceNumber).ResultData.BoardNumber });
             }
         }
     }

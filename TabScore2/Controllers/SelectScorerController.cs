@@ -22,17 +22,16 @@ namespace TabScore2.Controllers
             int deviceNumber = HttpContext.Session.GetInt32("DeviceNumber") ?? -1;
             if (deviceNumber == -1) return RedirectToAction("Index", "ErrorScreen", new { eventGuid });
             
-            DeviceStatus deviceStatus = appData.GetDeviceStatus(deviceNumber);
+            Device device = appData.GetDevice(deviceNumber);
 
             // Check if sitout table.  If so nobody is scoring and can go straight to ShowRoundInfo
-            int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
+            int missingPair = database.GetSection(device.SectionId).MissingPair;
+            if (device.RoundData!.ContestantNumberNorth == 0 || device.RoundData!.ContestantNumberNorth == missingPair
+              || device.RoundData!.ContestantNumberEast == 0 || device.RoundData!.ContestantNumberEast == missingPair) 
+              return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid });
 
-            if (tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair
-              || tableStatus.RoundData.ContestantNumberEast == 0 || tableStatus.RoundData.ContestantNumberEast == missingPair) return RedirectToAction("Index", "ShowPlayerIds");
-
-            ViewData["Title"] = busLogic.Title("SelectScorer", deviceStatus);
-            ViewData["Header"] = busLogic.Header(HeaderType.Round, deviceStatus);
+            ViewData["Title"] = busLogic.Title("SelectScorer", device);
+            ViewData["Header"] = busLogic.Header(HeaderType.Round, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
             TempData["eventGuid"] = eventGuid;
             return View();

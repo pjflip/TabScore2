@@ -39,6 +39,18 @@ namespace TabScore2.BusinessLogic
             };
         }
 
+        public SelectRoundNumberModel CreateSelectRoundNumberModel(int sectionId, int tableNumber, Direction direction)
+        {
+            IEnumerable<Device> matchingDevices = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
+            return new()
+            {
+                SectionId = sectionId,
+                TableNumber = tableNumber,
+                Direction = direction,
+                RoundNumbers = [.. matchingDevices.OrderBy(device => device.RoundNumber).Select(device => device.RoundNumber)],
+            };
+        }
+
         public SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber)
         {
             Section section = database.GetSection(sectionId);
@@ -67,7 +79,7 @@ namespace TabScore2.BusinessLogic
 
         public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection)
         {
-            TableStatus tableStatus = appData.GetTableStatus(sectionId, tableNumber);
+            Device device = appData.GetDevice(sectionId);
             Section section = database.GetSection(sectionId);
 
             return new()
@@ -76,20 +88,19 @@ namespace TabScore2.BusinessLogic
                 SectionLetter = section.SectionLetter,
                 TableNumber = tableNumber,
                 ConfirmDirection = confirmDirection,
-                RoundNumber = tableStatus.RoundNumber,
-                NorthSouthMissing = tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == section.MissingPair,
-                EastWestMissing = tableStatus.RoundData.ContestantNumberEast == 0 || tableStatus.RoundData.ContestantNumberEast == section.MissingPair,
+                RoundNumber = device.RoundNumber,
+                NorthSouthMissing = device.RoundData!.ContestantNumberNorth == 0 || device.RoundData.ContestantNumberNorth == section.MissingPair,
+                EastWestMissing = device.RoundData.ContestantNumberEast == 0 || device.RoundData.ContestantNumberEast == section.MissingPair,
             };
         }
 
-        public ShowPlayerIdsModel CreateShowPlayerIdsModel(DeviceStatus deviceStatus)
+        public ShowPlayerIdsModel CreateShowPlayerIdsModel(Device device)
         {
             ShowPlayerIdsModel showPlayerIdsModel = [];
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            Round round = tableStatus.RoundData;
-            int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
+            Round round = device.RoundData!;
+            int missingPair = database.GetSection(device.SectionId).MissingPair;
 
-            if (settings.Mode == Mode.Scorer || deviceStatus.DevicesPerTable == 1) // Scorer enters all names
+            if (settings.Mode == Mode.Scorer || device.DevicesPerTable == 1) // Scorer enters all names
             {
                 if (round.ContestantNumberNorth != 0 && round.ContestantNumberNorth != missingPair)
                 {
@@ -102,9 +113,9 @@ namespace TabScore2.BusinessLogic
                     showPlayerIdsModel.Add(CreatePlayerEntry(round, Direction.West));
                 }
             }
-            else if (deviceStatus.DevicesPerTable == 2)  // Personal Mode and pairs, so both pairs enter their names
+            else if (device.DevicesPerTable == 2)  // Personal Mode and pairs, so both pairs enter their names
             {
-                if (deviceStatus.Direction == Direction.North)
+                if (device.Direction == Direction.North)
                 {
                     showPlayerIdsModel.Add(CreatePlayerEntry(round, Direction.North));
                     showPlayerIdsModel.Add(CreatePlayerEntry(round, Direction.South));
@@ -117,7 +128,7 @@ namespace TabScore2.BusinessLogic
             }
             else  // Personal Mode and individual, so all 4 players enter their own name
             {
-                showPlayerIdsModel.Add(CreatePlayerEntry(round, deviceStatus.Direction));
+                showPlayerIdsModel.Add(CreatePlayerEntry(round, device.Direction));
             }
 
             return showPlayerIdsModel;
@@ -133,14 +144,13 @@ namespace TabScore2.BusinessLogic
             return enterPlayerIdModel;
         }
 
-        public ShowRoundInfoModel CreateShowRoundInfoModel(DeviceStatus deviceStatus) 
+        public ShowRoundInfoModel CreateShowRoundInfoModel(Device device) 
         {
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            Round round = tableStatus.RoundData;
+            Round round = device.RoundData!;
             string unknown = localizer["Unknown"];
             return new()
             {
-                RoundNumber = tableStatus.RoundNumber,
+                RoundNumber = device.RoundNumber,
                 ContestantNumberNorth = round.ContestantNumberNorth,
                 ContestantNumberEast = round.ContestantNumberEast,
                 ContestantNumberSouth = round.ContestantNumberSouth,
@@ -154,10 +164,9 @@ namespace TabScore2.BusinessLogic
             };
         }
 
-        public ShowBoardsModel CreateShowBoardsModel(DeviceStatus deviceStatus)
+        public ShowBoardsModel CreateShowBoardsModel(Device device)
         {
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            List<Result> resultsList = database.GetResultsList(tableStatus.SectionId, tableStatus.RoundData.LowBoard, tableStatus.RoundData.HighBoard, tableStatus.TableNumber, tableStatus.RoundNumber);
+            List<Result> resultsList = database.GetResultsList(device.SectionId, device.RoundData!.LowBoard, device.RoundData.HighBoard, device.TableNumber, device.RoundNumber);
 
             ShowBoardsModel showBoardsModel = new(settings.ShowTraveller);
             foreach (Result result in resultsList) 
@@ -167,7 +176,7 @@ namespace TabScore2.BusinessLogic
             }
 
             // Check to see if any boards don't have a result, and add dummies to the list
-            for (int iBoard = tableStatus.RoundData.LowBoard; iBoard <= tableStatus.RoundData.HighBoard; iBoard++)
+            for (int iBoard = device.RoundData.LowBoard; iBoard <= device.RoundData.HighBoard; iBoard++)
             {
                 if (showBoardsModel.Find(x => x.BoardNumber == iBoard) == null)
                 {
@@ -180,49 +189,48 @@ namespace TabScore2.BusinessLogic
             return showBoardsModel;
         }
 
-        public ShowMoveModel CreateShowMoveModel(DeviceStatus deviceStatus, int newRoundNumber, int tableNotReadyNumber)
+        public ShowMoveModel CreateShowMoveModel(Device device, int newRoundNumber, int tableNotReadyNumber)
         {
             ShowMoveModel showMoveModel = [];
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            showMoveModel.Direction = deviceStatus.Direction;
+            showMoveModel.Direction = device.Direction;
             showMoveModel.NewRoundNumber = newRoundNumber;
             showMoveModel.TableNotReadyNumber = tableNotReadyNumber;
-            showMoveModel.DevicesPerTable = deviceStatus.DevicesPerTable;
-            int missingPair = database.GetSection(deviceStatus.SectionId).MissingPair;
+            showMoveModel.DevicesPerTable = device.DevicesPerTable;
+            int missingPair = database.GetSection(device.SectionId).MissingPair;
             bool showBoards;
 
-            List<Round> roundsList = database.GetRoundsListForSectionRound(deviceStatus.SectionId, newRoundNumber);
-            if (deviceStatus.DevicesPerTable == 1 || (settings.Mode == Mode.Scorer && deviceStatus.Scoring))
+            List<Round> roundsList = database.GetRoundsListForSectionRound(device.SectionId, newRoundNumber);
+            if (device.DevicesPerTable == 1 || (settings.Mode == Mode.Scorer && device.Scoring))
             {
                 // Only one device per table, or a scoring device in Scorer Mode, so need to show all moves at the table
                 if (settings.IsIndividual)
                 {
-                    if (tableStatus.RoundData.ContestantNumberNorth != 0)
+                    if (device.RoundData!.ContestantNumberNorth != 0)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberNorth, Direction.North));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberNorth, Direction.North));
                     }
-                    if (tableStatus.RoundData.ContestantNumberSouth != 0)
+                    if (device.RoundData.ContestantNumberSouth != 0)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberSouth, Direction.South));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberSouth, Direction.South));
                     }
-                    if (tableStatus.RoundData.ContestantNumberEast != 0)
+                    if (device.RoundData.ContestantNumberEast != 0)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberEast, Direction.East));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberEast, Direction.East));
                     }
-                    if (tableStatus.RoundData.ContestantNumberWest != 0)
+                    if (device.RoundData.ContestantNumberWest != 0)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberWest, Direction.West));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberWest, Direction.West));
                     }
                 }
                 else  // Not individual
                 {
-                    if (tableStatus.RoundData.ContestantNumberNorth != 0 && tableStatus.RoundData.ContestantNumberNorth != missingPair)
+                    if (device.RoundData!.ContestantNumberNorth != 0 && device.RoundData.ContestantNumberNorth != missingPair)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberNorth, Direction.North));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberNorth, Direction.North));
                     }
-                    if (tableStatus.RoundData.ContestantNumberEast != 0 && tableStatus.RoundData.ContestantNumberEast != missingPair)
+                    if (device.RoundData.ContestantNumberEast != 0 && device.RoundData.ContestantNumberEast != missingPair)
                     {
-                        showMoveModel.Add(GetMove(roundsList, tableStatus.TableNumber, tableStatus.RoundData.ContestantNumberEast, Direction.East));
+                        showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.RoundData.ContestantNumberEast, Direction.East));
                     }
                 }
                 showBoards = true;
@@ -230,19 +238,20 @@ namespace TabScore2.BusinessLogic
             else
             {
                 // Personal Mode or a non-scoring device in Scoring Mode, so only need to show need move for single player/pair.
-                // Could be at phantom table, so use deviceStatus info
-                showMoveModel.Add(GetMove(roundsList, deviceStatus.TableNumber, deviceStatus.ContestantNumber, deviceStatus.Direction));
+                // Could be at phantom table, so use device info
+                showMoveModel.Add(GetMove(roundsList, device.TableNumber, device.ContestantNumber, device.Direction));
 
                 // Show boards move only to North (or North/South) unless missing, in which case only show to East (or East/West)
-                showBoards = deviceStatus.Direction == Direction.North || ((tableStatus.RoundData.ContestantNumberNorth == 0 || tableStatus.RoundData.ContestantNumberNorth == missingPair) && deviceStatus.Direction == Direction.East);
+                showBoards = device.Direction == Direction.North || ((device.RoundData!.ContestantNumberNorth == 0 || device.RoundData.ContestantNumberNorth == missingPair) 
+                  && device.Direction == Direction.East);
             }
 
-            if (showBoards && deviceStatus.TableNumber > 0)  // If at a phantom table, there are no boards to worry about
+            if (showBoards && device.TableNumber > 0)  // If at a phantom table, there are no boards to worry about
             {
-                showMoveModel.LowBoard = tableStatus.RoundData.LowBoard;
-                showMoveModel.HighBoard = tableStatus.RoundData.HighBoard;
-                showMoveModel.BoardsNewTable = GetBoardsNewTableNumber(roundsList, tableStatus.TableNumber, tableStatus.RoundData.LowBoard);
-                showMoveModel.BoardsStay = showMoveModel.BoardsNewTable == tableStatus.TableNumber;
+                showMoveModel.LowBoard = device.RoundData!.LowBoard;
+                showMoveModel.HighBoard = device.RoundData.HighBoard;
+                showMoveModel.BoardsNewTable = GetBoardsNewTableNumber(roundsList, device.TableNumber, device.RoundData.LowBoard);
+                showMoveModel.BoardsStay = showMoveModel.BoardsNewTable == device.TableNumber;
             }
             else
             {
@@ -269,12 +278,11 @@ namespace TabScore2.BusinessLogic
             return enterContractModel;
         }
 
-        public ShowTravellerModel CreateShowTravellerModel(DeviceStatus deviceStatus)
+        public ShowTravellerModel CreateShowTravellerModel(Device device)
         {
-            TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
-            int currentBoardNumber = deviceStatus.ResultData.BoardNumber;
+            int currentBoardNumber = device.ResultData.BoardNumber;
             ShowTravellerModel showTravellerModel = new(currentBoardNumber);
-            List<Result> resultsList = database.GetResultsList(tableStatus.SectionId, currentBoardNumber);
+            List<Result> resultsList = database.GetResultsList(device.SectionId, currentBoardNumber);
             foreach (Result result in resultsList)
             {
                 CalculateScore(result);
@@ -381,7 +389,7 @@ namespace TabScore2.BusinessLogic
                         (travellerResult.NumberEast, travellerResult.NumberNorth) = (travellerResult.NumberNorth, travellerResult.NumberEast);
                         (travellerResult.NumberWest, travellerResult.NumberSouth) = (travellerResult.NumberSouth, travellerResult.NumberWest);
                     }
-                    if (result.ContestantNumberNorth == tableStatus.RoundData.ContestantNumberNorth)
+                    if (result.ContestantNumberNorth == device.RoundData!.ContestantNumberNorth)
                     {
                         int intPercentageNS = Convert.ToInt32(travellerResult.SortPercentage);
                         showTravellerModel.PercentageNS = Convert.ToString(intPercentageNS) + "%";
@@ -403,12 +411,12 @@ namespace TabScore2.BusinessLogic
             // Determine if there is a hand record to view
             if (settings.ShowHandRecord && database.GetHandsCount() > 0)
             {
-                Hand hand = database.GetHand(tableStatus.SectionId, currentBoardNumber);
+                Hand hand = database.GetHand(device.SectionId, currentBoardNumber);
                 if (hand.NorthSpades != "###")
                 {
                     showTravellerModel.HandRecord = true;
                 }
-                else if (tableStatus.SectionId > 1)   // Can't find matching hand record, so try default SectionId = 1
+                else if (device.SectionId > 1)   // Can't find matching hand record, so try default SectionId = 1
                 {
                     hand = database.GetHand(1, currentBoardNumber);
                     if (hand.NorthSpades != "###")
@@ -420,9 +428,9 @@ namespace TabScore2.BusinessLogic
             return showTravellerModel;
         }
 
-        public ShowHandRecordModel? CreateShowHandRecordModel(DeviceStatus deviceStatus, int boardNumber)
+        public ShowHandRecordModel? CreateShowHandRecordModel(Device device, int boardNumber)
         {
-            Hand hand = database.GetHand(deviceStatus.SectionId, boardNumber);
+            Hand hand = database.GetHand(device.SectionId, boardNumber);
             if (hand.NorthSpades == "###")
             {
                 hand = database.GetHand(1, boardNumber);
@@ -461,7 +469,7 @@ namespace TabScore2.BusinessLogic
             showHandRecordModel.WestDiamondsDisplay = hand.WestDiamonds.Replace("A", A).Replace("K", K).Replace("Q", Q).Replace("J", J).Replace("T", tenShorthand);
             showHandRecordModel.WestClubsDisplay = hand.WestClubs.Replace("A", A).Replace("K", K).Replace("Q", Q).Replace("J", J).Replace("T", tenShorthand);
 
-            HandEvaluation? handEvaluation = appData.GetHandEvaluation(deviceStatus.SectionId, boardNumber);
+            HandEvaluation? handEvaluation = appData.GetHandEvaluation(device.SectionId, boardNumber);
             if (handEvaluation == null) return showHandRecordModel;
 
             showHandRecordModel.EvalNorthNT = handEvaluation.NorthNotrump > 6 ? (handEvaluation.NorthNotrump - 6).ToString() : string.Empty;
@@ -491,14 +499,14 @@ namespace TabScore2.BusinessLogic
             showHandRecordModel.HCPWest = handEvaluation.WestHcp;
 
             // Set perspective options based on combination of settings and number of devices per table
-            if (deviceStatus.DevicesPerTable == 4)
+            if (device.DevicesPerTable == 4)
             {
                 showHandRecordModel.PerspectiveButtonOption = HandRecordPerspectiveButtonOptions.None;
-                showHandRecordModel.PerspectiveFromDirection = deviceStatus.Direction.ToString();
+                showHandRecordModel.PerspectiveFromDirection = device.Direction.ToString();
             }
-            else if (deviceStatus.DevicesPerTable == 2)
+            else if (device.DevicesPerTable == 2)
             {
-                if (deviceStatus.Direction == Direction.North)
+                if (device.Direction == Direction.North)
                 {
                     showHandRecordModel.PerspectiveButtonOption = HandRecordPerspectiveButtonOptions.NS;
                     if (settings.ShowHandRecordFromDirection == "North")
@@ -531,41 +539,40 @@ namespace TabScore2.BusinessLogic
             return showHandRecordModel;
         }
 
-        public ShowRankingListModel CreateRankingListModel(DeviceStatus deviceStatus)
+        public ShowRankingListModel CreateRankingListModel(Device device)
         {
             ShowRankingListModel showRankingListModel = [];
-            showRankingListModel.RoundNumber = deviceStatus.RoundNumber;
+            showRankingListModel.RoundNumber = device.RoundNumber;
 
             // Set player numbers to highlight appropriate rows of ranking list
-            if (deviceStatus.DevicesPerTable == 1)
+            if (device.DevicesPerTable == 1)
             {
-                TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId,deviceStatus.TableNumber);
-                showRankingListModel.ContestantNumberNorth = tableStatus.RoundData.ContestantNumberNorth;
-                showRankingListModel.ContestantNumberEast = tableStatus.RoundData.ContestantNumberEast;
-                showRankingListModel.ContestantNumberSouth = tableStatus.RoundData.ContestantNumberSouth;
-                showRankingListModel.ContestantNumberWest = tableStatus.RoundData.ContestantNumberWest;
+                showRankingListModel.ContestantNumberNorth = device.RoundData!.ContestantNumberNorth;
+                showRankingListModel.ContestantNumberEast = device.RoundData.ContestantNumberEast;
+                showRankingListModel.ContestantNumberSouth = device.RoundData.ContestantNumberSouth;
+                showRankingListModel.ContestantNumberWest = device.RoundData.ContestantNumberWest;
             }
             else  // More than one tablet device per table
             {
                 // Only need to highlight one row entry, so use NumberNorth as proxy
-                showRankingListModel.ContestantNumberNorth = deviceStatus.ContestantNumber;
+                showRankingListModel.ContestantNumberNorth = device.ContestantNumber;
             }
 
-            showRankingListModel.AddRange(GetRankings(deviceStatus.SectionId));
+            showRankingListModel.AddRange(GetRankings(device.SectionId));
             return showRankingListModel;
         }
 
 
         // OTHER PUBLIC UTLITY CLASSES
 
-        public void GetDatabaseNamesForRound(TableStatus tableStatus)
+        public void GetDatabaseNamesForRound(Device device)
         {
-            NamesForRound names = database.GetNamesForTableRound(tableStatus.SectionId, tableStatus.RoundNumber, tableStatus.RoundData.ContestantNumberNorth, tableStatus.RoundData.ContestantNumberEast, tableStatus.RoundData.ContestantNumberSouth, tableStatus.RoundData.ContestantNumberWest);
-            tableStatus.RoundData.NameNorth = names.NameNorth;
-            tableStatus.RoundData.NameEast = names.NameEast;
-            tableStatus.RoundData.NameSouth = names.NameSouth;
-            tableStatus.RoundData.NameWest = names.NameWest;
-            tableStatus.RoundData.GotAllNames = names.GotAllNames;
+            NamesForRound names = database.GetNamesForTableRound(device.SectionId, device.RoundNumber, device.RoundData!.ContestantNumberNorth, device.RoundData.ContestantNumberEast, device.RoundData.ContestantNumberSouth, device.RoundData.ContestantNumberWest);
+            device.RoundData.NameNorth = names.NameNorth;
+            device.RoundData.NameEast = names.NameEast;
+            device.RoundData.NameSouth = names.NameSouth;
+            device.RoundData.NameWest = names.NameWest;
+            device.RoundData.GotAllNames = names.GotAllNames;
         }
 
 
@@ -693,10 +700,10 @@ namespace TabScore2.BusinessLogic
             }
         }
 
-        public int GetBoardsFromTableNumber(TableStatus tableStatus)
+        public int GetBoardsFromTableNumber(Device device)
         {
             // Get a list of all possible tables from which boards could have moved (ie where the boards were in the previous round)
-            List<Round> tableList = database.GetRoundsListForSectionRound(tableStatus.SectionId, tableStatus.RoundNumber - 1).FindAll(x => x.LowBoard == tableStatus.RoundData.LowBoard);
+            List<Round> tableList = database.GetRoundsListForSectionRound(device.SectionId, device.RoundNumber - 1).FindAll(x => x.LowBoard == device.RoundData!.LowBoard);
             if (tableList.Count == 0)
             {
                 // No table, so boards must have come from relay table
@@ -711,7 +718,7 @@ namespace TabScore2.BusinessLogic
             {
                 // Find the next table up from which the boards could have moved
                 tableList.Sort((x, y) => x.TableNumber.CompareTo(y.TableNumber));
-                Round? boardMoveFromTable = tableList.Find(x => x.TableNumber > tableStatus.TableNumber);
+                Round? boardMoveFromTable = tableList.Find(x => x.TableNumber > device.TableNumber);
                 if (boardMoveFromTable != null)
                 {
                     return boardMoveFromTable.TableNumber;
@@ -748,48 +755,46 @@ namespace TabScore2.BusinessLogic
             return rankings;
         }
 
-        public string Header(HeaderType headerType, DeviceStatus deviceStatus)
+        public string Header(HeaderType headerType, Device device)
         {
             switch (headerType)
             {
                 case HeaderType.Location:
                     // parameter1 = deviceNumber
-                    return $"{deviceStatus.Location}";
+                    return $"{device.Location}";
                 case HeaderType.Round:
                     // parameter1 = deviceNumber
-                    return $"{deviceStatus.Location}: {localizer["Rd"]} {deviceStatus.RoundNumber}";
+                    return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}";
                 case HeaderType.FullPlain:
-                    TableStatus tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                     if (settings.IsIndividual)
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {tableStatus.RoundData.ContestantNumberNorth}+{tableStatus.RoundData.ContestantNumberSouth} v {tableStatus.RoundData.ContestantNumberEast}+{tableStatus.RoundData.ContestantNumberWest}";
+                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {device.RoundData!.ContestantNumberNorth}+{device.RoundData.ContestantNumberSouth} v {device.RoundData.ContestantNumberEast}+{device.RoundData.ContestantNumberWest}";
                     }
                     else
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {localizer["N"]}{localizer["S"]} {tableStatus.RoundData.ContestantNumberNorth} v {localizer["E"]}{localizer["W"]} {tableStatus.RoundData.ContestantNumberEast}";
+                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {localizer["N"]}{localizer["S"]} {device.RoundData!.ContestantNumberNorth} v {localizer["E"]}{localizer["W"]} {device.RoundData.ContestantNumberEast}";
                     }
                 case HeaderType.FullColoured:
-                    tableStatus = appData.GetTableStatus(deviceStatus.SectionId, deviceStatus.TableNumber);
                     if (settings.IsIndividual)
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", deviceStatus.ResultData.BoardNumber, 
-                            $"{tableStatus.RoundData.ContestantNumberNorth}+{tableStatus.RoundData.ContestantNumberSouth}")} v {ColourPairByVulnerability("EW", deviceStatus.ResultData.BoardNumber,
-                            $"{tableStatus.RoundData.ContestantNumberEast}+{tableStatus.RoundData.ContestantNumberWest}")}";
+                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
+                            $"{device.RoundData!.ContestantNumberNorth}+{device.RoundData.ContestantNumberSouth}")} v {ColourPairByVulnerability("EW", device.ResultData.BoardNumber,
+                            $"{device.RoundData.ContestantNumberEast}+{device.RoundData.ContestantNumberWest}")}";
                     }
                     else
                     {
-                        return $"{deviceStatus.Location}: {localizer["Rd"]} {tableStatus.RoundNumber}: {ColourPairByVulnerability("NS", deviceStatus.ResultData.BoardNumber, 
-                            $"{localizer["N"]}{localizer["S"]} {tableStatus.RoundData.ContestantNumberNorth}")} v {ColourPairByVulnerability("EW", deviceStatus.ResultData.BoardNumber, 
-                            $"{localizer["E"]}{localizer["W"]} {tableStatus.RoundData.ContestantNumberEast}")}";
+                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
+                            $"{localizer["N"]}{localizer["S"]} {device.RoundData!.ContestantNumberNorth}")} v {ColourPairByVulnerability("EW", device.ResultData.BoardNumber, 
+                            $"{localizer["E"]}{localizer["W"]} {device.RoundData.ContestantNumberEast}")}";
                     }
                 default:
                     return string.Empty;
             }
         }
 
-        public string Title(string titleString, DeviceStatus deviceStatus)
+        public string Title(string titleString, Device device)
         {
-            return $"{deviceStatus.Location}: {localizer["Rd"]} {deviceStatus.RoundNumber}: {localizer[titleString]}";
+            return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {localizer[titleString]}";
         }
 
         public bool ValidateLead(Result result, string card)
