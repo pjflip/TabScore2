@@ -5,7 +5,6 @@ using GrpcSharedContracts.SharedClasses;
 using TabScore2.Classes;
 using TabScore2.Globals;
 using TabScore2.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace TabScore2.BusinessLogic
 {
@@ -13,9 +12,8 @@ namespace TabScore2.BusinessLogic
     {
         SelectSectionModel CreateSelectSectionModel();
         SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int confirmTableNumber);
-        SelectRoundNumberModel CreateSelectRoundNumberModel(int sectionId, int tableNumber, Direction direction);
-        SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber);
-        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection);
+        SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, List<int> contestantNumberOptions, int confirmContestantNumber);
+        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, int roundNumber, Direction confirmDirection);
         ShowPlayerIdsModel CreateShowPlayerIdsModel(Device device);
         EnterPlayerIdModel CreateEnterPlayerIdModel(Direction direction);
         ShowRoundInfoModel CreateShowRoundInfoModel(Device device);

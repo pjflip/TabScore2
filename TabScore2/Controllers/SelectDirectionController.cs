@@ -26,7 +26,21 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, confirmDirection);
+            // Try to establish roundNumber based on any saved devices.  The default is the starting round.  We need this to determine if there are any missing pairs
+            int roundNumber = 1;
+            
+            // First check if there are any existing devices
+            IEnumerable<Device> tableDevices = appData.GetDevicesByTableNumber(sectionId, tableNumber);
+            if (tableDevices.Any()) roundNumber = tableDevices.Min(device => device.RoundNumber);
+
+            // Then check if there are cookies for this section/table, and if so use the cookie roundNumber in preference
+            if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
+                  && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber)
+            {
+                _ = Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out roundNumber);
+            }
+
+            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, roundNumber, confirmDirection);
             model.EventGuid = eventGuid;
 
             ViewData["Title"] = $"{model.SectionLetter}{tableNumber}: {localizer["SelectDirection"]}";
@@ -48,7 +62,7 @@ namespace TabScore2.Controllers
 
             // We only want one device per location and round, so check if any devices are already registered.  If there's only one, we can use it.  
             // Use session state to keep track of any previous location for the current device
-            Device? device = null;
+            Device? device;
             IEnumerable<Device> matchingDevices = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
             int matchingDeviceCount = matchingDevices.Count();
             if (matchingDeviceCount == 0)
@@ -59,19 +73,21 @@ namespace TabScore2.Controllers
                       && Enum.TryParse(HttpContext.Request.Cookies["Direction"], out Direction cookieDirection) && cookieDirection == direction)
                 {
                     if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
-                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, cookieRoundNumber, direction);
+                    device = appData.CreateDeviceByTableNumberDirection(sectionId, tableNumber, cookieRoundNumber, direction);
                 }
                 else
                 {
                     // No valid cookie either, so create an initial device record and cookies
-                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, 1, direction);
-                    UpdateCookies(sectionId, tableNumber, 1, direction);
+                    device = appData.CreateDeviceByTableNumberDirection(sectionId, tableNumber, 1, direction);
+                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber, 1);
                 }
             }
             else if (matchingDeviceCount > 1)
             {
-                // There's more than one record, so devices at this location must be on different rounds.  So get the round number too
-                return RedirectToAction("Index", "SelectRoundNumber", new { eventGuid, sectionId, tableNumber, direction });
+                // There's more than one record, so devices at this location must belong to different contestants (on different rounds).  So get contestantNumber too
+                List<int> contestantNumberOptions = [];
+                foreach (Device iDevice in matchingDevices) contestantNumberOptions.Add(iDevice.ContestantNumber);
+                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId, contestantNumberOptions });
             }
             else
             {
@@ -79,8 +95,8 @@ namespace TabScore2.Controllers
                 device = matchingDevices.Single();
                 if (confirm)
                 {
-                    // A device record exists that we wish to use but it doesn't match cookies, so update cookies
-                    UpdateCookies(sectionId, tableNumber, device.RoundNumber, direction);
+                    // A device record exists that we have already checked and which doesn't match cookies.  But we wish to use it, so overwrite cookies
+                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber, device.RoundNumber);
                 }
                 else if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
                       || !Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) || cookieTableNumber != tableNumber
@@ -88,7 +104,7 @@ namespace TabScore2.Controllers
                 {
                     // Cookies exist but don't match this section/table/direction. So go back and confirm
                     // If, at this stage, the user has got the section or table number wrong, then they'd need to restart
-                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber, confirmTableNumber = tableNumber });
+                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber, confirmDirection = direction });
                 }
             }
 
@@ -99,19 +115,6 @@ namespace TabScore2.Controllers
             if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer", new { eventGuid });
             return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
-        }
-
-        private void UpdateCookies(int sectionId, int tableNumber, int roundNumber, Direction direction)
-        {
-            HttpContext.Response.Cookies.Delete("SectionId");
-            HttpContext.Response.Cookies.Delete("TableNumber");
-            HttpContext.Response.Cookies.Delete("RoundNumber");
-            HttpContext.Response.Cookies.Delete("Direction");
-            HttpContext.Response.Cookies.Delete("ContestantNumber");
-            HttpContext.Response.Cookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("TableNumber", tableNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("Direction", direction.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

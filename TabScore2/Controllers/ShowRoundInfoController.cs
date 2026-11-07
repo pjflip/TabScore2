@@ -94,11 +94,11 @@ namespace TabScore2.Controllers
 
             if (device.AtSitoutTable)
             {
-                return RedirectToAction("Index", "ShowRankingList");
+                return RedirectToAction("Index", "ShowRankingList", new { eventGuid });
             }
             else
             {
-                return RedirectToAction("Index", "ShowBoards");
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
         }
 

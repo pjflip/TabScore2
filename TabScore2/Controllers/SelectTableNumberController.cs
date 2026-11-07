@@ -1,7 +1,6 @@
 ﻿// TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
 // Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License
 
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using TabScore2.BusinessLogic;
@@ -41,7 +40,8 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            if (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1)
+            IEnumerable<Device> tableDevices = appData.GetDevicesByTableNumber(sectionId, tableNumber);
+            if (tableDevices.Count() > 1 || (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1))
             {
                 // Devices are moving so we also need direction
                 return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber });
@@ -50,7 +50,7 @@ namespace TabScore2.Controllers
             // Traditional Mode, or Personal/Scorer Mode with 2 winners : only one non-moving device per table.
             // We only want one device per location, so check if a device record for this location exists.
             // Use cookies to keep track of any previous location for the current device
-            Device? device = appData.GetDeviceByLocation(sectionId, tableNumber);
+            Device? device = tableDevices.SingleOrDefault();
             if (device == null)
             {
                 // No device record exists.  Check if there are cookies for this section/table, and if so recreate the device record from them
@@ -58,19 +58,19 @@ namespace TabScore2.Controllers
                       && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber)
                 {
                     if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
-                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, cookieRoundNumber);
+                    device = appData.CreateDeviceByTableNumber(sectionId, tableNumber, cookieRoundNumber);
                 }
                 else
                 {
                     // No valid cookies either, so create an initial device record and cookies
-                    device = appData.CreateDeviceByLocation(sectionId, tableNumber, 1);
-                    UpdateCookies(sectionId, tableNumber, 1);
+                    device = appData.CreateDeviceByTableNumber(sectionId, tableNumber, 1);
+                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber, 1);
                 }
             }
             else if (confirm)
             {
                 // A device record exists that we wish to use but it doesn't match cookies, so update cookies
-                UpdateCookies(sectionId, tableNumber, device.RoundNumber);
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber, device.RoundNumber);
             }
             else
             {
@@ -90,18 +90,6 @@ namespace TabScore2.Controllers
             // If ready to move then go to ShowMove; otherwise go to start of round via ShowPlayerIDs
             if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
-        }
-
-        private void UpdateCookies(int sectionId, int tableNumber, int roundNumber) 
-        {
-            HttpContext.Response.Cookies.Delete("SectionId");
-            HttpContext.Response.Cookies.Delete("TableNumber");
-            HttpContext.Response.Cookies.Delete("RoundNumber");
-            HttpContext.Response.Cookies.Delete("Direction");
-            HttpContext.Response.Cookies.Delete("ContestantNumber");
-            HttpContext.Response.Cookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("TableNumber", tableNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

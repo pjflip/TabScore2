@@ -19,13 +19,13 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(string eventGuid, int sectionId, int confirmContestantNumber = 0) 
+        public ActionResult Index(string eventGuid, int sectionId, List<int> contestantNumbers, int confirmContestantNumber = 0) 
         {
             // To get here, we must be in Scorer or Personal Mode
 
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, confirmContestantNumber);
+            SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, contestantNumbers, confirmContestantNumber);
             model.EventGuid = eventGuid;
 
             // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
@@ -55,13 +55,13 @@ namespace TabScore2.Controllers
                 {
                     // No valid cookies either, so create an initial device record and cookies
                     device = appData.CreateDeviceByContestant(sectionId, contestantNumber, 1);
-                    UpdateCookies(sectionId, contestantNumber, 1);
+                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber, 1);
                 }
             }
             else if (confirm)
             {
                 // A device record exists that we wish to use but it doesn't match cookies, so update cookies
-                UpdateCookies(sectionId, contestantNumber, device.RoundNumber);
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber, 1);
             }
             else
             {
@@ -81,18 +81,6 @@ namespace TabScore2.Controllers
             // If ready to move then go to ShowMove; otherwise go to start of round via ShowPlayerIDs
             if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
             return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
-        }
-
-        private void UpdateCookies(int sectionId, int contestantNumber, int roundNumber)
-        {
-            HttpContext.Response.Cookies.Delete("SectionId");
-            HttpContext.Response.Cookies.Delete("TableNumber");
-            HttpContext.Response.Cookies.Delete("RoundNumber");
-            HttpContext.Response.Cookies.Delete("Direction");
-            HttpContext.Response.Cookies.Delete("ContestantNumber");
-            HttpContext.Response.Cookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("ContestantNumber", contestantNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            HttpContext.Response.Cookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

@@ -39,47 +39,40 @@ namespace TabScore2.BusinessLogic
             };
         }
 
-        public SelectRoundNumberModel CreateSelectRoundNumberModel(int sectionId, int tableNumber, Direction direction)
-        {
-            IEnumerable<Device> matchingDevices = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
-            return new()
-            {
-                SectionId = sectionId,
-                TableNumber = tableNumber,
-                Direction = direction,
-                RoundNumbers = [.. matchingDevices.OrderBy(device => device.RoundNumber).Select(device => device.RoundNumber)],
-            };
-        }
-
-        public SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber)
+        public SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, List<int> contestantNumbers, int confirmContestantNumber)
         {
             Section section = database.GetSection(sectionId);
 
-            // Need a list of all possible contestant numbers.  We can't rely on the PlayerNumbers table, so use the movement
-            List<Round> roundsList = database.GetRoundsListForSection(sectionId);
-            HashSet<int> contestantNumbers = [];
-            foreach (Round round in roundsList) 
+            if (contestantNumbers.Count == 0) 
             {
-                contestantNumbers.Add(round.ContestantNumberNorth);
-                contestantNumbers.Add(round.ContestantNumberSouth);
-                contestantNumbers.Add(round.ContestantNumberEast);
-                contestantNumbers.Add(round.ContestantNumberWest);
+                // No contestant numbers specified, so need a list of all possible values.  We can't rely on the PlayerNumbers table, so use the movement
+                List<Round> roundsList = database.GetRoundsListForSection(sectionId);
+                HashSet<int> contestantNumbersHashSet = [];
+                foreach (Round round in roundsList)
+                {
+                    contestantNumbersHashSet.Add(round.ContestantNumberNorth);
+                    contestantNumbersHashSet.Add(round.ContestantNumberSouth);
+                    contestantNumbersHashSet.Add(round.ContestantNumberEast);
+                    contestantNumbersHashSet.Add(round.ContestantNumberWest);
+                }
+                contestantNumbersHashSet.Remove(0);
+                contestantNumbers = [.. contestantNumbersHashSet];
             }
-            contestantNumbers.Remove(0);
+            contestantNumbers.Sort();
 
             return new()
-            {
+                        {
                 SectionId = section.SectionId,
                 SectionLetter = section.SectionLetter,
-                ContestantNumbers = [.. contestantNumbers.OrderBy(contestantNumber => contestantNumber)],
+                ContestantNumbers = contestantNumbers,
                 NumContestants = contestantNumbers.Count,
                 ConfirmContestantNumber = confirmContestantNumber,
             };
         }
 
-        public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection)
+        public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, int roundNumber, Direction confirmDirection)
         {
-            Device device = appData.GetDevice(sectionId);
+            Round round = database.GetRound(sectionId, tableNumber, roundNumber);
             Section section = database.GetSection(sectionId);
 
             return new()
@@ -88,9 +81,8 @@ namespace TabScore2.BusinessLogic
                 SectionLetter = section.SectionLetter,
                 TableNumber = tableNumber,
                 ConfirmDirection = confirmDirection,
-                RoundNumber = device.RoundNumber,
-                NorthSouthMissing = device.RoundData!.ContestantNumberNorth == 0 || device.RoundData.ContestantNumberNorth == section.MissingPair,
-                EastWestMissing = device.RoundData.ContestantNumberEast == 0 || device.RoundData.ContestantNumberEast == section.MissingPair,
+                NorthSouthMissing = round.ContestantNumberNorth == 0 || round.ContestantNumberNorth == section.MissingPair,
+                EastWestMissing = round.ContestantNumberEast == 0 || round.ContestantNumberEast == section.MissingPair,
             };
         }
 

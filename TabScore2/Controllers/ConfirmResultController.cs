@@ -28,7 +28,7 @@ namespace TabScore2.Controllers
             Device device = appData.GetDevice(deviceNumber);
             if (device.ResultData.BoardNumber == 0)  // Probably from browser 'Back' button.  Don't know boardNumber so go to ShowBoards
             {
-                return RedirectToAction("Index", "ShowBoards", new { deviceNumber });
+                return RedirectToAction("Index", "ShowBoards", new { eventGuid });
             }
 
             EnterContractModel model = busLogic.CreateEnterContractModel(device.ResultData, true);

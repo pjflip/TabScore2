@@ -35,7 +35,7 @@
         function modalLogOn() {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid, sectionId = Model.SectionId, tableNumber = Model.TableNumber, direction = Model.ConfirmDirection, roundNumber = Model.RoundNumber, confirm = true })';
+                location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid })&sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&direction=@Model.ConfirmDirection&confirm=true';
             }
         }
     </script>
@@ -101,7 +101,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid, sectionId = Model.SectionId, tableNumber = Model.TableNumber})&direction=' + direction + '&roundNumber=@Model.RoundNumber&confirm=false';
+            location.href = '@Url.Action("OKButtonClick", "SelectDirection", new { eventGuid = Model.EventGuid })&sectionId=@Model.SectionId&tableNumber=@Model.TableNumber&direction=' + direction + '&confirm=false';
         }
     }
 </script>

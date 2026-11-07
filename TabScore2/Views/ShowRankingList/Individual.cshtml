@@ -73,7 +73,7 @@
 <script>
     var urlPollRanking = '@Url.Action("PollRanking", "ShowRankingList")';
     var urlEndScreen = '@Url.Action("Index", "EndScreen", new { eventGuid = Model.EventGuid })';
-    var urlShowMove = '@Url.Action("Index", "ShowMove", new { eventGuid = Model.EventGuid })&newRoundNumber=' + (@Model.RoundNumber + 1).toString();
+    var urlShowMove = '@Url.Action("Index", "ShowMove", new { eventGuid = Model.EventGuid })&newRoundNumber=@((Model.RoundNumber + 1).ToString());
     var urlShowBoards = '@Url.Action("Index", "ShowBoards", new { eventGuid = Model.EventGuid })';
     var finalRankingList = @Model.FinalRankingList.ToString().ToLower();
     var contestantNumberNorth = @Model.ContestantNumberNorth;

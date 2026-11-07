@@ -68,7 +68,7 @@ namespace TabScore2.Controllers
             }
             else
             {
-                TempData["ShowWarning"] = "ErrorNotAllNames";
+                TempData["ShowWarning"] = "Yes";
                 return RedirectToAction("Index", "ShowPlayerIds", new { eventGuid, databaseNamesRequired = false });
             }
         }

@@ -69,6 +69,8 @@
 <script>
     var isSubmitted = false;
     var notAllNamesModal = new bootstrap.Modal(document.getElementById("notAllNamesModal"), { backdrop: 'static' });
+    var notAllNamesModalShow = '@TempData["ShowWarning"]';
+    if (notAllNamesModalShow == "Yes") notAllNamesModal.show();
 
     function OKButtonClick() {
         if (document.getElementById("OKButton").disabled) return;
@@ -86,14 +88,7 @@
     function EnterPlayerId(direction) {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("Index", "EnterPlayerId", new { eventGuid = Model.EventGuid })?direction=' + direction;
+                location.href = '@Url.Action("Index", "EnterPlayerId", new { eventGuid = Model.EventGuid })&direction=' + direction;
             }
     }
 </script>
-
-@if (TempData.ContainsKey("ShowWarning") && TempData["Message"] is string message && !string.IsNullOrEmpty(message))
-{
-    <script>
-        notAllNamesModal.show();
-    </script>
-}

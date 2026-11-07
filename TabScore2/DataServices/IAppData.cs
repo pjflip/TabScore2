@@ -14,9 +14,10 @@ namespace TabScore2.DataServices
 
         bool IsTableReadyForNextRound(int sectionId, int tableNumber, int roundNumber);
         IEnumerable<TableStatus> GetAllTableStatuses();
-        Device? GetDeviceByLocation(int sectionId, int tableNumber, Direction direction = Direction.North);
-        Device CreateDeviceByLocation(int sectionId, int tableNumber, int roundNumber, Direction direction = Direction.North);
+        IEnumerable<Device> GetDevicesByTableNumber(int sectionId, int tableNumber);
+        Device CreateDeviceByTableNumber(int sectionId, int tableNumber, int roundNumber);
         IEnumerable<Device> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
+        Device CreateDeviceByTableNumberDirection(int sectionId, int tableNumber, int roundNumber, Direction direction);
         Device? GetDeviceByContestant(int sectionId, int contestantNumber);
         Device CreateDeviceByContestant(int sectionId, int contestantNumber, int roundNumber);
         Device GetDevice(int deviceNumber);

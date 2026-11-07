@@ -8,7 +8,6 @@ using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Models;
-using static System.Collections.Specialized.BitVector32;
 
 namespace TabScore2.Controllers
 {

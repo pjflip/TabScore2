@@ -85,7 +85,7 @@
     function View(n) {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("ViewResult", "ShowBoards", new { eventGuid = Model.EventGuid })?boardNumber=' + n;
+            location.href = '@Url.Action("ViewResult", "ShowBoards", new { eventGuid = Model.EventGuid })&boardNumber=' + n;
         }
     }
 </script>

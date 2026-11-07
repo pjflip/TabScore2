@@ -130,7 +130,7 @@
     function handRecordClick() {
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("Index", "ShowHandRecord", new { eventGuid = Model.EventGuid, boardNumber = Model.BoardNumber, fromView = Model.FromView.ToString().ToLower() })';
+            location.href = '@Url.Action("Index", "ShowHandRecord", new { eventGuid = Model.EventGuid })&boardNumber=@Model.BoardNumber&fromView=@(Model.FromView.ToString().ToLower())';
         }
     }
 </script>

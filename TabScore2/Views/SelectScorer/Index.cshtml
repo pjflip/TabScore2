@@ -57,6 +57,10 @@
     var scoring = false;
     var isSubmitted = false;
 
+    var notAllNamesModalShow = '@TempData["ShowWarning"]';
+    if (notAllNamesModalShow == "Yes") notAllNamesModal.show();
+
+
     function SelectScoring(isScoring) {
         scoring = isScoring;
         if (scoring) {
