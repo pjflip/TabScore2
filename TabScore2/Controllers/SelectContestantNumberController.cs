@@ -19,17 +19,21 @@ namespace TabScore2.Controllers
         private readonly ISettings settings = iSettings;
         private readonly IBusLogic busLogic = iBusLogic;
 
-        public ActionResult Index(string eventGuid, int sectionId, List<int> contestantNumbers, int confirmContestantNumber = 0) 
+        public ActionResult Index(string eventGuid, int sectionId, int confirmContestantNumber = 0) 
         {
-            // To get here, we must be in Scorer or Personal Mode
+            // To get here, we must be in Scorer or Personal Mode with devices moving
 
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, contestantNumbers, confirmContestantNumber);
+            SelectContestantNumberModel model = busLogic.CreateSelectContestantNumberModel(sectionId, confirmContestantNumber);
             model.EventGuid = eventGuid;
 
-            // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
-            if (settings.Mode == Mode.Scorer) model.ShowTableStatusButton = true;
+            // Only in Scorer Mode, show the button to go to the ShowTableStatus screen if not on the first round
+            if (settings.Mode == Mode.Scorer)
+            {
+                if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
+                if (cookieRoundNumber > 1) model.ShowTableStatusButton = true;
+            }
 
             ViewData["Title"] = $"{localizer["Section"]} {model.SectionLetter}: {localizer["SelectContestantNumber"]}";
             ViewData["Header"] = $"{localizer["Section"]} {model.SectionLetter}";
@@ -41,29 +45,14 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
+            // We need to link this device (and hence this contestant) to an existing device record or create a new device record
+            // If a device record exists that matches the cookies, just use it
+            // If a device record exists that doesn't match the cookies, confirm before making the link (it is possible for 2 or more devices to be linked to the same
+            //   device record, but we have to allow replacement devices in case of device failure).
+            // If no device record exists, the we need to create one.  The location of the contestant will be determined by the movement and existing results from the database.
+            
             Device? device = appData.GetDeviceByContestant(sectionId, contestantNumber);
-            if (device == null)
-            {
-                // No device record exists.  Check if there are cookies for this section/contestant, and if so recreate the device record from them
-                if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
-                      && Int32.TryParse(HttpContext.Request.Cookies["ContestantNumber"], out int cookieContestantNumber) && cookieContestantNumber == contestantNumber)
-                {
-                    if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
-                    device = appData.CreateDeviceByContestant(sectionId, contestantNumber, cookieRoundNumber);
-                }
-                else
-                {
-                    // No valid cookies either, so create an initial device record and cookies
-                    device = appData.CreateDeviceByContestant(sectionId, contestantNumber, 1);
-                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber, 1);
-                }
-            }
-            else if (confirm)
-            {
-                // A device record exists that we wish to use but it doesn't match cookies, so update cookies
-                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber, 1);
-            }
-            else
+            if (device != null && !confirm) 
             {
                 // A device record already exists for this section/contestant
                 if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
@@ -72,8 +61,19 @@ namespace TabScore2.Controllers
                     // Cookies exist but don't match this section/contestant. So go back and confirm
                     return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId, confirmContestantNumber = contestantNumber });
                 }
+                // else => device matches cookies so this is a re-registration and nothing more to do
             }
-            // else => device matches cookies so this is a re-registration and nothing more to do
+            else if (device != null)
+            {
+                // A device record exists that we have confirmed that we wish to use but it doesn't match cookies, so update cookies
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber);
+            }
+            else
+            {
+                // No device record exists, so create one
+                device = appData.CreateDeviceByContestant(sectionId, contestantNumber);
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, device.TableNumber, device.Direction, contestantNumber);
+            }
 
             // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application.  Store it in the sessionState
             HttpContext.Session.SetInt32("DeviceNumber", device!.DeviceNumber);

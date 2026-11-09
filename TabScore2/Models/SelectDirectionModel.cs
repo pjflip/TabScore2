@@ -11,6 +11,7 @@ namespace TabScore2.Models
         public int SectionId { get; set; }
         public string SectionLetter { get; set; } = "A";
         public int TableNumber { get; set; }
+        public int RoundNumber { get; set; }
         public Direction ConfirmDirection { get; set; }
         public bool NorthSouthMissing { get; set; }
         public bool EastWestMissing { get; set; }

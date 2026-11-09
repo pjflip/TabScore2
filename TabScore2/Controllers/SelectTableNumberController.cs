@@ -3,6 +3,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Configuration;
 using TabScore2.BusinessLogic;
 using TabScore2.Classes;
 using TabScore2.DataServices;
@@ -27,8 +28,8 @@ namespace TabScore2.Controllers
             SelectTableNumberModel model = busLogic.CreateSelectTableNumberModel(sectionId, confirmTableNumber);
             model.EventGuid = eventGuid;
 
-            // Only in Scorer Mode, show the button to go to the ShowTableStatus screen
-            model.ShowTableStatusButton = settings.Mode == Mode.Scorer;
+            // Only in Scorer Mode, show the button to go to the ShowTableStatus screen if not on the first round
+            if (settings.Mode == Mode.Scorer) model.ShowTableStatusButton = true;
 
             ViewData["Title"] = $"{localizer["Section"]} {model.SectionLetter}: {localizer["SelectTableNumber"]}";
             ViewData["Header"] = $"{localizer["Section"]} {model.SectionLetter}";
@@ -40,39 +41,22 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            IEnumerable<Device> tableDevices = appData.GetDevicesByTableNumber(sectionId, tableNumber);
-            if (tableDevices.Count() > 1 || (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1))
+            if (settings.Mode != Mode.Traditional && database.GetSection(sectionId).Winners == 1)
             {
-                // Devices are moving so we also need direction
+                // Devices are moving, so we'll need direction too
                 return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber });
             }
 
-            // Traditional Mode, or Personal/Scorer Mode with 2 winners : only one non-moving device per table.
-            // We only want one device per location, so check if a device record for this location exists.
-            // Use cookies to keep track of any previous location for the current device
-            Device? device = tableDevices.SingleOrDefault();
-            if (device == null)
-            {
-                // No device record exists.  Check if there are cookies for this section/table, and if so recreate the device record from them
-                if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
-                      && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber)
-                {
-                    if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
-                    device = appData.CreateDeviceByTableNumber(sectionId, tableNumber, cookieRoundNumber);
-                }
-                else
-                {
-                    // No valid cookies either, so create an initial device record and cookies
-                    device = appData.CreateDeviceByTableNumber(sectionId, tableNumber, 1);
-                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber, 1);
-                }
-            }
-            else if (confirm)
-            {
-                // A device record exists that we wish to use but it doesn't match cookies, so update cookies
-                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber, device.RoundNumber);
-            }
-            else
+            // Traditional Mode, or Personal/Scorer Mode with 2 winners, so only one non-moving device per table.
+            // We need to link this device (and hence this table) to an existing device record or create a new device record
+            // If a device record exists that matches the cookies, just use it
+            // If a device record exists that doesn't match the cookies, confirm before making the link (it is possible for 2 or more devices to be linked to the same
+            //   device record, but we have to allow replacement devices in case of device failure).
+            // If no device record exists, the we need to create one.  The round will be determined by existing results from the database.
+
+            // Check if a device record exists for this table
+            Device? device = appData.GetDeviceByTableNumber(sectionId, tableNumber);
+            if (device != null && !confirm)
             {
                 // A device record already exists for this section/table
                 if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
@@ -81,8 +65,19 @@ namespace TabScore2.Controllers
                     // Cookies exist but don't match this section/table. So go back and confirm
                     return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, sectionId, confirmTableNumber = tableNumber });
                 }
+                // else => device record matches cookies so this is a re-registration and nothing more to do
             }
-            // else => device matches cookies so this is a re-registration and nothing more to do
+            else if (device != null)
+            {
+                // A device record exists that we have confirmed that we wish to use but it doesn't match cookies, so update cookies
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber);
+            }
+            else
+            {
+                // No device record exists, so create one
+                device = appData.CreateDeviceByTableNumber(sectionId, tableNumber);
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, device.Direction, device.ContestantNumber);
+            }
 
             // deviceNumber is the key for identifying this particular device and is used throughout the rest of the application.  Store it in the sessionState
             HttpContext.Session.SetInt32("DeviceNumber", device!.DeviceNumber);

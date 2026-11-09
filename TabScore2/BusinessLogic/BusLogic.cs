@@ -39,29 +39,23 @@ namespace TabScore2.BusinessLogic
             };
         }
 
-        public SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, List<int> contestantNumbers, int confirmContestantNumber)
+        public SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber)
         {
             Section section = database.GetSection(sectionId);
-
-            if (contestantNumbers.Count == 0) 
+            List<Round> roundsList = database.GetRoundsListForSection(sectionId);
+            HashSet<int> contestantNumbersHashSet = [];
+            foreach (Round round in roundsList)
             {
-                // No contestant numbers specified, so need a list of all possible values.  We can't rely on the PlayerNumbers table, so use the movement
-                List<Round> roundsList = database.GetRoundsListForSection(sectionId);
-                HashSet<int> contestantNumbersHashSet = [];
-                foreach (Round round in roundsList)
-                {
-                    contestantNumbersHashSet.Add(round.ContestantNumberNorth);
-                    contestantNumbersHashSet.Add(round.ContestantNumberSouth);
-                    contestantNumbersHashSet.Add(round.ContestantNumberEast);
-                    contestantNumbersHashSet.Add(round.ContestantNumberWest);
-                }
-                contestantNumbersHashSet.Remove(0);
-                contestantNumbers = [.. contestantNumbersHashSet];
+                contestantNumbersHashSet.Add(round.ContestantNumberNorth);
+                contestantNumbersHashSet.Add(round.ContestantNumberSouth);
+                contestantNumbersHashSet.Add(round.ContestantNumberEast);
+                contestantNumbersHashSet.Add(round.ContestantNumberWest);
             }
-            contestantNumbers.Sort();
+            contestantNumbersHashSet.Remove(0);  // Remove any missing pair
+            List<int> contestantNumbers = [.. contestantNumbersHashSet.Order()];
 
             return new()
-                        {
+            {
                 SectionId = section.SectionId,
                 SectionLetter = section.SectionLetter,
                 ContestantNumbers = contestantNumbers,
@@ -70,16 +64,23 @@ namespace TabScore2.BusinessLogic
             };
         }
 
-        public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, int roundNumber, Direction confirmDirection)
+        public SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection)
         {
-            Round round = database.GetRound(sectionId, tableNumber, roundNumber);
-            Section section = database.GetSection(sectionId);
+            int roundNumber = database.GetLastRoundWithResultsForTable(sectionId, tableNumber);
+            if (roundNumber > 1)
+            {
+                // If we are past the first round, then this is a re-registration and it'll have to be done by contestantNumber
+                return new() { RoundNumber = roundNumber };
+            }
 
+            Round round = database.GetRound(sectionId, tableNumber, 1);
+            Section section = database.GetSection(sectionId);
             return new()
             {
                 SectionId = sectionId,
                 SectionLetter = section.SectionLetter,
                 TableNumber = tableNumber,
+                RoundNumber = roundNumber,
                 ConfirmDirection = confirmDirection,
                 NorthSouthMissing = round.ContestantNumberNorth == 0 || round.ContestantNumberNorth == section.MissingPair,
                 EastWestMissing = round.ContestantNumberEast == 0 || round.ContestantNumberEast == section.MissingPair,
@@ -753,29 +754,29 @@ namespace TabScore2.BusinessLogic
             {
                 case HeaderType.Location:
                     // parameter1 = deviceNumber
-                    return $"{device.Location}";
+                    return $"{device.LocationString}";
                 case HeaderType.Round:
                     // parameter1 = deviceNumber
-                    return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}";
+                    return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}";
                 case HeaderType.FullPlain:
                     if (settings.IsIndividual)
                     {
-                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {device.RoundData!.ContestantNumberNorth}+{device.RoundData.ContestantNumberSouth} v {device.RoundData.ContestantNumberEast}+{device.RoundData.ContestantNumberWest}";
+                        return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}: {device.RoundData!.ContestantNumberNorth}+{device.RoundData.ContestantNumberSouth} v {device.RoundData.ContestantNumberEast}+{device.RoundData.ContestantNumberWest}";
                     }
                     else
                     {
-                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {localizer["N"]}{localizer["S"]} {device.RoundData!.ContestantNumberNorth} v {localizer["E"]}{localizer["W"]} {device.RoundData.ContestantNumberEast}";
+                        return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}: {localizer["N"]}{localizer["S"]} {device.RoundData!.ContestantNumberNorth} v {localizer["E"]}{localizer["W"]} {device.RoundData.ContestantNumberEast}";
                     }
                 case HeaderType.FullColoured:
                     if (settings.IsIndividual)
                     {
-                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
+                        return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
                             $"{device.RoundData!.ContestantNumberNorth}+{device.RoundData.ContestantNumberSouth}")} v {ColourPairByVulnerability("EW", device.ResultData.BoardNumber,
                             $"{device.RoundData.ContestantNumberEast}+{device.RoundData.ContestantNumberWest}")}";
                     }
                     else
                     {
-                        return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
+                        return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}: {ColourPairByVulnerability("NS", device.ResultData.BoardNumber, 
                             $"{localizer["N"]}{localizer["S"]} {device.RoundData!.ContestantNumberNorth}")} v {ColourPairByVulnerability("EW", device.ResultData.BoardNumber, 
                             $"{localizer["E"]}{localizer["W"]} {device.RoundData.ContestantNumberEast}")}";
                     }
@@ -786,7 +787,7 @@ namespace TabScore2.BusinessLogic
 
         public string Title(string titleString, Device device)
         {
-            return $"{device.Location}: {localizer["Rd"]} {device.RoundNumber}: {localizer[titleString]}";
+            return $"{device.LocationString}: {localizer["Rd"]} {device.RoundNumber}: {localizer[titleString]}";
         }
 
         public bool ValidateLead(Result result, string card)

@@ -8,15 +8,15 @@ namespace TabScore2.Classes
 {
     public class Device
     {
-        public required int DeviceNumber { get; set; }
-        public required int SectionId { get; set; }
-        public required string SectionLetter { get; set; }
-        public required int DevicesPerTable { get; set; }
-        public required int TableNumber { get; set; }
-        public required int ContestantNumber { get; set; }
-        public required Direction Direction { get; set; }
-        public required string Location { get; set; }
-        public required int RoundNumber { get; set; }
+        public int DeviceNumber { get; set; }
+        public int SectionId { get; set; }
+        public string SectionLetter { get; set; } = "A";
+        public int DevicesPerTable { get; set; }
+        public int TableNumber { get; set; }
+        public int ContestantNumber { get; set; }
+        public Direction Direction { get; set; }
+        public required string LocationString { get; set; }
+        public int RoundNumber { get; set; }
         public Round? RoundData { get; set; }
         public bool ReadyForNextRound { get; set; } = false;
         public bool AtSitoutTable { get; set; } = false;

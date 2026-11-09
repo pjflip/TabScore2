@@ -18,18 +18,16 @@ namespace TabScore2.Globals
             return EWVulnerability[(boardNumber - 1) % 16];
         }
 
-        public static void UpdateCookies(IResponseCookies iResponseCookies, int sectionId, int tableNumber, Direction direction, int contestantNumber, int roundNumber)
+        public static void UpdateCookies(IResponseCookies iResponseCookies, int sectionId, int tableNumber, Direction direction, int contestantNumber)
         {
             iResponseCookies.Delete("SectionId");
             iResponseCookies.Delete("TableNumber");
             iResponseCookies.Delete("Direction");
             iResponseCookies.Delete("ContestantNumber");
-            iResponseCookies.Delete("RoundNumber");
             iResponseCookies.Append("SectionId", sectionId.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
             iResponseCookies.Append("TableNumber", tableNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
             iResponseCookies.Append("Direction", direction.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
             iResponseCookies.Append("ContestantNumber", contestantNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
-            iResponseCookies.Append("RoundNumber", roundNumber.ToString(), new() { Expires = DateTime.UtcNow.AddHours(1) });
         }
     }
 }

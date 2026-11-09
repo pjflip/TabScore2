@@ -100,24 +100,25 @@ namespace TabScore2.DataServices
         }
 
         // DEVICE
-        public IEnumerable<Device> GetDevicesByTableNumber(int sectionId, int tableNumber)
+        public Device? GetDeviceByTableNumber(int sectionId, int tableNumber)
         {
-            return deviceList.Where(device => device.SectionId == sectionId && device.TableNumber == tableNumber);
+            return deviceList.SingleOrDefault(device => device.SectionId == sectionId && device.TableNumber == tableNumber);
         }
 
-        public Device CreateDeviceByTableNumber(int sectionId, int tableNumber, int roundNumber)
+        public Device CreateDeviceByTableNumber(int sectionId, int tableNumber)
         {
             // Traditional Mode or two-winner pairs, so direction defaults to North
             
+            int roundNumber = database.GetLastRoundWithResultsForTable(sectionId, tableNumber);
+            if (roundNumber == 0) roundNumber = 1;  // If no results, then start at round 1
             string sectionLetter = database.GetSection(sectionId).SectionLetter;
             Round round = database.GetRound(sectionId, tableNumber, roundNumber);
-
             Device device = new()
             {
                 DeviceNumber = deviceList.Count,  // We add one to the end of the zero-based list, so this is its number,
                 SectionId = sectionId,
                 SectionLetter = sectionLetter,
-                Location = sectionLetter + tableNumber.ToString(),
+                LocationString = sectionLetter + tableNumber.ToString(),
                 TableNumber = tableNumber,
                 ContestantNumber = round.ContestantNumberNorth,
                 RoundNumber = roundNumber,
@@ -130,15 +131,24 @@ namespace TabScore2.DataServices
             return device;
         }
 
-        public IEnumerable<Device> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
+        public Device? GetDeviceByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
         {
-            return deviceList.Where(device => device.SectionId == sectionId && device.TableNumber == tableNumber && device.Direction == direction);
+            Round round = database.GetRound(sectionId, tableNumber, 1);
+            int contestantNumber = direction switch
+            {
+                Direction.North => round.ContestantNumberNorth,
+                Direction.East => round.ContestantNumberEast,
+                Direction.South => round.ContestantNumberSouth,
+                _ => round.ContestantNumberWest,
+            };
+            return deviceList.SingleOrDefault(device => device.SectionId == sectionId && device.ContestantNumber == contestantNumber);
         }
 
-        public Device CreateDeviceByTableNumberDirection(int sectionId, int tableNumber, int roundNumber, Direction direction)
+        public Device CreateDeviceByTableNumberDirection(int sectionId, int tableNumber, Direction direction)
         {
+            // We can only create device records by table and direction in round 1; for round 2+, it has to be done by contestant
             string sectionLetter = database.GetSection(sectionId).SectionLetter;
-            Round round = database.GetRound(sectionId, tableNumber, roundNumber);
+            Round round = database.GetRound(sectionId, tableNumber, 1);
             int contestantNumber = direction switch
             {
                 Direction.North => round.ContestantNumberNorth,
@@ -158,10 +168,10 @@ namespace TabScore2.DataServices
                 DeviceNumber = deviceList.Count,  // We add one to the end of the zero-based list, so this is its number,
                 SectionId = sectionId,
                 SectionLetter = sectionLetter,
-                Location = sectionLetter + tableNumber.ToString(),
+                LocationString = sectionLetter + tableNumber.ToString(),
                 TableNumber = tableNumber,
                 ContestantNumber = contestantNumber,
-                RoundNumber = roundNumber,
+                RoundNumber = 1,
                 RoundData = round,
                 Direction = direction,
                 DevicesPerTable = devicesPerTable,
@@ -176,31 +186,22 @@ namespace TabScore2.DataServices
             return deviceList.SingleOrDefault(device => device.SectionId == sectionId && device.ContestantNumber == contestantNumber);
         }
 
-        public Device CreateDeviceByContestant(int sectionId, int contestantNumber, int roundNumber)
+        public Device CreateDeviceByContestant(int sectionId, int contestantNumber)
         {
             string sectionLetter = database.GetSection(sectionId).SectionLetter;
 
-            // Need to find a location for this contestant.  Not teams, so contestant can only be playing at one table
-            List<Round> roundsList = database.GetRoundsListForSectionRound(sectionId, roundNumber);
-            Round? round = roundsList.SingleOrDefault(round => round.ContestantNumberNorth == contestantNumber || round.ContestantNumberEast == contestantNumber
-              || round.ContestantNumberSouth == contestantNumber || round.ContestantNumberWest == contestantNumber);
-            int tableNumber = 0;
-            Direction direction = Direction.Sitout;
-            if (round != null)
+            Location location = database.GetLastLocationWithResultsForContestant(sectionId, contestantNumber);
+            if (location.TableNumber == 0)
             {
-                // Contestant not sitting out this round
-                tableNumber = round.TableNumber;
-                if (round.ContestantNumberNorth == contestantNumber) direction = Direction.North;
-                else if (round.ContestantNumberEast == contestantNumber) direction = Direction.East;
-                else if (round.ContestantNumberNorth == contestantNumber) direction = Direction.South;
-                else direction = Direction.West;
+                // No results yet for this contestant
+                location = database.GetStartLocationForContestant(sectionId, contestantNumber);
             }
 
             // Number of devices per table depends on whether it's an individual event.  Stored in the device (not settings) as can vary by section
             int devicesPerTable = settings.IsIndividual ? 4 : 2;
 
             // In Personal Mode, only North is scoring; in Scorer Mode we initially set all devices to non-scoring
-            bool scoring = settings.Mode == Mode.Personal && direction == Direction.North;
+            bool scoring = settings.Mode == Mode.Personal && location.Direction == Direction.North;
 
             int deviceNumber = deviceList.Count;  // We add one to the end of the zero-based list, so this is its number
             Device device = new()
@@ -208,12 +209,12 @@ namespace TabScore2.DataServices
                 DeviceNumber = deviceNumber,
                 SectionId = sectionId,
                 SectionLetter = sectionLetter,
-                Location = GetdeviceLocation(sectionLetter, tableNumber, direction, devicesPerTable),
-                TableNumber = tableNumber,
+                LocationString = GetDeviceLocationString(sectionLetter, location.TableNumber, location.Direction, devicesPerTable),
+                TableNumber = location.TableNumber,
                 ContestantNumber = contestantNumber,
-                RoundNumber = roundNumber,
-                RoundData = round,
-                Direction = direction,
+                RoundNumber = location.RoundNumber,
+                RoundData = database.GetRound(sectionId, location.TableNumber, location.RoundNumber),
+                Direction = location.Direction,
                 DevicesPerTable = devicesPerTable,
                 Scoring = scoring,
             };
@@ -237,10 +238,10 @@ namespace TabScore2.DataServices
             device.RoundData = database.GetRound(device.SectionId, tableNumber, roundNumber);
             device.Scoring = scoring;
             device.ReadyForNextRound = false;
-            device.Location = GetdeviceLocation(device.SectionLetter, device.TableNumber, device.Direction, device.DevicesPerTable);
+            device.LocationString = GetDeviceLocationString(device.SectionLetter, device.TableNumber, device.Direction, device.DevicesPerTable);
         }
 
-        private string GetdeviceLocation(string sectionLetter, int tableNumber, Direction direction, int devicesPerTable)
+        private string GetDeviceLocationString(string sectionLetter, int tableNumber, Direction direction, int devicesPerTable)
         {
             string location = sectionLetter + tableNumber.ToString();
             if (devicesPerTable == 4)

@@ -38,7 +38,7 @@ namespace TabScore2.Controllers
             model.EventGuid = eventGuid;
 
             ViewData["Title"] = busLogic.Title("ShowPlayerIds", device);
-            ViewData["Header"] = busLogic.Header(HeaderType.Round, device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
 
             if (settings.IsIndividual)

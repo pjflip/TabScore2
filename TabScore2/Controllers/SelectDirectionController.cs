@@ -14,8 +14,7 @@ namespace TabScore2.Controllers
 {
     public class SelectDirectionController(IStringLocalizer<Strings> iLocalizer, IAppData iAppData, ISettings iSettings, IBusLogic iBusLogic) : Controller
     {
-        // Only used in Personal Mode and then only for one-winner pairs or individuals (when Winners = 1).
-        // Hence DevicesPerTable is either 2 or 4 depending on whether it's pairs or individuals.
+        // Used when devices are moving.  It's either round 1 or an initial registration for this device
 
         private readonly IStringLocalizer<Strings> localizer = iLocalizer;
         private readonly IAppData appData = iAppData;
@@ -26,21 +25,13 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            // Try to establish roundNumber based on any saved devices.  The default is the starting round.  We need this to determine if there are any missing pairs
-            int roundNumber = 1;
-            
-            // First check if there are any existing devices
-            IEnumerable<Device> tableDevices = appData.GetDevicesByTableNumber(sectionId, tableNumber);
-            if (tableDevices.Any()) roundNumber = tableDevices.Min(device => device.RoundNumber);
-
-            // Then check if there are cookies for this section/table, and if so use the cookie roundNumber in preference
-            if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
-                  && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber)
+            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, confirmDirection);
+            if (model.RoundNumber > 1)
             {
-                _ = Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out roundNumber);
+                // If we are past the first round, then this is a re-registration and it'll have to be done by contestantNumber as direction could be ambiguous
+                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId });
             }
 
-            SelectDirectionModel model = busLogic.CreateSelectDirectionModel(sectionId, tableNumber, roundNumber, confirmDirection);
             model.EventGuid = eventGuid;
 
             ViewData["Title"] = $"{model.SectionLetter}{tableNumber}: {localizer["SelectDirection"]}";
@@ -60,52 +51,35 @@ namespace TabScore2.Controllers
         {
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
-            // We only want one device per location and round, so check if any devices are already registered.  If there's only one, we can use it.  
-            // Use session state to keep track of any previous location for the current device
-            Device? device;
-            IEnumerable<Device> matchingDevices = appData.GetDevicesByTableNumberDirection(sectionId, tableNumber, direction);
-            int matchingDeviceCount = matchingDevices.Count();
-            if (matchingDeviceCount == 0)
+            // We need to link this device (and hence the contestant at this table/direction) to an existing device record or create a new device record
+            // If a device record exists that matches the cookies, just use it
+            // If a device record exists that doesn't match the cookies, confirm before making the link (it is possible for 2 or more devices to be linked to the same
+            //   device record, but we have to allow replacement devices in case of device failure).
+            // If no device record exists, the we need to create one.
+
+            // Check if a device record exists for the contestant at this table/direction
+            Device? device = appData.GetDeviceByTableNumberDirection(sectionId, tableNumber, direction);
+            if (device != null && !confirm)
             {
-                // No device record exists.  Check if there are cookies for this section/table/direction, and if so recreate the device record from them
-                if (Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) && cookieSectionId == sectionId
-                      && Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) && cookieTableNumber == tableNumber
-                      && Enum.TryParse(HttpContext.Request.Cookies["Direction"], out Direction cookieDirection) && cookieDirection == direction)
+                // A device record already exists for the contestant at this table/direction
+                if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
+                      || !Int32.TryParse(HttpContext.Request.Cookies["ContestantNumber"], out int cookieContestantNumber) || cookieContestantNumber != device.ContestantNumber)
                 {
-                    if (!Int32.TryParse(HttpContext.Request.Cookies["RoundNumber"], out int cookieRoundNumber)) cookieRoundNumber = 1;
-                    device = appData.CreateDeviceByTableNumberDirection(sectionId, tableNumber, cookieRoundNumber, direction);
+                    // Cookies exist but don't match this section/contestant. So go back and confirm direction
+                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber, confirmDirection = direction });
                 }
-                else
-                {
-                    // No valid cookie either, so create an initial device record and cookies
-                    device = appData.CreateDeviceByTableNumberDirection(sectionId, tableNumber, 1, direction);
-                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber, 1);
-                }
+                // else => device matches cookies so this is a re-registration and nothing more to do
             }
-            else if (matchingDeviceCount > 1)
+            else if (device != null)
             {
-                // There's more than one record, so devices at this location must belong to different contestants (on different rounds).  So get contestantNumber too
-                List<int> contestantNumberOptions = [];
-                foreach (Device iDevice in matchingDevices) contestantNumberOptions.Add(iDevice.ContestantNumber);
-                return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId, contestantNumberOptions });
+                // A device record exists that we have confirmed that we wish to use but it doesn't match cookies, so update cookies
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber);
             }
             else
             {
-                // A single device record exists for this section/table/direction
-                device = matchingDevices.Single();
-                if (confirm)
-                {
-                    // A device record exists that we have already checked and which doesn't match cookies.  But we wish to use it, so overwrite cookies
-                    Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber, device.RoundNumber);
-                }
-                else if (!Int32.TryParse(HttpContext.Request.Cookies["SectionId"], out int cookieSectionId) || cookieSectionId != sectionId
-                      || !Int32.TryParse(HttpContext.Request.Cookies["TableNumber"], out int cookieTableNumber) || cookieTableNumber != tableNumber
-                      || !Enum.TryParse(HttpContext.Request.Cookies["Direction"], out Direction cookieDirection) || cookieDirection != direction)
-                {
-                    // Cookies exist but don't match this section/table/direction. So go back and confirm
-                    // If, at this stage, the user has got the section or table number wrong, then they'd need to restart
-                    return RedirectToAction("Index", "SelectDirection", new { eventGuid, sectionId, tableNumber, confirmDirection = direction });
-                }
+                // No device record exists, so create one
+                device = appData.CreateDeviceByTableNumberDirection(sectionId, tableNumber, direction);
+                Global.UpdateCookies(HttpContext.Response.Cookies, sectionId, tableNumber, direction, device.ContestantNumber);
             }
 
             // DeviceNumber is the key for identifying this particular tablet device and is used throughout the rest of the application

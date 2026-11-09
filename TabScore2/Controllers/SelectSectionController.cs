@@ -19,24 +19,30 @@ namespace TabScore2.Controllers
 
         public ActionResult Index(string eventGuid)
         {
+            // Check that we are still processing the correct event; this is done in every screen.  If not, this an orphan process and should be closed
             if (eventGuid != settings.EventGuid) return RedirectToAction("Index", "WrongEventScreen");
 
             SelectSectionModel model = busLogic.CreateSelectSectionModel();
-            model.EventGuid = eventGuid;
-            if (model.Count == 1)  // Check if only one section - if so use it
+            if (model.Count == 1)  
             {
+                // Only one section - so use it
                 int sectionId = model[0].SectionId;
+
                 if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
                 {
+                    // Using the option to register by contestant number
                     return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId });
                 }
                 else
                 {
+                    // Otherwise this is a registration by table number (and direction if needed)
                     return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, sectionId });
                 }
             }
-            else  // Get section
+            else
             {
+                // More than one section, so select one
+                model.EventGuid = eventGuid;
                 ViewData["Title"] = localizer["SelectSection"];
                 ViewData["Header"] = string.Empty;
                 ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
@@ -50,10 +56,12 @@ namespace TabScore2.Controllers
 
             if (settings.Mode != Mode.Traditional && settings.RegisterByContestantNumber)
             {
+                // Using the option to register by contestant number
                 return RedirectToAction("Index", "SelectContestantNumber", new { eventGuid, sectionId });
             }
             else
             {
+                // Registration by table number (and direction if needed)
                 return RedirectToAction("Index", "SelectTableNumber", new { eventGuid, sectionId });
             }
         }

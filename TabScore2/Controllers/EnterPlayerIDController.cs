@@ -27,7 +27,7 @@ namespace TabScore2.Controllers
             Device device = appData.GetDevice(deviceNumber);
 
             ViewData["Title"] = busLogic.Title("EnterPlayerIds", device);
-            ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
+            ViewData["Header"] = busLogic.Header(HeaderType.FullPlain, device);
             ViewData["ButtonOptions"] = ButtonOptions.OKDisabled;
             EnterPlayerIdModel model = busLogic.CreateEnterPlayerIdModel(direction);
             model.EventGuid = eventGuid;

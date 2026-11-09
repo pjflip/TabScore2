@@ -430,7 +430,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
 
                 if (queryResult == null || queryResult == DBNull.Value)
                 {
-                    return new() { RoundNumber = 1 };
+                    return new() { RoundNumber = 0 };
                 }
                 else
                 {
@@ -603,7 +603,7 @@ namespace GrpcBwsDatabaseServer.GrpcServices
             }
             catch (Exception exception)
             {
-                return new() { ErrorMessage = $"GetNumberOfLastRoundWithResultsException: {exception.Message}" };
+                return new() { ErrorMessage = $"GetStartLocationForContestantException: {exception.Message}" };
             }
         }
 

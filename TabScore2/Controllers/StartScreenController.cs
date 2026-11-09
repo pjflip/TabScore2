@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Reflection;
+using TabScore2.Classes;
 using TabScore2.DataServices;
 using TabScore2.Globals;
 using TabScore2.Resources;
@@ -38,6 +39,9 @@ namespace TabScore2.Controllers
                 appData.WebappInitialize();
                 settings.SessionStarted = true;
             }
+            
+            // Reset the cookies for this device
+            Global.UpdateCookies(HttpContext.Response.Cookies, 0, -1, Direction.Null, 0);
             
             // Get the eventGuid in settings that was created on database initialization.  This is passed from screen to screen in the URL and checked against settings.
             // Thus, if TabScore2 is closed and restarted, the setting value will change and any orphaned windows will no longer work.  

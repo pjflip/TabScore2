@@ -12,8 +12,8 @@ namespace TabScore2.BusinessLogic
     {
         SelectSectionModel CreateSelectSectionModel();
         SelectTableNumberModel CreateSelectTableNumberModel(int sectionId, int confirmTableNumber);
-        SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, List<int> contestantNumberOptions, int confirmContestantNumber);
-        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, int roundNumber, Direction confirmDirection);
+        SelectContestantNumberModel CreateSelectContestantNumberModel(int sectionId, int confirmContestantNumber);
+        SelectDirectionModel CreateSelectDirectionModel(int sectionId, int tableNumber, Direction confirmDirection);
         ShowPlayerIdsModel CreateShowPlayerIdsModel(Device device);
         EnterPlayerIdModel CreateEnterPlayerIdModel(Direction direction);
         ShowRoundInfoModel CreateShowRoundInfoModel(Device device);

@@ -14,12 +14,12 @@ namespace TabScore2.DataServices
 
         bool IsTableReadyForNextRound(int sectionId, int tableNumber, int roundNumber);
         IEnumerable<TableStatus> GetAllTableStatuses();
-        IEnumerable<Device> GetDevicesByTableNumber(int sectionId, int tableNumber);
-        Device CreateDeviceByTableNumber(int sectionId, int tableNumber, int roundNumber);
-        IEnumerable<Device> GetDevicesByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
-        Device CreateDeviceByTableNumberDirection(int sectionId, int tableNumber, int roundNumber, Direction direction);
+        Device? GetDeviceByTableNumber(int sectionId, int tableNumber);
+        Device CreateDeviceByTableNumber(int sectionId, int tableNumber);
+        Device? GetDeviceByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
+        Device CreateDeviceByTableNumberDirection(int sectionId, int tableNumber, Direction direction);
         Device? GetDeviceByContestant(int sectionId, int contestantNumber);
-        Device CreateDeviceByContestant(int sectionId, int contestantNumber, int roundNumber);
+        Device CreateDeviceByContestant(int sectionId, int contestantNumber);
         Device GetDevice(int deviceNumber);
         void UpdateDevice(Device device, int tableNumber, int roundNumber, Direction direction);
         bool SetDeviceAsScorer(int deviceNumber);
