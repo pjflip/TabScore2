@@ -79,7 +79,8 @@ namespace TabScore2.Controllers
             HttpContext.Session.SetInt32("DeviceNumber", device!.DeviceNumber);
 
             // If ready to move then go to ShowMove; otherwise go to start of round via ShowPlayerIDs
-            if (device.ReadyForNextRound) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
+            if (device.ReadyForNextRound || device.TableNumber == 0) return RedirectToAction("Index", "ShowMove", new { eventGuid, newRoundNumber = device.RoundNumber + 1 });
+            if (settings.Mode == Mode.Scorer) return RedirectToAction("Index", "SelectScorer", new { eventGuid });
             return RedirectToAction("Index", "ShowPlayerIDs", new { eventGuid });
         }
     }

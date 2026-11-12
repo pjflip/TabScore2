@@ -80,7 +80,7 @@ namespace TabScore2.Controllers
             ShowRankingListModel model = busLogic.CreateRankingListModel(appData.GetDevice(deviceNumber));
             if (model.Count <= 1 && model[0].ScoreDecimal == 0.0)
             {
-                return RedirectToAction("Index", "EndScreen", new { eventGuid, deviceNumber });
+                return RedirectToAction("Index", "EndScreen", new { eventGuid });
 
             }
             model.EventGuid = eventGuid;

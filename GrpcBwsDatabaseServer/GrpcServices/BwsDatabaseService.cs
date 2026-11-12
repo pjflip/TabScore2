@@ -540,25 +540,17 @@ namespace GrpcBwsDatabaseServer.GrpcServices
         {
             try
             {
-                LocationResponse response = new();
+                LocationResponse response = new() { RoundNumber = 1 };
                 using OdbcConnection connection = new(connectionString);
                 connection.Open();
-                object? queryResult = null;
-                int roundNumber;
                 string SQLString;
 
                 if (isIndividual)
                 {
-                    SQLString = $"SELECT MIN(Round) FROM RoundData WHERE Section={request.SectionId} AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber} OR South={request.ContestantNumber} OR West={request.ContestantNumber})";
-                    queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
-                    roundNumber = Convert.ToInt32(queryResult);
-                    if (roundNumber < 1) roundNumber = 1;
-
-                    SQLString = $"SELECT [Table], NSPair, EWPair, South FROM RoundData WHERE Section={request.SectionId} AND Round={roundNumber} AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber} OR South={request.ContestantNumber} OR West={request.ContestantNumber})";
+                    SQLString = $"SELECT [Table], NSPair, EWPair, South FROM RoundData WHERE Section={request.SectionId} AND Round=1 AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber} OR South={request.ContestantNumber} OR West={request.ContestantNumber})";
                     OdbcHelper.ExecuteReaderOnce(connection, SQLString, reader =>
                     {
                         response.TableNumber = reader.GetInt32(0);
-                        response.RoundNumber = roundNumber;
                         if (reader.GetInt32(1) == request.ContestantNumber)
                         {
                             response.Direction = "North";
@@ -579,16 +571,10 @@ namespace GrpcBwsDatabaseServer.GrpcServices
                 }
                 else  // Not individual
                 {
-                    SQLString = $"SELECT MIN(Round) FROM RoundData WHERE Section={request.SectionId} AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber})";
-                    queryResult = OdbcHelper.ExecuteScalar(connection, SQLString);
-                    roundNumber = Convert.ToInt32(queryResult);
-                    if (roundNumber < 1) roundNumber = 1;
-
-                    SQLString = $"SELECT [Table], NSPair FROM RoundData WHERE Section={request.SectionId} AND Round={roundNumber} AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber})";
+                    SQLString = $"SELECT [Table], NSPair FROM RoundData WHERE Section={request.SectionId} AND Round=1 AND (NSPair={request.ContestantNumber} OR EWPair={request.ContestantNumber})";
                     OdbcHelper.ExecuteReaderOnce(connection, SQLString, reader =>
                     {
                         response.TableNumber = reader.GetInt32(0);
-                        response.RoundNumber = roundNumber;
                         if (reader.GetInt32(1) == request.ContestantNumber)
                         {
                             response.Direction = "North";

@@ -125,7 +125,7 @@ namespace TabScore2.DataServices
                     "East" => Direction.East,
                     "South" => Direction.South,
                     "West" => Direction.West,
-                    _ => Direction.Null,
+                    _ => Direction.Sitout,
                 }
             };
         }

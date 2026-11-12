@@ -27,7 +27,7 @@ namespace TabScore2.Controllers
             ViewData["Header"] = busLogic.Header(HeaderType.Location, device);
             ViewData["Title"] = busLogic.Title("EndScreen", device);
             ViewData["ButtonOptions"] = ButtonOptions.OKEnabled;
-            TempData["eventGuid"] = eventGuid;
+            ViewData["EventGuid"] = eventGuid;
             return View();
         }
 

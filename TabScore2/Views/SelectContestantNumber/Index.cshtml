@@ -35,7 +35,7 @@
         function modalLogOn() {
             if (!isSubmitted) {
                 isSubmitted = true;
-                location.href = '@Url.Action("OKButtonClick", "selectContestantNumber", new { eventGuid = Model.EventGuid })&sectionId=@Model.SectionId&contestantNumber=' + contestantNumber + '&confirm=true';
+                location.href = '@Url.Action("OKButtonClick", "selectContestantNumber", new { eventGuid = Model.EventGuid })&sectionId=@Model.SectionId&contestantNumber=@Model.ConfirmContestantNumber&confirm=true';
             }
         }
     </script>

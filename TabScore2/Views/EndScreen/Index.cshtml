@@ -1,8 +1,6 @@
 ﻿<!-- TabScore2, a wireless bridge scoring program.  Copyright(C) 2026 by Peter Flippant
      Licensed under the Apache License, Version 2.0; you may not use this file except in compliance with the License -->
 
-@model EnterContractModel
-
 <div class="row mt-4">
     <div class="col-12 text-center">
         <h2>
@@ -34,7 +32,7 @@
         if (document.getElementById("OKButton").disabled) return;
         if (!isSubmitted) {
             isSubmitted = true;
-            location.href = '@Url.Action("OKButtonClick", "EndScreen", new { eventGuid = Model.EventGuid })';
+            location.href = '@Url.Action("OKButtonClick", "EndScreen", new { eventGuid = ViewData["EventGuid"].ToString() })';
         }
     }
 </script>
